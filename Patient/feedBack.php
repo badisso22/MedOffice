@@ -35,26 +35,6 @@
             <p>We value your experience with MedOffice. Your detailed feedback helps us improve our services and provide better care.</p>
 
             <form class="feedback-form" id="feedbackForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="feedback-type">Feedback Type</label>
-                        <select id="feedback-type" name="feedback-type" required>
-                            <option value="">Select a category</option>
-                            <option value="general">General Feedback</option>
-                            <option value="appointment">Appointment Experience</option>
-                            <option value="website">Website/Portal Experience</option>
-                            <option value="staff">Staff Interaction</option>
-                            <option value="medical-care">Medical Care</option>
-                            <option value="suggestion">Suggestion</option>
-                            <option value="complaint">Complaint</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="visit-date">Date of Visit <span class="optional-badge">Optional</span></label>
-                        <input type="date" id="visit-date" name="visit-date">
-                    </div>
-                </div>               
                 <div class="rating-section">
                     <h3>
                         <svg viewBox="0 0 24 24">
@@ -75,6 +55,48 @@
                         </div>
                     </div>
                 </div>
+                <div class="rating-section">
+                    <h3>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        Doctor Competence
+                    </h3>
+                    <div class="rating-grid">
+                        <div class="rating-item">
+                            <label>How would you rate the doctor's professionalism and expertise?</label>
+                            <div class="star-rating" id="doctor-competence">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-section">
+                    <h3>
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Punctuality & Waiting Time
+                    </h3>
+                    <div class="rating-grid">
+                        <div class="rating-item">
+                            <label>How would you rate the punctuality of your appointment?</label>
+                            <div class="star-rating" id="appointment-punctuality">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="rating-section">
                     <h3>
                         <svg viewBox="0 0 24 24">
@@ -119,6 +141,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="rating-section">
+                    <h3>
+                        <svg viewBox="0 0 24 24">
+                            <rect x="5" y="11" width="14" height="10" rx="2"/>
+                            <circle cx="12" cy="16" r="2"/>
+                            <path d="M9 11V7a3 3 0 0 1 6 0v4"/>
+                        </svg>
+                        Parking & Security
+                    </h3>
+                    <div class="rating-grid">
+                        <div class="rating-item">
+                            <label>How would you rate the availability and ease of parking?</label>
+                            <div class="star-rating" id="parking-availability">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="rating-section">
                     <h3>
                         <svg viewBox="0 0 24 24">
@@ -170,25 +215,6 @@
                     <label for="feedback-message">Detailed Feedback <span class="optional-badge">Optional</span></label>
                     <textarea id="feedback-message" name="feedback-message" placeholder="Please share your detailed feedback, suggestions, or concerns."></textarea>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="follow-up">Would you like us to follow up with you?</label>
-                        <select id="follow-up" name="follow-up">
-                            <option value="no">No, thank you</option>
-                            <option value="yes">Yes, please contact me</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="recommend">Would you recommend us to others?</label>
-                        <select id="recommend" name="recommend">
-                            <option value="yes">Yes, definitely</option>
-                            <option value="maybe">Maybe</option>
-                            <option value="no">No</option>
-                        </select>
-                    </div>
-                </div>
-
                 <button type="submit" class="submit-btn">Submit Feedback</button>
                 <a href="dashboard_p.php" class="btn" >Cancel</a>
 
