@@ -544,7 +544,7 @@
     }
 
     function logout() {
-        window.location.href = '../index.php';
+        window.location.href = '../index.html';
     }
 
     function toggleAllReviews() {
