@@ -421,7 +421,26 @@
             </div>
         </div>
     </div>
-
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>MedOffice</h3>
+                <p></p>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#contact">Contact Support</a></li>
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
+        </div>
+    </footer>
     <script>
     const doctors = {
         1: {
@@ -520,7 +539,7 @@
     function toggleDrawer() {
         const drawer = document.getElementById('drawer');
         const overlay = document.getElementById('drawerOverlay');
-        drawer.classList.toggle('active');
+        drawer.classList.toggle('open');
         overlay.classList.toggle('active');
     }
 
@@ -543,5 +562,6 @@
         });
     }
     </script>
+
 </body>
 </html>
