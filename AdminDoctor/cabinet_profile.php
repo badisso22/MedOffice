@@ -417,7 +417,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-book-appointment">Book Appointment</button>
             </div>
         </div>
     </div>
