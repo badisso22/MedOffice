@@ -305,6 +305,16 @@
                         <h3>About Cabinet</h3>
                         <p>View and manage your medical cabinet information</p>
                     </a>
+                    <a href="cabinet_profile.php" class="feature-card dashboard-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h3>Cabinet Profile</h3>
+                        <p>Manage your cabinet profile and settings</p>
+                    </a>
                 </div>
             </div>
         </section>
