@@ -7,158 +7,206 @@
   <link rel="stylesheet" href="../CSS/general.css">
   <link rel="stylesheet" href="../CSS/dashboard.css">
   <link rel="stylesheet" href="../CSS/patient.css">
+  <link rel="stylesheet" href="../CSS/cabinet_list.css">
 </head>
 <body>
-<nav>
-        <div class="nav-container">
-            <button class="drawer-toggle" onclick="toggleDrawer()">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <a href="#" class="logo">
-                <div class="logo-icon">⚕</div>
-                MedOffice
-            </a>
-            <div class="nav-cta">
-                <span class="user-name">John Smith</span>
-                <a href="logout.php" class="btn btn-secondary">Logout</a>
-            </div>
-        </div>
-    </nav>
-<div class="drawer" id="drawer">
-        <div class="drawer-header">
-            <div class="logo">
-                <div class="logo-icon">⚕</div>
-                MedOffice
-            </div>
-            <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
-        </div>
-        <ul class="drawer-menu">
-            <li><a href="dashboard_p.php" class="active">
-                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                Dashboard
-            </a></li>
-            <li><a href="profileP.php">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                My Profile
-            </a></li>
-            <li><a href="calendarP.php">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Calendar
-            </a></li>
-            <li><a href="calendarP.php">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                Appointments
-            </a></li>
-            <li><a href="myRecords.php">
-                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                Medical Records
-            </a></li>
-            <li><a href="myPrescriptions.php">
-                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                Prescriptions
-            </a></li>
-          <!--  <li><a href="myPrescriptions.php">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                Consultations
-            </a></li>-->
-            <li><a href="about_cabinet.php">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                Cabinet Info
-            </a></li>
-            <li><a href="medAi.php">
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-                    <circle cx="8" cy="10" r="1.5" fill="white"/>
-                    <circle cx="12" cy="7" r="1.5" fill="white"/>
-                    <circle cx="16" cy="10" r="1.5" fill="white"/>
-                    <circle cx="10" cy="14" r="1.5" fill="white"/>
-                    <circle cx="14" cy="14" r="1.5" fill="white"/>
-                    <circle cx="12" cy="17" r="1.5" fill="white"/>
-                    <line x1="8" y1="10" x2="12" y2="7" stroke="white" stroke-width="1"/>
-                    <line x1="12" y1="7" x2="16" y2="10" stroke="white" stroke-width="1"/>
-                    <line x1="8" y1="10" x2="10" y2="14" stroke="white" stroke-width="1"/>
-                    <line x1="16" y1="10" x2="14" y2="14" stroke="white" stroke-width="1"/>
-                    <line x1="10" y1="14" x2="12" y2="17" stroke="white" stroke-width="1"/>
-                    <line x1="14" y1="14" x2="12" y2="17" stroke="white" stroke-width="1"/>
-                </svg>                Med Ai
-            </a></li>
-            <li><a href="settings.php">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 6.92 4.58l.06.06c.37.37.86.54 1.34.41a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .49.19.97.54 1.34a1.65 1.65 0 0 0 1.82.33h.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82c.1.63.52 1.15 1.15 1.25z"/>
-                </svg>
-                Settings
-            </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
-        </ul>
-    </div>
+
   <main class="layout">
+    <section class="page-title">
+      <h1>Find Your Healthcare Provider</h1>
+      <p style="color: #6b7280; margin-top: 0.5rem; font-size: 1rem;">Browse through our network of trusted medical cabinets</p>
+    </section>
+    <div class="cabinets-container">
+      <div class="search-filter-bar">
+        <div class="search-box">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search by cabinet name or city..." onkeyup="filterCabinets()">
+        </div>
+        <select class="filter-select" id="cityFilter" onchange="filterCabinets()">
+          <option value="">All Cities</option>
+          <option value="Algiers">Algiers</option>
+          <option value="Oran">Oran</option>
+          <option value="Tamanrasset">Tamanrasset</option>
+        </select>
+        <select class="filter-select" id="ratingFilter" onchange="filterCabinets()">
+          <option value="">All Ratings</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4+ Stars</option>
+          <option value="3">3+ Stars</option>
+        </select>
+      </div>
+      <div id="cab-list" class="cabinets-grid"></div>
+      
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <h3>No cabinets found</h3>
+        <p>Try adjusting your search or filters</p>
+      </div>
+    </div>
 
-<section class="page-title"><h1>All Available Clinics</h1></section>
-<div id="cab-list" class="grid-2"></div>
-<script>
-const data=[{id:1,name:'Central Clinic',city:'Algiers',phone:'+213 21 00 00 00', rating :"★★★★★"},{id:2,name:'North Clinic',city:'Oran',phone:'+213 41 00 00 00',rating :"★★★★"},{id:3,name:'South Clinic',city:'Tamanrasset',phone:'+213 29 00 00 00',rating :"★★★★★"}];
-const list=document.getElementById('cab-list');
-function render(items){
-    list.innerHTML = '';
-    items.forEach(c => {
-        const a = document.createElement('a');
-        a.className = 'card';
-        a.href = 'cabinet_info.php?id=' + c.id;
-        a.style.textDecoration = 'none';
-        a.style.color = 'inherit';
-        a.innerHTML = '<h3>' + c.name + '</h3>' +
-                                    '<p>' + c.city + '</p>' +
-                                    '<p class="note">' + c.phone + '</p>' +
-                                    '<p class="rating">' + (c.rating || '') + '</p>';
-        list.appendChild(a);
-    });
-}
-render(data);
-</script>
-
-      <br>
-      <a href="dashboard_p.php" class="btn btn-secondary">← Dashboard</a>
+    <br>
+    <a href="dashboard_p.php" class="btn btn-secondary">← Dashboard</a>
   </main>
-<footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>MedOffice</h3>
-                <p>Your trusted healthcare management platform</p>
-            </div>
-            <div class="footer-section">
-                <h3>Support</h3>
-                <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Contact Support</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">Book Appointment</a></li>
-                    <li><a href="#">View Records</a></li>
-                    <li><a href="#">Message Doctor</a></li>
-                    <li><a href="#">Account Settings</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
-        </div>
-    </footer>
+
+
   <script>
     function toggleDrawer(){
       const d=document.getElementById('drawer');
-      const o=document.getElementById('drawerOverlay');
       d.classList.toggle('open');
-      o.classList.toggle('active');
     }
 
+    const data = [
+      {
+        id: 1, 
+        name: 'Central Medical Cabinet', 
+        city: 'Algiers', 
+        phone: '+213 21 00 00 00', 
+        rating: 5,
+        ratingDisplay: '★★★★★',
+        ratingValue: '4.8',
+        reviews: 145,
+        doctors: 8,
+        featured: true
+      },
+      {
+        id: 2, 
+        name: 'North Clinic', 
+        city: 'Oran', 
+        phone: '+213 41 00 00 00',
+        rating: 4,
+        ratingDisplay: '★★★★☆',
+        ratingValue: '4.2',
+        reviews: 89,
+        doctors: 5,
+        featured: false
+      },
+      {
+        id: 3, 
+        name: 'South Medical Center', 
+        city: 'Tamanrasset', 
+        phone: '+213 29 00 00 00',
+        rating: 5,
+        ratingDisplay: '★★★★★',
+        ratingValue: '4.9',
+        reviews: 67,
+        doctors: 6,
+        featured: true
+      },
+      {
+        id: 4, 
+        name: 'East Healthcare', 
+        city: 'Algiers', 
+        phone: '+213 21 11 22 33',
+        rating: 4,
+        ratingDisplay: '★★★★☆',
+        ratingValue: '4.5',
+        reviews: 112,
+        doctors: 7,
+        featured: false
+      }
+    ];
+
+    const list = document.getElementById('cab-list');
+    const emptyState = document.getElementById('emptyState');
+    let filteredData = [...data];
+
+    function render(items) {
+      list.innerHTML = '';
+      
+      if (items.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      
+      items.forEach(c => {
+        const card = document.createElement('a');
+        card.className = 'cabinet-card';
+        card.href = 'cabinet_profile.php?id=' + c.id;
+        
+        card.innerHTML = `
+          <div class="cabinet-image">
+            ⚕
+            ${c.featured ? '<span class="featured-badge">Featured</span>' : ''}
+          </div>
+          <div class="cabinet-content">
+            <div class="cabinet-header-row">
+              <h3>${c.name}</h3>
+              <div class="cabinet-rating">
+                <span class="rating-stars">${c.ratingDisplay}</span>
+                <span class="rating-value">${c.ratingValue}</span>
+              </div>
+            </div>
+            
+            <div class="cabinet-location">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              ${c.city}
+            </div>
+            
+            <div class="cabinet-info-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              ${c.phone}
+            </div>
+            
+            <div class="cabinet-info-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              ${c.reviews} reviews
+            </div>
+            
+            <div class="cabinet-footer">
+              <div class="doctors-count">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="8.5" cy="7" r="4"></circle>
+                  <polyline points="17 11 19 13 23 9"></polyline>
+                </svg>
+                ${c.doctors} Doctors
+              </div>
+              <button class="view-profile-btn" onclick="event.preventDefault(); window.location.href='cabinet_profile.php?id=${c.id}'">View Profile</button>
+            </div>
+          </div>
+        `;
+        
+        list.appendChild(card);
+      });
+    }
+
+    function filterCabinets() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const cityFilter = document.getElementById('cityFilter').value;
+      const ratingFilter = parseInt(document.getElementById('ratingFilter').value) || 0;
+      
+      filteredData = data.filter(cabinet => {
+        const matchesSearch = cabinet.name.toLowerCase().includes(searchTerm) || 
+                             cabinet.city.toLowerCase().includes(searchTerm);
+        const matchesCity = !cityFilter || cabinet.city === cityFilter;
+        const matchesRating = !ratingFilter || cabinet.rating >= ratingFilter;
+        
+        return matchesSearch && matchesCity && matchesRating;
+      });
+      
+      render(filteredData);
+    }
+
+    render(data);
   </script>
 </body>
 </html>
