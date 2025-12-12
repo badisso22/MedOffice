@@ -1,0 +1,234 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+
+:root {
+  --primary: #06b6d4;
+  --primary-dark: #0891b2;
+  --secondary: #0f172a;
+  --accent: #8b5cf6;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --bg: #ffffff;
+  --bg-secondary: #f8fafc;
+  --border: #e2e8f0;
+  --success: #4caf50;
+  --warning: #ffd700;
+  --danger: #f44336;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.container,
+.main-content {
+  background: var(--bg);
+  border-radius: 16px;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--secondary);
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: 10px;
+  color: var(--text);
+  gap: 2rem;
+}
+
+.date-selector,
+.view-options {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-selector h2 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--primary);
+}
+
+.nav-btn,
+.view-option,
+.back-btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.nav-btn:hover,
+.view-option.active,
+.back-btn:hover {
+  background: var(--primary-dark);
+  color: #fff;
+}
+
+.date-picker {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--bg-secondary);
+  color: var(--text);
+}
+
+.calendar {
+  background: var(--bg);
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: 100px repeat(7, 1fr);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.day-header,
+.time-header {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  border-right: 1px solid var(--border);
+  color: var(--text);
+}
+.time-row {
+  display: grid;
+  grid-template-columns: 100px repeat(7, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+.time-label {
+  padding: 1rem;
+  text-align: right;
+  color: var(--text-light);
+  border-right: 1px solid var(--border);
+  font-size: 1rem;
+}
+
+.appointment-slot {
+  min-height: 60px;
+  padding: 0.5rem;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+
+.appointment {
+  background: #e3f2fd;
+  border-left: 3px solid var(--primary);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.appointment.accepted {
+  background: #e8f5e9;
+  border-left: 3px solid var(--success);
+}
+.appointment.pending {
+  background: #fff8e1;
+  border-left: 3px solid var(--warning);
+}
+.appointment.cancelled {
+  background: #ffebee;
+  border-left: 3px solid var(--danger);
+}
+
+.patient-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.appointment-type {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.legend {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: 10px;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.legend-color.accepted {
+  background: var(--success);
+}
+.legend-color.pending {
+  background: var(--warning);
+}
+.legend-color.cancelled {
+  background: var(--danger);
+}
+
+.message {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+}
+.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid var(--success);
+}
+.error {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid var(--danger);
+}
+
+@media (max-width: 900px) {
+  .calendar-header,
+  .time-row {
+    grid-template-columns: 60px repeat(7, 1fr);
+  }
+  .container {
+    padding: 1rem;
+  }
+}

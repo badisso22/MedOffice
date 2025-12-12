@@ -1,0 +1,95 @@
+input.error,
+select.error,
+textarea.error {
+  border-color: #e74c3c !important;
+  background-color: #fdf2f2 !important;
+}
+
+input.success,
+select.success,
+textarea.success {
+  border-color: #2ecc71 !important;
+  background-color: #f2fdf2 !important;
+}
+
+input.error:focus,
+select.error:focus,
+textarea.error:focus {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1) !important;
+}
+
+input.success:focus,
+select.success:focus,
+textarea.success:focus {
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1) !important;
+}
+
+.error-message {
+  display: block;
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.validation-message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+.validation-message svg {
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.validation-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.validation-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+input[type="checkbox"].error,
+input[type="radio"].error {
+  border-color: inherit !important;
+  background-color: transparent !important;
+  box-shadow: 0 0 0 2px #e74c3c !important;
+}
+
+input[type="checkbox"].success,
+input[type="radio"].success {
+  border-color: inherit !important;
+  background-color: transparent !important;
+  box-shadow: 0 0 0 2px #2ecc71 !important;
+}

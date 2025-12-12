@@ -1,0 +1,41 @@
+.avatar-section {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.avatar-display {
+    width: 100px;
+    height: 100px;
+    background: var(--gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.avatar-upload {
+    flex: 1;
+}
+
+.avatar-upload .form-group {
+    margin-bottom: 0;
+}
+
+.form-group input[type="file"] {
+    padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .avatar-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

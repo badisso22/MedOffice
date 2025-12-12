@@ -1,0 +1,205 @@
+.success-container {
+      background: var(--bg-white);
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      max-width: 600px;
+      margin: 4rem auto;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      border: 3px solid #16a34a;
+      animation: scaleIn 0.5s ease-out;
+    }
+
+    @keyframes scaleIn {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .success-icon svg {
+      width: 48px;
+      height: 48px;
+      stroke: #16a34a;
+      fill: none;
+      stroke-width: 3;
+    }
+
+    .success-container h1 {
+      font-size: 2rem;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .success-message {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .archived-patient-info {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      border-left: 4px solid #16a34a;
+    }
+
+    .archived-patient-info p {
+      margin: 0.5rem 0;
+      color: var(--text-medium);
+      font-size: 1rem;
+    }
+
+    .archived-patient-info strong {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .action-buttons-success {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      border: 1px solid rgba(8, 145, 178, 0.2);
+    }
+
+    .info-box p {
+      margin: 0;
+      color: var(--text-medium);
+      font-size: 0.95rem;
+    }
+
+
+     .confirmation-container {
+      background: var(--bg-white);
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      max-width: 600px;
+      margin: 4rem auto;
+      text-align: center;
+    }
+
+    .warning-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      border: 3px solid #f59e0b;
+    }
+
+    .warning-icon svg {
+      width: 48px;
+      height: 48px;
+      stroke: #d97706;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .confirmation-container h1 {
+      font-size: 2rem;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .patient-info {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+      border-left: 4px solid var(--primary);
+    }
+
+    .patient-info p {
+      margin: 0.5rem 0;
+      color: var(--text-medium);
+      font-size: 1rem;
+    }
+
+    .patient-info strong {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .confirmation-message {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .action-buttons-confirm {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    }
+
+    .btn-cancel {
+      background: var(--bg-white);
+      color: var(--text-medium);
+      border: 2px solid var(--border);
+    }
+
+    .btn-cancel:hover {
+      background: var(--bg-secondary);
+      border-color: var(--text-medium);
+    }
