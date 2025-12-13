@@ -14,7 +14,7 @@ function loadEnv($filePath) {
         }
     }
 }
-loadEnv(__DIR__ . '/.env');
+loadEnv('../.env');
 $servername = getenv('DB_HOST');
 $username = getenv('DB_USER');
 $password = getenv('DB_PASS');
