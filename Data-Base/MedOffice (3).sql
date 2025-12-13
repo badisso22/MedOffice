@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 01, 2025 at 04:10 PM
+-- Generation Time: Dec 13, 2025 at 03:17 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -345,6 +345,30 @@ CREATE TABLE `PatientConsultationInfo` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `PatientFeedback`
+--
+
+CREATE TABLE `PatientFeedback` (
+  `id` int(11) NOT NULL,
+  `patient_id` int(11) NOT NULL,
+  `cabinet_id` int(11) NOT NULL,
+  `appointment_id` int(11) DEFAULT NULL,
+  `medical_assistant_rating` tinyint(4) DEFAULT NULL,
+  `doctor_competence_rating` tinyint(4) DEFAULT NULL,
+  `appointment_punctuality_rating` tinyint(4) DEFAULT NULL,
+  `cleanliness_rating` tinyint(4) DEFAULT NULL,
+  `equipment_quality_rating` tinyint(4) DEFAULT NULL,
+  `parking_availability_rating` tinyint(4) DEFAULT NULL,
+  `appointment_method` varchar(100) DEFAULT NULL,
+  `feedback_title` varchar(255) DEFAULT NULL,
+  `feedback_message` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `PatientInsurance`
 --
 
@@ -375,8 +399,7 @@ CREATE TABLE `PatientTable` (
   `address` varchar(70) NOT NULL,
   `phonenumber` int(10) NOT NULL,
   `dateofregistration` timestamp NOT NULL DEFAULT current_timestamp(),
-  `archived` tinyint(1) NOT NULL DEFAULT 0,
-  `cabinetID` int(11) NOT NULL
+  `archived` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -472,6 +495,13 @@ CREATE TABLE `UserProfile` (
   `createdAt` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `UserProfile`
+--
+
+INSERT INTO `UserProfile` (`userProfileID`, `userID`, `firstName`, `lastName`, `dateOfBirth`, `gender`, `address`, `phoneNumber`, `createdAt`) VALUES
+(1, 5, 'anis', 'ferrah', '2005-09-04', 'male', 'staoueli', '0549805432', '2025-12-11 20:02:47');
+
 -- --------------------------------------------------------
 
 --
@@ -480,7 +510,6 @@ CREATE TABLE `UserProfile` (
 
 CREATE TABLE `Users` (
   `userID` int(11) NOT NULL,
-  `cabinetID` int(11) NOT NULL,
   `roleID` int(11) DEFAULT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
@@ -489,6 +518,15 @@ CREATE TABLE `Users` (
   `last_login` datetime DEFAULT NULL,
   `account_status` enum('active','suspended','deleted') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `Users`
+--
+
+INSERT INTO `Users` (`userID`, `roleID`, `username`, `email`, `password`, `profile_picture`, `last_login`, `account_status`) VALUES
+(2, 5, 'badisso', 'mehdi.moussous@gmail.com', '$2y$12$JUd9ibCE4Anz3b67dG2wNuuIfUfLt0reoet308/J.PoDiUaSjMROa', NULL, NULL, 'active'),
+(3, 5, 'badiso', 'mehdi.m@gmail.com', '$2y$12$ZOxzucIUH.eR4mX0cdOsdOYMTiKRsenXTGSz9IbjAWlHAGiy2xo6S', NULL, NULL, 'active'),
+(5, 5, 'anisf', 'anis.ferrah@gmail.com', '$2y$12$yGKWZtNzIMGzml47DSY9EubhFPseZ1LxUCfx7td/u1e7WFF7F7lAC', NULL, NULL, 'active');
 
 --
 -- Indexes for dumped tables
@@ -642,6 +680,14 @@ ALTER TABLE `PatientConsultationInfo`
   ADD KEY `idx_consultations_patient_date` (`PatientID`,`consultationdate`);
 
 --
+-- Indexes for table `PatientFeedback`
+--
+ALTER TABLE `PatientFeedback`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_pf_patient` (`patient_id`),
+  ADD KEY `fk_pf_cabinet` (`cabinet_id`);
+
+--
 -- Indexes for table `PatientInsurance`
 --
 ALTER TABLE `PatientInsurance`
@@ -654,8 +700,7 @@ ALTER TABLE `PatientInsurance`
 --
 ALTER TABLE `PatientTable`
   ADD PRIMARY KEY (`patientID`),
-  ADD KEY `userID` (`userID`),
-  ADD KEY `cabinetID` (`cabinetID`);
+  ADD KEY `userID` (`userID`);
 
 --
 -- Indexes for table `Payments`
@@ -706,8 +751,7 @@ ALTER TABLE `Users`
   ADD PRIMARY KEY (`userID`),
   ADD UNIQUE KEY `username` (`username`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `roleID` (`roleID`),
-  ADD KEY `idx_users_cabinet_role` (`cabinetID`,`roleID`);
+  ADD KEY `idx_users_cabinet_role` (`roleID`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -822,6 +866,12 @@ ALTER TABLE `PatientConsultationInfo`
   MODIFY `consultationID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `PatientFeedback`
+--
+ALTER TABLE `PatientFeedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `PatientInsurance`
 --
 ALTER TABLE `PatientInsurance`
@@ -861,13 +911,13 @@ ALTER TABLE `SubscriptionPlan`
 -- AUTO_INCREMENT for table `UserProfile`
 --
 ALTER TABLE `UserProfile`
-  MODIFY `userProfileID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `userProfileID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -977,6 +1027,13 @@ ALTER TABLE `PatientConsultationInfo`
   ADD CONSTRAINT `patientconsultationinfo_ibfk_1` FOREIGN KEY (`PatientID`) REFERENCES `PatientTable` (`patientID`);
 
 --
+-- Constraints for table `PatientFeedback`
+--
+ALTER TABLE `PatientFeedback`
+  ADD CONSTRAINT `fk_pf_cabinet` FOREIGN KEY (`cabinet_id`) REFERENCES `CabinetInfo` (`cabinetID`),
+  ADD CONSTRAINT `fk_pf_patient` FOREIGN KEY (`patient_id`) REFERENCES `Users` (`userID`);
+
+--
 -- Constraints for table `PatientInsurance`
 --
 ALTER TABLE `PatientInsurance`
@@ -986,8 +1043,7 @@ ALTER TABLE `PatientInsurance`
 -- Constraints for table `PatientTable`
 --
 ALTER TABLE `PatientTable`
-  ADD CONSTRAINT `patienttable_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `Users` (`userID`),
-  ADD CONSTRAINT `patienttable_ibfk_2` FOREIGN KEY (`cabinetID`) REFERENCES `CabinetInfo` (`cabinetID`);
+  ADD CONSTRAINT `patienttable_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `Users` (`userID`);
 
 --
 -- Constraints for table `Payments`
@@ -1014,7 +1070,6 @@ ALTER TABLE `UserProfile`
 -- Constraints for table `Users`
 --
 ALTER TABLE `Users`
-  ADD CONSTRAINT `fk_users_cabinetID` FOREIGN KEY (`cabinetID`) REFERENCES `CabinetInfo` (`cabinetID`),
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`roleID`) REFERENCES `Roles` (`roleID`);
 COMMIT;
 
