@@ -1,3 +1,79 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require '../config/config.php';
+session_start();
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $conn->real_escape_string($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $remember = isset($_POST['remember']);
+    if (empty($email) || empty($password)) {
+        $error = "Email and password are required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email format.";
+    } else {
+        $query = $conn->prepare(
+            "SELECT u.userID, u.password, u.roleID, r.roleName 
+             FROM Users u 
+             LEFT JOIN Roles r ON u.roleID = r.roleID 
+             WHERE u.email = ?"
+        );
+        $query->bind_param("s", $email);
+        $query->execute();
+        $result = $query->get_result();
+        
+        if ($result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['userID'] = $user['userID'];
+                $_SESSION['email'] = $email;
+                $_SESSION['roleID'] = $user['roleID'];
+                $_SESSION['roleName'] = $user['roleName'];
+                $_SESSION['loggedIn'] = true;
+                $updateLogin = $conn->prepare("UPDATE Users SET last_login = NOW() WHERE userID = ?");
+                $updateLogin->bind_param("i", $user['userID']);
+                $updateLogin->execute();
+                $updateLogin->close();
+                if ($remember) {
+                    setcookie('userEmail', $email, time() + (30 * 24 * 60 * 60), '/');
+                    setcookie('remember', '1', time() + (30 * 24 * 60 * 60), '/');
+                }
+                switch ($user['roleID']) {
+                    case 1: 
+                        header("Location: ../SuperAdmin/dashboard_superadmin.php");
+                        break;
+                    case 2: 
+                        header("Location: ../AdminDoctor/dashboard_ad.php");
+                        break;
+                    case 3: 
+                        header("Location: ../Doctor/dashboard_d.php");
+                        break;
+                    case 4: 
+                        header("Location: ../Assistant/dashboard_a.php");
+                        break;
+                    case 5: 
+                        header("Location: ../Patient/dashboard_p.php");
+                        break;
+                    default:
+                        header("Location: ../index.html");
+                }
+                exit();
+            } else {
+                $error = "Invalid email or password.";
+            }
+        } else {
+            $error = "Invalid email or password.";
+        }
+        
+        $query->close();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +81,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - MedOffice SaaS</title>
     <link rel="stylesheet" href="../CSS/login.css">
-    <link rel="stylesheet" href="../CSS/form_validation.css">
+    <link rel="stylesheet" href="../CSS/formvalidation.css">
 </head>
 <body>
     <div class="login-container">
@@ -13,13 +89,19 @@
             <div class="login-header">
                 <div class="logo">
                     <div class="logo-icon">⚕</div>
-                    MedOffice
+                    <span>MedOffice</span>
                 </div>
                 <h2>Welcome Back</h2>
                 <p>Please log in to access your MedOffice account</p>
             </div>
 
-            <form class="login-form">
+            <?php if ($error): ?>
+                <div class="alert alert-danger">
+                    <strong>Login Failed!</strong> <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+
+            <form class="login-form" method="POST" action="login.php">
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input 
@@ -27,24 +109,31 @@
                         id="email" 
                         name="email" 
                         placeholder="doctor@clinic.com" 
+                        value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
                         required
                     >
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
-                        placeholder="Enter your password" 
-                        required
-                    >
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility">
+                            <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg class="eye-slash-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-options">
                     <label class="checkbox-label">
-                        <input type="checkbox" name="remember">
+                        <input type="checkbox" name="remember" value="1">
                         <span>Remember me</span>
                     </label>
                     <a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
@@ -59,6 +148,11 @@
             </div>
         </div>
     </div>
-    <script src="../js/form_validation.js"></script>
+    <script>
+        function togglePassword() {
+            const pass = document.getElementById('password');
+            pass.type = pass.type === 'password' ? 'text' : 'password';
+        }
+    </script>
 </body>
 </html>
