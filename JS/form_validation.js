@@ -1,16 +1,16 @@
 ;(() => {
   const patterns = {
     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    phone: /^\d{10}$/, 
+    phone: /^\d{10}$/,
     name: /^[a-zA-Z\s\-']+$/,
     username: /^[a-zA-Z0-9_]+$/,
-    password: /.{6,}/, 
+    password: /.{8,}/,
   }
 
   const messages = {
     required: "This field is required",
     email: "Please enter a valid email address",
-    phone: "Please enter a valid phone number", 
+    phone: "Please enter a valid phone number",
     name: "Please enter a valid name",
     username: "Username can only contain letters, numbers, and underscores",
     password: "Password must be at least 6 characters",
@@ -77,19 +77,31 @@
         break
 
       case "password":
-        isValid = patterns.password.test(value)
-        errorMessage = messages.password
+        if (field.classList.contains("login-password")) {
+          isValid = true
+          errorMessage = ""
+        } else {
+          isValid = patterns.password.test(value)
+          errorMessage = messages.password
+        }
         break
 
       case "text":
         const fieldName = (field.name || field.id || "").toLowerCase()
-        if (fieldName.includes("name") || fieldName.includes("firstname") || fieldName.includes("lastname")) {
+
+        if (
+          fieldName.includes("name") ||
+          fieldName.includes("firstname") ||
+          fieldName.includes("lastname")
+        ) {
           isValid = patterns.name.test(value)
           errorMessage = messages.name
         } else if (fieldName.includes("username")) {
           isValid = patterns.username.test(value)
           errorMessage = messages.username
         }
+        break
+      default:
         break
     }
     if (isValid) {
@@ -112,17 +124,21 @@
 
     return isValid
   }
+
   function addError(field, message) {
     field.classList.remove("success")
     field.classList.add("error")
+
     let errorMsg = field.parentElement.querySelector(".error-message")
     if (!errorMsg) {
       errorMsg = document.createElement("span")
       errorMsg.className = "error-message"
       field.parentElement.appendChild(errorMsg)
     }
+
     errorMsg.textContent = message
   }
+
   function addSuccess(field) {
     field.classList.remove("error")
     const errorMsg = field.parentElement.querySelector(".error-message")
@@ -144,8 +160,14 @@
       field.dataset.originalRequired = "true"
       const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-          if (mutation.type === "attributes" && mutation.attributeName === "required") {
-            if (field.dataset.originalRequired === "true" && !field.hasAttribute("required")) {
+          if (
+            mutation.type === "attributes" &&
+            mutation.attributeName === "required"
+          ) {
+            if (
+              field.dataset.originalRequired === "true" &&
+              !field.hasAttribute("required")
+            ) {
               field.setAttribute("required", "true")
             }
           }
@@ -161,8 +183,8 @@
 
     const message = document.createElement("div")
     message.className = "validation-message validation-success"
-    message.innerHTML =
-      '<svg viewBox="0 0 24 24" width="20" height="20"><polyline points="20 6 9 17 4 12"></polyline></svg> Form validated successfully!'
+    message.innerHTML = "Form validated successfully!"
+
     form.insertBefore(message, form.firstChild)
     setTimeout(() => message.remove(), 3000)
   }
@@ -172,8 +194,7 @@
 
     const message = document.createElement("div")
     message.className = "validation-message validation-error"
-    message.innerHTML =
-      '<svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Please correct the errors below.'
+    message.innerHTML = "Please correct the errors below."
 
     form.insertBefore(message, form.firstChild)
   }
