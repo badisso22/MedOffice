@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - MedOffice SaaS</title>
     <link rel="stylesheet" href="../CSS/login.css">
-    <link rel="stylesheet" href="../CSS/formvalidation.css">
+    <link rel="stylesheet" href="../CSS/login_modals.css">
 </head>
 <body>
     <div class="login-container">
@@ -96,9 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <?php if ($error): ?>
-                <div class="alert alert-danger">
-                    <strong>Login Failed!</strong> <?php echo htmlspecialchars($error); ?>
-                </div>
+                <div id="errorData" style="display: none;" data-error="<?php echo htmlspecialchars($error); ?>"></div>
             <?php endif; ?>
 
             <form class="login-form" method="POST" action="login.php">
@@ -117,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-container">
-                        <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                        <input type="password" id="password" name="password" class="login-password" placeholder="Create a strong password" required>
                         <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility">
                             <svg class="eye-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -148,11 +146,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+    <div id="errorModal" class="modal-overlay">
+        <div class="modal-content error-modal">
+            <div class="modal-icon error-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+            </div>
+            <h3>Login Failed</h3>
+            <p id="errorMessage"></p>
+            <button class="modal-btn" onclick="closeErrorModal()">Try Again</button>
+        </div>
+    </div>
+
+    <script src="../JS/form_validation.js"></script>
     <script>
         function togglePassword() {
             const pass = document.getElementById('password');
-            pass.type = pass.type === 'password' ? 'text' : 'password';
+            const eyeIcon = document.querySelector('.eye-icon');
+            const eyeSlashIcon = document.querySelector('.eye-slash-icon');
+            
+            if (pass.type === 'password') {
+                pass.type = 'text';
+                eyeIcon.style.display = 'none';
+                eyeSlashIcon.style.display = 'block';
+            } else {
+                pass.type = 'password';
+                eyeIcon.style.display = 'block';
+                eyeSlashIcon.style.display = 'none';
+            }
         }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const errorData = document.getElementById('errorData');
+            if (errorData) {
+                const errorMessage = errorData.getAttribute('data-error');
+                if (errorMessage) {
+                    showErrorModal(errorMessage);
+                }
+            }
+        });
+
+        function showErrorModal(message) {
+            const modal = document.getElementById('errorModal');
+            const messageEl = document.getElementById('errorMessage');
+            messageEl.textContent = message;
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 100);
+        }
+
+        function closeErrorModal() {
+            const modal = document.getElementById('errorModal');
+            modal.classList.remove('active');
+        }
+
+        document.getElementById('errorModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeErrorModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeErrorModal();
+            }
+        });
     </script>
 </body>
 </html>
