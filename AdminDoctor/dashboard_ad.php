@@ -1,3 +1,39 @@
+<?php
+session_start();
+require '../config/config.php';
+
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || $_SESSION['roleID'] != 2) {
+    header("Location: ../login-forms/login.php");
+    exit();
+}
+$userID = $_SESSION['userID'];
+$userEmail = $_SESSION['email'];
+$profileQuery = $conn->prepare(
+    "SELECT u.username, up.firstName, up.lastName, up.dateOfBirth, up.gender, up.address, up.phoneNumber 
+     FROM Users u 
+     LEFT JOIN UserProfile up ON u.userID = up.userID 
+     WHERE u.userID = ?"
+);
+$profileQuery->bind_param("i", $userID);
+$profileQuery->execute();
+$profileResult = $profileQuery->get_result();
+$userProfile = $profileResult->fetch_assoc();
+$fullname= trim($userProfile['lastName'] . ' ' . $userProfile['firstName']);
+$profileQuery->close();
+
+$firstName = $userProfile['firstName'] ?? 'Patient';
+$lastName = $userProfile['lastName'] ?? '';
+$fullName = trim("$firstName $lastName");
+$messagesQuery = $conn->prepare(
+    "SELECT COUNT(*) as unread FROM Messages WHERE recipientID = ? AND isRead = 0"
+);
+$messagesQuery->bind_param("i", $userID);
+$messagesQuery->execute();
+$messagesResult = $messagesQuery->get_result();
+$messagesRow = $messagesResult->fetch_assoc();
+$unreadMessages = $messagesRow['unread'] ?? 0;
+$messagesQuery->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +56,7 @@
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Dr. John Doe</span>
+                <span class="user-name">Dr. <?= htmlspecialchars($fullname ?? 'User') ?></span>
                 <div class="top-icons">
                     <a href="messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -107,7 +143,7 @@
     <main class="dashboard-main">
         <section class="dashboard-hero">
             <div class="hero-badge">Doctor Portal</div>
-            <h1>Welcome back, <span class="highlight">Dr. John Doe</span></h1>
+            <h1>Welcome back, <span class="highlight">Dr.<?= htmlspecialchars($fullname ?? 'User') ?></span></h1>
             <p>Manage your patients, appointments, and medical records from your personalized dashboard</p>
         </section>
         <section class="dashboard-content">
