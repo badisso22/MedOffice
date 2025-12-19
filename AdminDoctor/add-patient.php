@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +13,7 @@
     <link rel="stylesheet" href="../CSS/form_validation.css">
 </head>
 <body>
-     <nav>
+  <nav>
     <div class="nav-container">
       <button class="drawer-toggle" onclick="toggleDrawer()">
         <span></span>
@@ -23,7 +26,7 @@
       </a>
       <div class="nav-cta">
         <span class="user-name">Dr. John Doe</span>
-          <div class="top-icons">
+      <div class="top-icons">
             <a href="messages.php" class="icon-btn" title="Chat">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -36,7 +39,7 @@
                 </svg>
                 <span class="notification-badge">3</span>
             </a>
-          </div>
+        </div>
       </div>
     </div>
   </nav>
@@ -101,19 +104,11 @@
         Settings
       </a></li>
     </ul>
-    <button class="drawer-logout" onclick="window.location.href='logout.php'">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; margin-right: 0.5rem; vertical-align: middle;">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-        <polyline points="16 17 21 12 16 7"></polyline>
-        <line x1="21" y1="12" x2="9" y2="12"></line>
-      </svg>
-      Logout
-    </button>
   </div>
 
   <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 
-    <main class="dashboard-main">
+  <main class="dashboard-main">
         <section class="form-hero">
             <div class="hero-badge">Patient Registration</div>
             <h1>Add New <span class="highlight">Patient</span></h1>
@@ -121,7 +116,9 @@
         </section>
 
         <section class="form-container">
-            <form method="post" class="modern-form">
+            <div id="patient-result"></div>
+
+            <form id="patient-form" class="modern-form">
                 <div class="form-section">
                     <div class="form-section-header">
                         <div class="section-icon">
@@ -132,7 +129,7 @@
                         </div>
                         <h2>Personal Information</h2>
                     </div>
-                    
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="firstName">First Name</label>
@@ -180,7 +177,7 @@
                         </div>
                         <h2>Login Credentials</h2>
                     </div>
-                    
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="username">Username</label>
@@ -223,6 +220,7 @@
             </form>
         </section>
     </main>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -244,7 +242,7 @@
         </div>
     </footer>
     <script src="../JS/form_validation.js"></script>
-
+    <script src="../ajax/add-patient.js"></script>
     <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
