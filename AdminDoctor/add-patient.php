@@ -11,6 +11,7 @@ session_start();
     <link rel="stylesheet" href="../CSS/dashboard.css">
     <link rel="stylesheet" href="../CSS/forms.css">
     <link rel="stylesheet" href="../CSS/form_validation.css">
+    <link rel="stylesheet" href="../CSS/modals.css">
 </head>
 <body>
   <nav>
@@ -241,6 +242,18 @@ session_start();
             <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
         </div>
     </footer>
+
+    <div id="addPatientSuccessModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h2 class="modal-title">Patient Successfully Added</h2>
+        </div>
+    </div>
+
     <script src="../JS/form_validation.js"></script>
     <script src="../ajax/add-patient.js"></script>
     <script>
