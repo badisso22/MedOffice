@@ -1,34 +1,53 @@
 <?php
 session_start();
 
+$fullname = isset($_SESSION['full_name']) ? $_SESSION['full_name'] : 'User';
+
 $patientID = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($patientID <= 0) {
     die('Invalid patient ID');
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Patient Details - MedOffice</title>
+  <link rel="stylesheet" href="../CSS/general.css" />
   <link rel="stylesheet" href="../CSS/view_patient.css" />
 </head>
 <body>
   <nav>
-    <div class="nav-container">
-      <a href="dashboard_d.php" class="logo">
-        <div class="logo-icon">⚕</div>
-        MedOffice
-      </a>
-      <div class="nav-cta">
-        <span class="user-name">Dr. John Doe</span>
-        <a href="logout.php" class="btn btn-secondary">Logout</a>
-      </div>
-    </div>
-  </nav>
-
+        <div class="nav-container">
+            <button class="drawer-toggle" onclick="toggleDrawer()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="#" class="logo">
+                <div class="logo-icon">⚕</div>
+                MedOffice
+            </a>
+            <div class="nav-cta">
+                <span class="user-name">Dr. <?= htmlspecialchars($fullname ?? 'User') ?></span>
+                <div class="top-icons">
+                    <a href="messages.php" class="icon-btn" title="Chat">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </a>
+                    <a href="notifications.php" class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
   <div class="container">
     <div class="patient-top-row">
       <div class="header-section">
