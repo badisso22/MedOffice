@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +25,7 @@ session_start();
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Dr. John Doe</span>
+                <span class="user-name">Dr.<?= htmlspecialchars($fullname ?? 'User') ?></span>
                 <div class="top-icons">
                     <a href="messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -94,7 +95,6 @@ session_start();
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
