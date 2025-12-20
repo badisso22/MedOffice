@@ -1,10 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
-require '../config/config.php'; 
+require_once '../config/config.php'; 
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -37,19 +33,21 @@ try {
     $username  = trim($input['username'] ?? '');
     $password  = $input['pass'] ?? '';
 
-    // Validation
-    if ($firstName === '')  { $response['errors'][] = 'First name is required'; }
-    if ($lastName === '')   { $response['errors'][] = 'Last name is required'; }
-    if ($dob === '')        { $response['errors'][] = 'Date of birth is required'; }
-    if ($gender === '')     { $response['errors'][] = 'Gender is required'; }
-    if ($address === '')    { $response['errors'][] = 'Address is required'; }
-    if ($phone === '')      { $response['errors'][] = 'Phone is required'; }
-    if ($email === '')      { $response['errors'][] = 'Email is required'; }
-    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if ($firstName === '') $response['errors'][] = 'First name is required';
+    if ($lastName === '')  $response['errors'][] = 'Last name is required';
+    if ($dob === '')       $response['errors'][] = 'Date of birth is required';
+    if ($gender === '')    $response['errors'][] = 'Gender is required';
+    if ($address === '')   $response['errors'][] = 'Address is required';
+    if ($phone === '')     $response['errors'][] = 'Phone is required';
+
+    if ($email === '') {
+        $response['errors'][] = 'Email is required';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $response['errors'][] = 'Invalid email format';
     }
-    if ($username === '')   { $response['errors'][] = 'Username is required'; }
-    if ($password === '')   { $response['errors'][] = 'Password is required'; }
+
+    if ($username === '')  $response['errors'][] = 'Username is required';
+    if ($password === '')  $response['errors'][] = 'Password is required';
 
     if (!empty($response['errors'])) {
         http_response_code(400);
@@ -61,15 +59,16 @@ try {
     $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 1;
 
     if (!$conn instanceof mysqli) {
-        throw new Exception("Database connection not initialized.");
+        throw new Exception('Database connection not initialized.');
     }
 
     $conn->begin_transaction();
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM Users WHERE username = ?");
+
+    $stmt = $conn->prepare('SELECT COUNT(*) FROM Users WHERE username = ?');
     if (!$stmt) {
-        throw new Exception("Prepare failed (check username): " . $conn->error);
+        throw new Exception('Prepare failed (check username): ' . $conn->error);
     }
-    $stmt->bind_param("s", $username);
+    $stmt->bind_param('s', $username);
     $stmt->execute();
     $stmt->bind_result($count);
     $stmt->fetch();
@@ -84,42 +83,42 @@ try {
     }
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $roleID = 5;
+    $roleID = 5; 
 
-    $stmt = $conn->prepare("INSERT INTO Users (username, email, password, roleID) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare('INSERT INTO Users (username, email, password, roleID) VALUES (?, ?, ?, ?)');
     if (!$stmt) {
-        throw new Exception("Prepare failed (insert user): " . $conn->error);
+        throw new Exception('Prepare failed (insert user): ' . $conn->error);
     }
-    $stmt->bind_param("sssi", $username, $email, $hashedPassword, $roleID);
+    $stmt->bind_param('sssi', $username, $email, $hashedPassword, $roleID);
     if (!$stmt->execute()) {
-        throw new Exception("Error creating user: " . $stmt->error);
+        throw new Exception('Error creating user: ' . $stmt->error);
     }
     $userId = $conn->insert_id;
     $stmt->close();
 
     $stmt = $conn->prepare(
-        "INSERT INTO UserProfile (userID, firstName, lastName, dateOfBirth, gender, address, phoneNumber)
-         VALUES (?, ?, ?, ?, ?, ?, ?)"
+        'INSERT INTO UserProfile (userID, firstName, lastName, dateOfBirth, gender, address, phoneNumber)
+         VALUES (?, ?, ?, ?, ?, ?, ?)'
     );
     if (!$stmt) {
-        throw new Exception("Prepare failed (insert user profile): " . $conn->error);
+        throw new Exception('Prepare failed (insert user profile): ' . $conn->error);
     }
-    $stmt->bind_param("issssss", $userId, $firstName, $lastName, $dob, $gender, $address, $phone);
+    $stmt->bind_param('issssss', $userId, $firstName, $lastName, $dob, $gender, $address, $phone);
     if (!$stmt->execute()) {
-        throw new Exception("Error creating user profile: " . $stmt->error);
+        throw new Exception('Error creating user profile: ' . $stmt->error);
     }
     $stmt->close();
 
     $stmt = $conn->prepare(
-        "INSERT INTO PatientTable (userID, firstname, lastname, dateofbirth, gender, address, phonenumber, cabinetID)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        'INSERT INTO PatientTable (userID, firstname, lastname, dateofbirth, gender, address, phonenumber, cabinetID)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
     );
     if (!$stmt) {
-        throw new Exception("Prepare failed (insert patient table): " . $conn->error);
+        throw new Exception('Prepare failed (insert patient table): ' . $conn->error);
     }
-    $stmt->bind_param("issssssi", $userId, $firstName, $lastName, $dob, $gender, $address, $phone, $cabinetID);
+    $stmt->bind_param('issssssi', $userId, $firstName, $lastName, $dob, $gender, $address, $phone, $cabinetID);
     if (!$stmt->execute()) {
-        throw new Exception("Error creating patient record: " . $stmt->error);
+        throw new Exception('Error creating patient record: ' . $stmt->error);
     }
     $stmt->close();
 
@@ -135,6 +134,7 @@ try {
         'createdAt' => date('Y-m-d H:i:s'),
     ];
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    exit;
 
 } catch (Exception $e) {
     if (isset($conn) && $conn instanceof mysqli && $conn->ping()) {
@@ -145,4 +145,5 @@ try {
     $response['message'] = 'Server error';
     $response['errors'][] = $e->getMessage();
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
+    exit;
 }

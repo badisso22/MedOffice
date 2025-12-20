@@ -11,7 +11,6 @@ session_start();
     <link rel="stylesheet" href="../CSS/dashboard.css">
     <link rel="stylesheet" href="../CSS/forms.css">
     <link rel="stylesheet" href="../CSS/form_validation.css">
-    <link rel="stylesheet" href="../CSS/modals.css">
 </head>
 <body>
   <nav>
@@ -27,7 +26,7 @@ session_start();
       </a>
       <div class="nav-cta">
         <span class="user-name">Dr. John Doe</span>
-      <div class="top-icons">
+        <div class="top-icons">
             <a href="messages.php" class="icon-btn" title="Chat">
                 <svg viewBox="0 0 24 24">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -53,7 +52,7 @@ session_start();
       <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
     </div>
     <ul class="drawer-menu">
-      <li><a href="dashboard_d.php">
+       <li><a href="dashboard_d.php">
         <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
         Dashboard
       </a></li>
@@ -117,9 +116,17 @@ session_start();
         </section>
 
         <section class="form-container">
+            <div id="patient-success-modal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <h2 id="patient-success-text">Patient Successfully Added</h2>
+                    <p>The patient has been created.</p>
+                    <button id="patient-modal-ok" class="btn btn-primary">OK</button>
+                    <a href="patients-list.php" class="btn btn-secondary">Go to Patients List</a>
+                </div>
+            </div>
             <div id="patient-result"></div>
 
-            <form id="patient-form" class="modern-form">
+            <form id="patient-form" method="post" action="add-patient.php" class="modern-form">
                 <div class="form-section">
                     <div class="form-section-header">
                         <div class="section-icon">
@@ -207,18 +214,13 @@ session_start();
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary btn-large">
-                        <svg viewBox="0 0 24 24" width="20" height="20">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="8.5" cy="7" r="4"></circle>
-                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                        </svg>
                         Add Patient
                     </button>
                     <button type="reset" class="btn btn-secondary btn-large">Reset Form</button>
                     <a href="dashboard_ad.php" class="btn btn-white btn-large">Cancel</a>
                 </div>
             </form>
+            <div id="patient-result"></div>
         </section>
     </main>
 
@@ -242,18 +244,6 @@ session_start();
             <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
         </div>
     </footer>
-
-    <div id="addPatientSuccessModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="success-icon">
-                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
-            <h2 class="modal-title">Patient Successfully Added</h2>
-        </div>
-    </div>
-
     <script src="../JS/form_validation.js"></script>
     <script src="../ajax/add-patient.js"></script>
     <script>
