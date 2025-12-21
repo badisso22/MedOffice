@@ -104,6 +104,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     `;
                 }).join('');
             }
+            if (tbody && !tbody._archiveHandlerAttached) {
+                tbody.addEventListener('click', function (e) {
+                    const btn = e.target.closest('.archive-btn');
+                    if (!btn) return;
+
+                    const row = btn.closest('tr');
+                    if (!row) return;
+
+                    const patientID = row.getAttribute('data-patient-id');
+                    const nameCell  = row.querySelector('td:nth-child(1)');
+                    const ageCell   = row.querySelector('td:nth-child(2)');
+
+                    const name = nameCell ? nameCell.textContent.trim() : '';
+                    const age  = ageCell ? ageCell.textContent.trim() : 'N/A';
+
+                    openArchiveModalWithData(patientID, name, age);
+                });
+                tbody._archiveHandlerAttached = true;
+            }
 
         } catch (err) {
             console.error('Error in loadPatients:', err);
