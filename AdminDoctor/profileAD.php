@@ -1,9 +1,19 @@
+<?php
+session_start();
+
+if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'])) {
+    header('Location: ../login-forms/login.php'); 
+    exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doctor Profile - Dr. Sarah Johnson</title>
+  <title>Doctor Profile</title>
   <link rel="stylesheet" href="../CSS/profile.css" />
   <link rel="stylesheet" href="../CSS/profile_d.css" />
 </head>
@@ -21,14 +31,17 @@
     <div class="doctor-profile-card">
       <div class="doctor-header">
         <div class="doctor-avatar-section">
-          <img src="https://ui-avatars.com/api/?name=Dr.+Sarah+Johnson&background=0891b2&color=fff&size=200" 
-               class="doctor-avatar" 
-               alt="Dr. Sarah Johnson" />
-          <span class="doctor-badge">Doctor</span>
+          <img
+            id="doctorAvatar"
+            class="doctor-avatar"
+            src=""
+            alt="Doctor avatar"
+          />
+          <span class="doctor-badge" id="doctorBadge"></span>
         </div>
         <div class="doctor-title-section">
-          <h1 class="doctor-name">Dr. Sarah Johnson</h1>
-          <p class="doctor-specialty">Cardiology</p>
+          <h1 class="doctor-name" id="doctorName"></h1>
+          <p class="doctor-specialty" id="doctorSpeciality"></p>
           <div class="doctor-rating">
             <div class="stars">
               <svg class="star-icon filled" viewBox="0 0 24 24" fill="currentColor">
@@ -47,8 +60,8 @@
                 <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
               </svg>
             </div>
-            <span class="rating-score">4.8</span>
-            <span class="rating-count">(142 reviews)</span>
+            <span class="rating-score" id="ratingScore"></span>
+            <span class="rating-count" id="ratingCount"></span>
           </div>
         </div>
         <button class="close-button" onclick="window.location.href='dashboard_ad.php'">
@@ -61,68 +74,18 @@
       <div class="doctor-content">
         <section class="doctor-section">
           <h2 class="section-heading">About</h2>
-          <p class="section-text">
-            Dr. Sarah Johnson is dedicated to providing comprehensive cardiovascular care to patients of all ages. 
-            She has extensive experience in cardiology, interventional procedures, and preventive heart health. 
-            With a patient-centered approach, Dr. Johnson ensures each individual receives personalized treatment plans 
-            tailored to their specific needs.
-          </p>
+          <p class="section-text" id="doctorBio"></p>
         </section>
 
         <section class="doctor-section">
           <h2 class="section-heading">Experience</h2>
-          <p class="section-text">15 years of medical practice specializing in Cardiology</p>
-          <div class="experience-list">
-            <div class="experience-item">
-              <div class="experience-marker"></div>
-              <div class="experience-details">
-                <h3 class="experience-title">Senior Cardiologist</h3>
-                <p class="experience-location">Algiers Medical Center, Cheraga</p>
-                <p class="experience-period">2018 - Present</p>
-              </div>
-            </div>
-            <div class="experience-item">
-              <div class="experience-marker"></div>
-              <div class="experience-details">
-                <h3 class="experience-title">Cardiologist</h3>
-                <p class="experience-location">Central Hospital, Algiers</p>
-                <p class="experience-period">2010 - 2018</p>
-              </div>
-            </div>
-          </div>
+          <p class="section-text" id="experienceSummary"></p>
+          <div class="experience-list" id="experienceList"></div>
         </section>
 
         <section class="doctor-section">
           <h2 class="section-heading">Education</h2>
-          <div class="education-list">
-            <div class="education-item">
-              <svg class="education-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-              </svg>
-              <div>
-                <p class="education-degree">Medical Degree - University of Algiers (2005)</p>
-              </div>
-            </div>
-            <div class="education-item">
-              <svg class="education-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-              </svg>
-              <div>
-                <p class="education-degree">Cardiology Specialization - CHU Mustapha (2010)</p>
-              </div>
-            </div>
-            <div class="education-item">
-              <svg class="education-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-              </svg>
-              <div>
-                <p class="education-degree">Fellowship in Interventional Cardiology - Paris (2012)</p>
-              </div>
-            </div>
-          </div>
+          <div class="education-list" id="educationList"></div>
         </section>
 
         <section class="doctor-section">
@@ -140,25 +103,21 @@
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></path>
               </svg>
-              <span>License: MED-2020-789456</span>
+              <span id="licenseText"></span>
             </div>
             <div class="certification-badge">
               <svg class="cert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 6v6l4 2"></path>
               </svg>
-              <span>15+ Years Experience</span>
+              <span id="experienceBadge"></span>
             </div>
           </div>
         </section>
 
         <section class="doctor-section">
           <h2 class="section-heading">Languages</h2>
-          <div class="languages-list">
-            <span class="language-tag">Arabic</span>
-            <span class="language-tag">French</span>
-            <span class="language-tag">English</span>
-          </div>
+          <div class="languages-list" id="languagesList"></div>
         </section>
 
         <section class="doctor-section">
@@ -171,7 +130,7 @@
               </svg>
               <div>
                 <p class="contact-label">Email</p>
-                <p class="contact-value">sarah.johnson@medic-office.com</p>
+                <p class="contact-value" id="contactEmail"></p>
               </div>
             </div>
             <div class="contact-item">
@@ -180,7 +139,7 @@
               </svg>
               <div>
                 <p class="contact-label">Phone</p>
-                <p class="contact-value">+1 (555) 123-4567</p>
+                <p class="contact-value" id="contactPhone"></p>
               </div>
             </div>
             <div class="contact-item">
@@ -190,7 +149,7 @@
               </svg>
               <div>
                 <p class="contact-label">Location</p>
-                <p class="contact-value">Algiers Medical Center, Cheraga</p>
+                <p class="contact-value" id="contactLocation"></p>
               </div>
             </div>
           </div>
@@ -198,24 +157,7 @@
 
         <section class="doctor-section">
           <h2 class="section-heading">Availability</h2>
-          <div class="availability-list">
-            <div class="availability-item">
-              <span class="day-label">Monday - Wednesday:</span>
-              <span class="time-value">9:00 AM - 5:00 PM</span>
-            </div>
-            <div class="availability-item">
-              <span class="day-label">Thursday - Friday:</span>
-              <span class="time-value">10:00 AM - 6:00 PM</span>
-            </div>
-            <div class="availability-item">
-              <span class="day-label">Saturday:</span>
-              <span class="time-value">9:00 AM - 2:00 PM</span>
-            </div>
-            <div class="availability-item unavailable">
-              <span class="day-label">Sunday:</span>
-              <span class="time-value">Closed</span>
-            </div>
-          </div>
+          <div class="availability-list" id="availabilityList"></div>
         </section>
       </div>
 
@@ -237,5 +179,6 @@
       </div>
     </div>
   </div>
+  <script src="../ajax/admin-profile.js"></script>
 </body>
 </html>
