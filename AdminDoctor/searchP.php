@@ -130,7 +130,7 @@ session_start();
     </table>
     <a href="dashboard_ad.php" class="btn btn-white btn-large">←back to the dashboard</a>
   </div>
- <div id="archiveModal" class="modal">
+  <div id="archiveModal" class="modal">
     <div class="modal-content">
       <div class="modal-icon warning">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
@@ -145,14 +145,14 @@ session_start();
       <div class="modal-body">
         <p>Are you sure you want to archive this patient? This action will move the patient record to the archive section.</p>
         <div class="modal-info">
-          <p><strong>Patient ID:</strong> 001</p>
-          <p><strong>Name:</strong> Samia Boulkrinat</p>
-          <p><strong>Age:</strong> 29</p>
+          <p><strong>Patient ID:</strong> <span id="archive-patient-id"></span></p>
+          <p><strong>Name:</strong> <span id="archive-patient-name"></span></p>
+          <p><strong>Age:</strong> <span id="archive-patient-age"></span></p>
         </div>
       </div>
       <div class="modal-actions">
-        <button onclick="confirmArchive()" class="btn btn-danger">Yes, Archive Patient</button>
-        <button onclick="closeArchiveModal()" class="btn btn-secondary">Cancel</button>
+        <button id="archive-confirm-btn" class="btn btn-danger">Yes, Archive Patient</button>
+        <button id="archive-cancel-btn" class="btn btn-secondary">Cancel</button>
       </div>
     </div>
   </div>
@@ -169,10 +169,10 @@ session_start();
       <div class="modal-body">
         <p>The patient record has been successfully moved to the archive. You can restore it at any time from the archived patients section.</p>
         <div class="modal-info">
-          <p><strong>Patient ID:</strong> 001</p>
-          <p><strong>Name:</strong> Samia Boulkrinat</p>
-          <p><strong>Age:</strong> 29</p>
-          <p><strong>Status:</strong> <span style="color: #10b981;">Archived</span></p>
+          <p><strong>Patient ID:</strong> <span id="success-patient-id"></span></p>
+          <p><strong>Name:</strong> <span id="success-patient-name"></span></p>
+          <p><strong>Age:</strong> <span id="success-patient-age"></span></p>
+          <p><strong>Status:</strong> <span id="success-patient-status" style="color: #10b981;"></span></p>
         </div>
         <div class="modal-note">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
@@ -184,7 +184,7 @@ session_start();
         </div>
       </div>
       <div class="modal-actions">
-        <button onclick="window.location.href='searchP.php'" class="btn btn-primary">Back to Patient List</button>
+        <button id="success-ok-btn" class="btn btn-primary">Back to Patient List</button>
         <button onclick="window.location.href='dashboard_ad.php'" class="btn btn-secondary">Go to Dashboard</button>
       </div>
     </div>
