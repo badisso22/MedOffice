@@ -37,6 +37,7 @@ try {
         FROM PatientTable p
         LEFT JOIN Users u ON u.userID = p.userID
         WHERE 1 = 1
+        AND p.archived = 0
     ";
 
     $params = [];
