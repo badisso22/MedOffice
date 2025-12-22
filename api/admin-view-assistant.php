@@ -39,7 +39,6 @@ try {
         INNER JOIN Users u        ON u.userID = ap.userID
         INNER JOIN UserProfile up ON up.userID = u.userID
         WHERE ap.assistantID = ?
-          AND ap.isArchived = 0
         LIMIT 1
     ";
 
