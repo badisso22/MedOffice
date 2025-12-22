@@ -63,7 +63,7 @@ if ($patientID <= 0) {
                 Dashboard
             </a></li>
             <li><a href="profileAD.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Profile
             </a></li>
             <li><a href="searchP.php">
@@ -71,7 +71,7 @@ if ($patientID <= 0) {
                 Search Patients
             </a></li>
             <li><a href="searchA.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><path d="M17 11h6m-3-3v6"></path></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                 Search Assistant
             </a></li>
             <li><a href="calendarAD.php">
@@ -114,48 +114,91 @@ if ($patientID <= 0) {
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <main class="dashboard-main">
-        <section class="form-container">
-            <h1>Edit Patient</h1>
-            <form id="patient-edit-form" class="modern-form">
+        <div class="page-header">
+            <div class="header-content">
+                <div>
+                    <h1 class="page-title">Edit Patient Information</h1>
+                    <p class="page-subtitle">Update patient details and contact information</p>
+                </div>
+                <div class="header-actions">
+                    <a href="searchP.php" class="btn-ghost">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Back to Search
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-wrapper">
+            <form id="patient-edit-form" class="professional-form">
                 <input type="hidden" name="patientID" value="<?php echo $patientID; ?>">
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" required>
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Personal Information</h2>
+                        <p class="card-description">Basic patient details and identification</p>
                     </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="dob">Date of Birth</label>
-                        <input type="date" id="dob" name="dob" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" name="gender" required>
-                            <option value="">Select gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="addr">Address</label>
-                        <input type="text" id="addr" name="addr" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" required>
+                    <div class="card-body">
+                        <div class="form-grid-2">
+                            <div class="form-field">
+                                <label for="firstName" class="field-label">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="field-input" placeholder="Enter first name" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="lastName" class="field-label">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="field-input" placeholder="Enter last name" required>
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-field">
+                                <label for="dob" class="field-label">Date of Birth</label>
+                                <input type="date" id="dob" name="dob" class="field-input" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="gender" class="field-label">Gender</label>
+                                <select id="gender" name="gender" class="field-input" required>
+                                    <option value="">Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <a href="searchP.php" class="btn btn-secondary">Cancel</a>
+                <div class="form-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Contact Information</h2>
+                        <p class="card-description">Address and phone details</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-field">
+                            <label for="addr" class="field-label">Address</label>
+                            <input type="text" id="addr" name="addr" class="field-input" placeholder="Enter full address" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="phone" class="field-label">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="field-input" placeholder="(555) 123-4567" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions-wrapper">
+                    <button type="submit" class="btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        Save Changes
+                    </button>
+                    <a href="searchP.php" class="btn-secondary">Cancel</a>
                 </div>
             </form>
-        </section>
+        </div>
     </main>
     <script src="../ajax/edit_patient.js"></script>
     <script src="../JS/form_validation.js"></script>
