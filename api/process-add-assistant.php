@@ -1,133 +1,135 @@
 <?php
-declare(strict_types=1);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
-require_once __DIR__ . '/../config/config.php';
+require '../config/config.php';
+
 header('Content-Type: application/json; charset=utf-8');
 
 $response = [
     'success' => false,
     'message' => '',
-    'errors' => [],
-    'data' => null,
+    'data'    => null,
+    'errors'  => []
 ];
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    $response['message'] = 'Method not allowed';
-    echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    exit;
-}
-
 try {
-    $rawBody = file_get_contents('php://input');
-    $input = json_decode($rawBody, true);
-
-    if (!is_array($input) || empty($input)) {
-        $input = $_POST;
+    if (!$conn instanceof mysqli) {
+        throw new Exception('Database connection error');
     }
 
-    $firstName = trim($input['firstName'] ?? '');
-    $lastName = trim($input['lastName'] ?? '');
-    $dob = trim($input['dob'] ?? '');
-    $gender = trim($input['gender'] ?? '');
-    $address = trim($input['addr'] ?? '');
-    $phone = trim($input['phone'] ?? '');
-    $email = trim($input['email'] ?? '');
-    $username = trim($input['username'] ?? '');
-    $password = (string)($input['pass'] ?? '');
+    $firstName = isset($_POST['firstName']) ? trim($_POST['firstName']) : '';
+    $lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $password = isset($_POST['pass']) ? $_POST['pass'] : '';
+    $employeeCode = isset($_POST['employeeId']) ? trim($_POST['employeeId']) : '';
+    $yearsExp = isset($_POST['experience']) ? (float)$_POST['experience'] : 0;
+    $skills = isset($_POST['skills']) ? trim($_POST['skills']) : '';
 
-    if ($firstName === '') $response['errors'][] = 'First name is required';
-    if ($lastName === '') $response['errors'][] = 'Last name is required';
-    if ($dob === '') $response['errors'][] = 'Date of birth is required';
-    if ($gender === '') $response['errors'][] = 'Gender is required';
-    if ($address === '') $response['errors'][] = 'Address is required';
-    if ($phone === '') $response['errors'][] = 'Phone is required';
-    if ($email === '') {
-        $response['errors'][] = 'Email is required';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $response['errors'][] = 'Invalid email format';
+    if (!$firstName || !$lastName || !$email || !$phone || !$username || !$password) {
+        throw new Exception('Missing required fields');
     }
-    if ($username === '') $response['errors'][] = 'Username is required';
-    if ($password === '') $response['errors'][] = 'Password is required';
 
-    if (!empty($response['errors'])) {
-        http_response_code(400);
-        $response['message'] = 'Validation errors';
-        echo json_encode($response, JSON_UNESCAPED_UNICODE);
-        exit;
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception('Invalid email format');
     }
 
     $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 1;
+    $roleID = 4; 
 
-    if (!isset($conn) || !$conn instanceof mysqli) {
-        throw new Exception('Database connection not initialized.');
-    }
-
-    $conn->begin_transaction();
-
-    $stmt = $conn->prepare('SELECT COUNT(*) FROM Users WHERE username = ?');
-    if (!$stmt) throw new Exception('Prepare failed: ' . $conn->error);
-    $stmt->bind_param('s', $username);
+    $sqlCheck = "SELECT userID FROM Users WHERE username = ? OR email = ?";
+    $stmt = $conn->prepare($sqlCheck);
+    $stmt->bind_param('ss', $username, $email);
     $stmt->execute();
-    $stmt->bind_result($count);
-    $stmt->fetch();
+    $result = $stmt->get_result();
     $stmt->close();
 
-    if ($count > 0) {
-        http_response_code(400);
-        $response['message'] = 'Validation errors';
-        $response['errors'][] = 'Username already exists';
-        echo json_encode($response, JSON_UNESCAPED_UNICODE);
-        $conn->rollback();
-        exit;
+    if ($result->num_rows > 0) {
+        throw new Exception('Username or email already exists');
     }
 
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $roleID = 4;
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    $stmt = $conn->prepare('INSERT INTO Users (username, email, password, roleID) VALUES (?, ?, ?, ?)');
-    if (!$stmt) throw new Exception('Insert user prepare failed: ' . $conn->error);
-    $stmt->bind_param('sssi', $username, $email, $hashedPassword, $roleID);
-    if (!$stmt->execute()) throw new Exception('Error creating user: ' . $stmt->error);
-    $userId = $conn->insert_id;
+    $sqlUsers = "INSERT INTO Users (roleID, username, email, password, accountstatus) VALUES (?, ?, ?, ?, 'active')";
+    $stmt = $conn->prepare($sqlUsers);
+    $stmt->bind_param('isss', $roleID, $username, $email, $hashedPassword);
+    $stmt->execute();
+    $userID = $stmt->insert_id;
     $stmt->close();
 
-    $stmt = $conn->prepare('INSERT INTO UserProfile (userID, firstName, lastName, dateOfBirth, gender, address, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?)');
-    if (!$stmt) throw new Exception('Insert profile prepare failed: ' . $conn->error);
-    $stmt->bind_param('issssss', $userId, $firstName, $lastName, $dob, $gender, $address, $phone);
-    if (!$stmt->execute()) throw new Exception('Error creating profile: ' . $stmt->error);
+    if (!$userID) {
+        throw new Exception('Failed to create user');
+    }
+
+    $sqlProfile = "INSERT INTO UserProfile (userID, firstName, lastName, phoneNumber) VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($sqlProfile);
+    $stmt->bind_param('isss', $userID, $firstName, $lastName, $phone);
+    $stmt->execute();
     $stmt->close();
 
-    $stmt = $conn->prepare('INSERT INTO AssistantProfile (userID, cabinetID, assignedDoctorID, isActive, isArchived) VALUES (?, ?, NULL, 1, 0)');
-    if (!$stmt) throw new Exception('Insert assistant prepare failed: ' . $conn->error);
-    $stmt->bind_param('ii', $userId, $cabinetID);
-    if (!$stmt->execute()) throw new Exception('Error creating assistant: ' . $stmt->error);
+    $sqlAssistant = "INSERT INTO AssistantProfile (userID, cabinetID, yearsExperience, employeeCode, status, isActive, isArchived) VALUES (?, ?, ?, ?, 'available', 1, 0)";
+    $stmt = $conn->prepare($sqlAssistant);
+    $stmt->bind_param('iids', $userID, $cabinetID, $yearsExp, $employeeCode);
+    $stmt->execute();
+    $assistantID = $stmt->insert_id;
     $stmt->close();
 
-    $conn->commit();
+    if (!$assistantID) {
+        throw new Exception('Failed to create assistant profile');
+    }
+
+    if (!empty($skills)) {
+        $skillArray = array_map('trim', explode(',', $skills));
+        $sqlSkill = "INSERT INTO AssistantSkills (assistantID, skillName) VALUES (?, ?)";
+        $stmt = $conn->prepare($sqlSkill);
+        foreach ($skillArray as $skill) {
+            if (!empty($skill)) {
+                $stmt->bind_param('is', $assistantID, $skill);
+                $stmt->execute();
+            }
+        }
+        $stmt->close();
+    }
+
+    $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    $sqlAvail = "INSERT INTO AssistantAvailability (assistantID, dayOfWeek, startTime, endTime, isAvailable) VALUES (?, ?, ?, ?, ?)";
+
+    foreach ($days as $day) {
+        $dayLower = strtolower($day);
+        $startKey = $dayLower . '_start';
+        $endKey = $dayLower . '_end';
+        $checkboxKey = $dayLower;
+
+        $isAvailable = isset($_POST[$checkboxKey]) && $_POST[$checkboxKey] ? 1 : 0;
+        $startTime = isset($_POST[$startKey]) && !empty($_POST[$startKey]) ? $_POST[$startKey] : NULL;
+        $endTime = isset($_POST[$endKey]) && !empty($_POST[$endKey]) ? $_POST[$endKey] : NULL;
+
+        $stmt = $conn->prepare($sqlAvail);
+        $stmt->bind_param('isssi', $assistantID, $day, $startTime, $endTime, $isAvailable);
+        $stmt->execute();
+    }
+    $stmt->close();
 
     $response['success'] = true;
     $response['message'] = 'Assistant added successfully';
     $response['data'] = [
-        'userID' => $userId,
-        'username' => $username,
+        'assistantID' => $assistantID,
         'firstName' => $firstName,
         'lastName' => $lastName,
-        'createdAt' => date('Y-m-d H:i:s'),
+        'email' => $email,
+        'username' => $username
     ];
 
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    exit;
 
 } catch (Exception $e) {
-    if (isset($conn) && $conn instanceof mysqli && $conn->ping()) {
-        $conn->rollback();
-    }
-
-    http_response_code(500);
+    http_response_code(400);
     $response['success'] = false;
-    $response['message'] = 'Server error';
+    $response['message'] = 'Error adding assistant';
     $response['errors'][] = $e->getMessage();
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
-    exit;
 }
