@@ -137,11 +137,12 @@ function openUnarchiveSuccessModal() {
     const idEl = document.getElementById('success-unarchive-id');
     const nameEl = document.getElementById('success-unarchive-name');
     const ageEl = document.getElementById('success-unarchive-age');
-
+    const statusEl = document.getElementById('unarchive-success-status');
+    
     if (idEl) idEl.textContent = String(assistantToUnarchive).padStart(3, '0');
     if (nameEl) nameEl.textContent = assistantName;
     if (ageEl) ageEl.textContent = assistantAge || 'N/A';
-
+    if (statusEl) statusEl.textContent = 'Active';
     if (modal) modal.classList.add('active');
 }
 
@@ -172,8 +173,8 @@ async function confirmUnarchive() {
         try {
             json = JSON.parse(raw);
         } catch (e) {
-            console.error('JSON parse error', e);
-            alert('Server did not return valid JSON. Check console.');
+            console.error('JSON parse error in unarchive', e);
+            alert('Server did not return valid JSON. Check console for RAW RESPONSE.');
             return;
         }
 
@@ -188,16 +189,8 @@ async function confirmUnarchive() {
 
         closeUnarchiveModal();
         openUnarchiveSuccessModal();
-
-        setTimeout(() => {
-            const row = document.querySelector(`tr[data-assistant-id="${assistantToUnarchive}"]`);
-            if (row && row.parentNode) {
-                row.parentNode.removeChild(row);
-            }
-        }, 1000);
-
     } catch (err) {
-        console.error('Network error', err);
+        console.error('Network/server error unarchiving assistant', err);
         alert('Network error while unarchiving assistant.');
     }
 }
@@ -218,5 +211,20 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
         closeUnarchiveModal();
         closeUnarchiveSuccessModal();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const confirmBtn = document.getElementById('unarchive-confirm-btn');
+    const cancelBtn = document.getElementById('unarchive-cancel-btn');
+    const successOkBtn = document.getElementById('unarchive-success-ok-btn');
+
+    if (confirmBtn) confirmBtn.addEventListener('click', confirmUnarchive);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeUnarchiveModal);
+    if (successOkBtn) {
+        successOkBtn.addEventListener('click', () => {
+            closeUnarchiveSuccessModal();
+            window.location.href = 'archive_assistant.php';
+        });
     }
 });
