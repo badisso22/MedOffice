@@ -1,15 +1,21 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Doctors - MedOffice</title>
+    <title>Edit Doctor - MedOffice</title>
     <link rel="stylesheet" href="../CSS/general.css">
     <link rel="stylesheet" href="../CSS/forms.css">
     <link rel="stylesheet" href="../CSS/editp.css">
+    <link rel="stylesheet" href="../CSS/profile.css" />
+    <link rel="stylesheet" href="../CSS/profile_d.css" />
+    <link rel="stylesheet" href="../CSS/doctor_edit.css" />
 </head>
 <body>
-     <nav>
+    <nav>
         <div class="nav-container">
             <button class="drawer-toggle" onclick="toggleDrawer()">
                 <span></span>
@@ -35,7 +41,6 @@
                         </svg>
                         <span class="notification-badge">3</span>
                     </a>
-
                 </div>
             </div>
         </div>
@@ -49,45 +54,37 @@
             <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
         </div>
         <ul class="drawer-menu">
-            <li><a href="dashboard_ad.html" class="active">
+            <li><a href="dashboard_ad.php" class="active">
                 <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 Dashboard
             </a></li>
             <li><a href="profileAD.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>ircle cx="12" cy="7" r="4"></circle></svg>
                 Profile
             </a></li>
-            <li><a href="searchD.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            <li><a href="searchP.php">
+                <svg viewBox="0 0 24 24" width="20" height="20">ircle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
                 Search Patients
             </a></li>
             <li><a href="searchA.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><path d="M17 11h6m-3-3v6"></path></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>ircle cx="8.5" cy="7" r="4"></circle><path d="M17 11h6m-3-3v6"></path></svg>
                 Search Assistant
             </a></li>
-            <li><a href="calendarD.php">
+            <li><a href="calendarAD.php">
                 <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Calendar
             </a></li>
             <li><a href="add-patient.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>ircle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                 Add Patient
             </a></li>
             <li><a href="add-assistant.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>ircle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                 Add Assistant
             </a></li>
             <li><a href="appointments.php">
                 <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Appointments
-            </a></li>
-            <li><a href="medical_records.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                Medical Records
-            </a></li>
-            <li><a href="prescriptions.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                Prescriptions
             </a></li>
             <li><a href="reports_analytics.php">
                 <svg viewBox="0 0 24 24" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
@@ -100,151 +97,161 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 
-    <div class="form-container">
-        <div class="form-hero">
-            <h1>Edit Doctor Information</h1>
-            <p>Update doctor details and contact information</p>
-        </div>
-        <div class="info-banner">
-            <svg width="20" height="20" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            <p>All changes will be saved to the doctor's medical record. Ensure accuracy before submitting.</p>
+    <div class="edit-wrapper">
+        <div class="edit-header">
+            <h1 class="edit-title">Edit Doctor Profile</h1>
+            <p class="edit-subtitle">Update doctor professional information</p>
         </div>
 
-        <form class="modern-form" method="POST" action="update_patient.php">
+        <form class="edit-form" id="doctorEditForm">
             <div class="form-section">
-                <div class="form-section-header">
-                    <div class="section-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <h2>Personal Information</h2>
-                </div>
-
+                <h2 class="form-section-title">Personal Information</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="first-name">First Name</label>
-                        <input type="text" id="first-name" name="first_name" value="Samia" required>
+                        <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                        <input type="text" id="firstName" name="firstName" class="form-input" required />
                     </div>
                     <div class="form-group">
-                        <label for="last-name">Last Name</label>
-                        <input type="text" id="last-name" name="last_name" value="Boulkrinat" required>
+                        <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+                        <input type="text" id="lastName" name="lastName" class="form-input" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" class="form-input" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" class="form-input" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="speciality" class="form-label">Specialization <span class="required">*</span></label>
+                        <input type="text" id="speciality" name="speciality" class="form-input" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yearsExp" class="form-label">Years of Experience</label>
+                        <input type="number" id="yearsExp" name="yearsExp" class="form-input" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label for="licenseNumber" class="form-label">License Number</label>
+                        <input type="text" id="licenseNumber" name="licenseNumber" class="form-input" />
                     </div>
                 </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="dob">Date of Birth</label>
-                        <input type="date" id="dob" name="date_of_birth" value="1990-05-15" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
-                        <select id="gender" name="gender" required>
-                            <option value="female" selected>Female</option>
-                            <option value="male">Male</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="blood-type">Blood Type</label>
-                        <select id="blood-type" name="blood_type" required>
-                            <option value="">Select Blood Type</option>
-                            <option value="O+" selected>O+</option>
-                            <option value="O-">O-</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="patient-id">Doctor ID</label>
-                        <input type="text" id="patient-id" name="patient_id" value="001" disabled>
-                        <p class="form-hint">Auto-generated, cannot be changed</p>
-                    </div>
+                <div class="form-group">
+                    <label for="bio" class="form-label">Professional Bio</label>
+                    <textarea id="bio" name="bio" class="form-textarea" rows="4" placeholder="Brief professional summary..."></textarea>
                 </div>
             </div>
             <div class="form-section">
-                <div class="form-section-header">
-                    <div class="section-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                        </svg>
+                <h2 class="form-section-title">Availability</h2>
+                <div class="availability-grid" id="availabilityGrid">
+                    <div class="availability-day">
+                        <div class="day-header">
+                            <input type="checkbox" id="monday" name="days[]" value="Monday" />
+                            <label for="monday">Monday</label>
+                        </div>
+                        <div class="time-inputs">
+                            <input type="time" name="monday_start" class="time-input" />
+                            <span class="time-separator">to</span>
+                            <input type="time" name="monday_end" class="time-input" />
+                        </div>
                     </div>
-                    <h2>Contact Information</h2>
-                </div>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" value="sarah.mitchell@email.com" required>
+                    <div class="availability-day">
+                        <div class="day-header">
+                            <input type="checkbox" id="tuesday" name="days[]" value="Tuesday" />
+                            <label for="tuesday">Tuesday</label>
+                        </div>
+                        <div class="time-inputs">
+                            <input type="time" name="tuesday_start" class="time-input" />
+                            <span class="time-separator">to</span>
+                            <input type="time" name="tuesday_end" class="time-input" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" value="+213000000000" required>
-                    </div>
-                </div>
 
-                <div class="form-group full-width">
-                    <label for="address">Street Address</label>
-                    <input type="text" id="address" name="address" value="les deux bassins" required>
-                </div>
+                    <div class="availability-day">
+                        <div class="day-header">
+                            <input type="checkbox" id="wednesday" name="days[]" value="Wednesday" />
+                            <label for="wednesday">Wednesday</label>
+                        </div>
+                        <div class="time-inputs">
+                            <input type="time" name="wednesday_start" class="time-input" />
+                            <span class="time-separator">to</span>
+                            <input type="time" name="wednesday_end" class="time-input" />
+                        </div>
+                    </div>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" id="city" name="city" value="el achour" required>
+                    <div class="availability-day">
+                        <div class="day-header">
+                            <input type="checkbox" id="thursday" name="days[]" value="Thursday" />
+                            <label for="thursday">Thursday</label>
+                        </div>
+                        <div class="time-inputs">
+                            <input type="time" name="thursday_start" class="time-input" />
+                            <span class="time-separator">to</span>
+                            <input type="time" name="thursday_end" class="time-input" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="state">wilaya</label>
-                        <input type="text" id="state" name="state" value="alger" required>
-                    </div>
-                </div>
-            </div>
-            <div class="form-section">
-                <div class="form-section-header">
-                    <div class="section-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24">
-                            <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"></path>
-                        </svg>
-                    </div>
-                    <h2>Emergency Contact</h2>
-                </div>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="emergency-name">Contact Name</label>
-                        <input type="text" id="emergency-name" name="emergency_contact_name" value="John Mitchell" required>
+                    <div class="availability-day">
+                        <div class="day-header">
+                            <input type="checkbox" id="friday" name="days[]" value="Friday" />
+                            <label for="friday">Friday</label>
+                        </div>
+                        <div class="time-inputs">
+                            <input type="time" name="friday_start" class="time-input" />
+                            <span class="time-separator">to</span>
+                            <input type="time" name="friday_end" class="time-input" />
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="emergency-phone">Contact Phone</label>
-                        <input type="tel" id="emergency-phone" name="emergency_contact_phone" value="+1 (555) 987-6543" required>
-                    </div>
-                </div>
 
-                <div class="form-group full-width">
-                    <label for="emergency-relation">Relationship</label>
-                    <input type="text" id="emergency-relation" name="emergency_contact_relation" value="Spouse" required>
+                    <div class="availability-day">
+                        <div class="day-header">
+                            <input type="checkbox" id="saturday" name="days[]" value="Saturday" />
+                            <label for="saturday">Saturday</label>
+                        </div>
+                        <div class="time-inputs">
+                            <input type="time" name="saturday_start" class="time-input" />
+                            <span class="time-separator">to</span>
+                            <input type="time" name="saturday_end" class="time-input" />
+                        </div>
+                    </div>
+
+                    <div class="availability-day">
+                        <div class="day-header">
+                            <input type="checkbox" id="sunday" name="days[]" value="Sunday" />
+                            <label for="sunday">Sunday</label>
+                        </div>
+                        <div class="time-inputs">
+                            <input type="time" name="sunday_start" class="time-input" />
+                            <span class="time-separator">to</span>
+                            <input type="time" name="sunday_end" class="time-input" />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-actions">
-                <a href="searchD.php" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="searchD.php" class="btn btn-secondary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"></path>
+                    </svg>
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
+                    Save Changes
+                </button>
             </div>
         </form>
     </div>
@@ -268,7 +275,9 @@
             <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
         </div>
     </footer>
-    <script>    
+
+    <script src="../ajax/edit_doctor.js"></script>
+    <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
             const overlay = document.getElementById('drawerOverlay');
