@@ -1,3 +1,11 @@
+<?php
+session_start();
+$assistantID = isset($_GET['assistantID']) ? (int)$_GET['assistantID'] : 0;
+if ($assistantID <= 0) {
+    die('Invalid assistant ID');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,47 +18,29 @@
     <div class="container">
         <div class="header">
             <h1>Assistant Details</h1>
-            <a href="searcha.php" class="back-btn">← Back to Search</a>
+            <a href="searchA.php" class="back-btn">← Back to Search</a>
         </div>
 
         <div class="main-content">
             <div class="sidebar">
                 <div class="profile-card">
                     <div class="avatar"></div>
-                    <h2>Sarah Johnson</h2>
+                    <h2 id="assistant-name">Assistant Name</h2>
                     <div class="title">Medical Assistant</div>
-                    <div class="status-badge">Available</div>
-                    <div class="rating">
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                        <span class="star">★</span>
-                    </div>
-                    <div style="color: #666; font-size: 13px; margin-bottom: 20px;">4.9 out of 5 (127 reviews)</div>
-                    
-                    <div class="quick-stats">
+                    <div id="assistant-status" class="status-badge">Status</div>
+
+                    <div class="quick-stats single-stat">
                         <div class="stat">
-                            <div class="stat-value">3.5</div>
+                            <div id="assistant-years-exp" class="stat-value">–</div>
                             <div class="stat-label">Years Exp.</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value">450+</div>
-                            <div class="stat-label">Patients</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="content-area">
-                <div class="section">
-                    <h3>Specialties & Skills</h3>
-                    <div class="specialties">
-                        <span class="specialty-tag">Patient Care</span>
-                        <span class="specialty-tag">Clinical Support</span>
-                        <span class="specialty-tag">Administrative</span>
-                        <span class="specialty-tag">Phlebotomy</span>
-                        <span class="specialty-tag">EHR Management</span>
-                        <span class="specialty-tag">Patient Education</span>
+                <div class="section" id="skills-section">
+                    <h3>Specialties &amp; Skills</h3>
+                    <div id="assistant-skills" class="specialties">
                     </div>
                 </div>
                 <div class="section">
@@ -58,78 +48,31 @@
                     <div class="info-grid">
                         <div class="info-item">
                             <span class="info-label">Email</span>
-                            <span class="info-value">sarah.johnson@medoffice.com</span>
+                            <span id="assistant-email" class="info-value">—</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Phone</span>
-                            <span class="info-value">(555) 123-4567</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Department</span>
-                            <span class="info-value">General Medicine</span>
+                            <span id="assistant-phone" class="info-value">—</span>
                         </div>
                         <div class="info-item">
                             <span class="info-label">Employee ID</span>
-                            <span class="info-value">AST-2024-001</span>
+                            <span id="assistant-employee-id" class="info-value">—</span>
                         </div>
                     </div>
                 </div>
-                <div class="section">
+
+                <div class="section" id="availability-section">
                     <h3>Weekly Availability</h3>
-                    <div class="availability-grid">
-                        <div class="availability-item">
-                            <div class="day">Monday</div>
-                            <div class="time">8:00 AM - 5:00 PM</div>
-                        </div>
-                        <div class="availability-item">
-                            <div class="day">Tuesday</div>
-                            <div class="time">8:00 AM - 5:00 PM</div>
-                        </div>
-                        <div class="availability-item">
-                            <div class="day">Wednesday</div>
-                            <div class="time">8:00 AM - 5:00 PM</div>
-                        </div>
-                        <div class="availability-item">
-                            <div class="day">Thursday</div>
-                            <div class="time">8:00 AM - 5:00 PM</div>
-                        </div>
-                        <div class="availability-item">
-                            <div class="day">Friday</div>
-                            <div class="time">8:00 AM - 3:00 PM</div>
-                        </div>
-                        <div class="availability-item">
-                            <div class="day">Saturday</div>
-                            <div class="time">Off</div>
-                        </div>
+                    <div id="assistant-availability" class="availability-grid">
                     </div>
                 </div>
-                <div class="section">
-                    <h3>Certifications & Qualifications</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">Certification</span>
-                            <span class="info-value">Certified Medical Assistant (CMA)</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">License Number</span>
-                            <span class="info-value">CMA-789456</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">Expiration Date</span>
-                            <span class="info-value">June 15, 2026</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">CPR Certification</span>
-                            <span class="info-value">Valid until March 2025</span>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="action-buttons">
-                    <button class="btn btn-primary">Schedule Meeting</button>
                     <button class="btn btn-secondary">Send Message</button>
                 </div>
             </div>
         </div>
     </div>
+    <script src="../ajax/admin_view_assistant.js"></script>
 </body>
 </html>
