@@ -23,7 +23,6 @@ if ($doctorID <= 0) {
       </a>
       <div class="nav-cta">
         <span class="user-name">Dr. John Doe</span>
-        <a href="logout.php" class="btn btn-secondary">Logout</a>
       </div>
     </div>
   </nav>
