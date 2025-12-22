@@ -1,3 +1,69 @@
+console.log('add-assistant.js loaded');
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('assistantForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Adding Assistant...';
+        }
+
+        const formData = new FormData(form);
+
+        try {
+            const res = await fetch('../api/process-add-assistant.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const raw = await res.text();
+            console.log('RAW RESPONSE:', raw);
+
+            let json;
+            try {
+                json = JSON.parse(raw);
+            } catch (e) {
+                console.error('JSON parse error', e);
+                alert('Server did not return valid JSON. Check console for RAW RESPONSE.');
+                return;
+            }
+
+            if (!res.ok || !json.success) {
+                console.error('Add error', json);
+                alert(json.message || 'Could not add assistant');
+                if (json.errors && json.errors.length) {
+                    alert(json.errors.join('\n'));
+                }
+                return;
+            }
+
+            const modal = document.getElementById('successModal');
+            const message = document.getElementById('modalMessage');
+            if (modal && message) {
+                message.textContent = `Assistant "${json.data.firstName} ${json.data.lastName}" has been successfully added to the system.`;
+                modal.classList.add('active');
+            }
+
+            form.reset();
+
+        } catch (err) {
+            console.error('Network/server error', err);
+            alert('Network error while adding assistant.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Add Assistant';
+            }
+        }
+    });
+});
+
 function toggleDrawer() {
     const drawer = document.getElementById('drawer');
     const overlay = document.getElementById('drawerOverlay');
@@ -6,69 +72,18 @@ function toggleDrawer() {
 }
 
 function togglePassword() {
-    const passwordInput = document.getElementById('pass');
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
+    const passInput = document.getElementById('pass');
+    if (passInput.type === 'password') {
+        passInput.type = 'text';
+    } else {
+        passInput.type = 'password';
+    }
 }
 
 function closeSuccessModal() {
     const modal = document.getElementById('successModal');
-    modal.classList.remove('show');
-    setTimeout(() => window.location.href = '../AdminDoctor/dashboard_ad.php', 5000);
-}
-
-function showSuccessModal(title, message) {
-    const modal = document.getElementById('successModal');
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalMessage').textContent = message;
-    modal.classList.add('show');
-    console.log('SUCCESS MODAL DISPLAYED');
-}
-
-document.getElementById('assistantForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const submitBtn = document.getElementById('submitBtn');
-    const originalBtnHTML = submitBtn.innerHTML;
-    
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span> Processing...';
-    
-    const formData = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        dob: document.getElementById('dob').value,
-        gender: document.getElementById('gender').value,
-        addr: document.getElementById('addr').value,
-        phone: document.getElementById('phone').value,
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        pass: document.getElementById('pass').value
-    };
-    
-    try {
-        const response = await fetch('../api/process-add-assistant.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            showSuccessModal('Assistant Successfully Added', `${data.data.firstName} ${data.data.lastName} has been registered as a medical assistant.`);
-            document.getElementById('assistantForm').reset();
-        } else {
-            let errorMsg = data.message;
-            if (data.errors && data.errors.length > 0) {
-                errorMsg = data.errors.join('\n');
-            }
-            alert('Error: ' + errorMsg);
-        }
-    } catch (error) {
-        console.error('Network error:', error);
-        alert('Network Error: ' + error.message);
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalBtnHTML;
+    if (modal) {
+        modal.classList.remove('active');
     }
-});
+    window.location.href = 'searchA.php';
+}
