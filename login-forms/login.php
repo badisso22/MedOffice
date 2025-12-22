@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                 }
 
-                $updateLogin = $conn->prepare("UPDATE Users SET lastlogin = NOW() WHERE userID = ?");
+                $updateLogin = $conn->prepare("UPDATE Users SET last_login = NOW() WHERE userID = ?");
                 $updateLogin->bind_param("i", $user["userID"]);
                 $updateLogin->execute();
                 $updateLogin->close();
