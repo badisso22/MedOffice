@@ -20,41 +20,70 @@ try {
         throw new Exception('Database connection error');
     }
 
-   $doctorID = isset($_SESSION['doctorID']) ? (int)$_SESSION['doctorID'] : 0;
-   // $doctorID =4; // For testing purposes only
-   // $cabinetID =1; // For testing purposes only
-   $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 0;
+    $roleID = isset($_SESSION['roleID']) ? (int)$_SESSION['roleID'] : 0;
+    $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 0;
 
-    if ($doctorID <= 0) {
-        throw new Exception('Doctor not logged in');
+    if ($cabinetID <= 0) {
+        throw new Exception('Cabinet ID not found in session');
     }
 
     $today = date('Y-m-d');
+    if ($roleID == 3) {
+        $doctorID = isset($_SESSION['doctorID']) ? (int)$_SESSION['doctorID'] : 0;
+        if ($doctorID <= 0) {
+            throw new Exception('Doctor ID not found in session');
+        }
 
-    $sql = "
-        SELECT 
-            a.appointmentID,
-            a.patientID,
-            a.date,
-            a.appointmentTime,
-            a.purpose,
-            a.status,
-            p.firstname,
-            p.lastname
-        FROM Appointments a
-        INNER JOIN PatientTable p ON p.patientID = a.patientID
-        WHERE a.doctorID = ?
-          AND a.cabinetID = ?
-          AND a.date = ?
-        ORDER BY a.appointmentTime ASC
-    ";
+        $sql = "
+            SELECT 
+                a.appointmentID,
+                a.patientID,
+                a.date,
+                a.appointmentTime,
+                a.purpose,
+                a.status,
+                p.firstname,
+                p.lastname
+            FROM Appointments a
+            INNER JOIN PatientTable p ON p.patientID = a.patientID
+            WHERE a.doctorID = ?
+              AND a.cabinetID = ?
+              AND a.date = ?
+            ORDER BY a.appointmentTime ASC
+        ";
 
-    $stmt = $conn->prepare($sql);
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('iis', $doctorID, $cabinetID, $today);
+
+    } elseif ($roleID == 2) {
+        $sql = "
+            SELECT 
+                a.appointmentID,
+                a.patientID,
+                a.date,
+                a.appointmentTime,
+                a.purpose,
+                a.status,
+                p.firstname,
+                p.lastname
+            FROM Appointments a
+            INNER JOIN PatientTable p ON p.patientID = a.patientID
+            WHERE a.cabinetID = ?
+              AND a.date = ?
+            ORDER BY a.appointmentTime ASC
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('is', $cabinetID, $today);
+
+    } else {
+        throw new Exception('Unauthorized access');
+    }
+
     if (!$stmt) {
         throw new Exception('Prepare failed: ' . $conn->error);
     }
 
-    $stmt->bind_param('iis', $doctorID, $cabinetID, $today);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -80,14 +109,14 @@ try {
 
     foreach ($appointments as $apt) {
         $aptTime = $apt['time'];
-
+        
         if ($apt['status'] === 'cancelled') {
-            continue; 
+            continue;
         }
         if ($aptTime < $currentTime) {
             $completed[] = $apt;
         } elseif (!$current && $aptTime >= $currentTime) {
-            $current = $apt; 
+            $current = $apt;
         } else {
             $upcoming[] = $apt;
         }
