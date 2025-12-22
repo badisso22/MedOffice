@@ -11,6 +11,7 @@ if ($doctorID <= 0) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Doctor Details - MedOffice</title>
+  <link rel="stylesheet" href="../CSS/general.css" />
   <link rel="stylesheet" href="../CSS/view_patient.css" />
   <link rel="stylesheet" href="../CSS/view_doctor.css" />
 </head>
