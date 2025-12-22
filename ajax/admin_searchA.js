@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function () {
                   <td>
                     <div class="action-buttons">
                       <a href="view_assistant.php?assistantID=${a.assistantID}" class="action-btn view-btn" title="View">
-                        <!-- same SVG as before -->
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                           <circle cx="12" cy="12" r="3"></circle>
@@ -107,4 +106,101 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     loadAssistants();
+});
+
+function openArchiveModal(btn) {
+    const modal = document.getElementById('archiveModal');
+    if (!modal || !btn) return;
+
+    const id   = btn.getAttribute('data-assistant-id');
+    const name = btn.getAttribute('data-assistant-name');
+    const age  = btn.getAttribute('data-assistant-age');
+
+    window.currentAssistantToArchive = id;
+
+    const idSpan   = document.getElementById('archive-assistant-id');
+    const nameSpan = document.getElementById('archive-assistant-name');
+    const ageSpan  = document.getElementById('archive-assistant-age');
+
+    if (idSpan)   idSpan.textContent = id || '—';
+    if (nameSpan) nameSpan.textContent = name || '—';
+    if (ageSpan)  ageSpan.textContent = age || '—';
+
+    modal.classList.add('active');
+}
+
+function closeArchiveModal() {
+    const modal = document.getElementById('archiveModal');
+    if (modal) modal.classList.remove('active');
+}
+
+async function confirmArchive() {
+    const id = window.currentAssistantToArchive;
+    if (!id) {
+        closeArchiveModal();
+        return;
+    }
+
+    try {
+        const res = await fetch('../api/admin_archive_assistant.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ assistantID: id })
+        });
+
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+            console.error(json.errors || json.message);
+            alert('Failed to archive assistant.');
+            return;
+        }
+
+        const row = document.querySelector(`tr[data-assistant-id="${id}"]`);
+        if (row && row.parentNode) {
+            row.parentNode.removeChild(row);
+        }
+
+        const successModal = document.getElementById('successModal');
+        const sId   = document.getElementById('success-assistant-id');
+        const sName = document.getElementById('success-assistant-name');
+        const sAge  = document.getElementById('success-assistant-age');
+
+        if (sId)   sId.textContent = id;
+        if (sName) sName.textContent = document.getElementById('archive-assistant-name')?.textContent || '—';
+        if (sAge)  sAge.textContent = document.getElementById('archive-assistant-age')?.textContent || '—';
+
+        closeArchiveModal();
+        if (successModal) successModal.classList.add('active');
+
+    } catch (err) {
+        console.error(err);
+        alert('Network or server error: ' + err.message);
+    }
+}
+
+function closeSuccessModal() {
+    const modal = document.getElementById('successModal');
+    if (modal) modal.classList.remove('active');
+}
+
+document.addEventListener('click', (event) => {
+    const archiveModal = document.getElementById('archiveModal');
+    const successModal = document.getElementById('successModal');
+
+    if (event.target === archiveModal) {
+        closeArchiveModal();
+    }
+    if (event.target === successModal) {
+        closeSuccessModal();
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        closeArchiveModal();
+        closeSuccessModal();
+    }
 });
