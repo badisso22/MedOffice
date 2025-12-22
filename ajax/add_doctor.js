@@ -81,7 +81,7 @@ async function submitForm(event) {
     const availability = {};
 
     days.forEach(day => {
-        const checkbox = document.getElementById(day);
+        const checkbox = document.getElementById(day + '2');  
         const timesDiv = document.getElementById(day + 'Times');
         
         if (checkbox && checkbox.checked && timesDiv) {
@@ -101,6 +101,8 @@ async function submitForm(event) {
         ...step1Data,
         availability: availability
     };
+
+    console.log('Submitting data:', fullData);  
 
     loadingScreen.classList.remove('hidden');
 
