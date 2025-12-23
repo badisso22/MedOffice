@@ -31,7 +31,7 @@ try {
     }
 
     $doctorID = null;
-    $status = 'pending'; 
+    $status = 'pending';
 
     if ($roleID == 3) {
         $doctorID = isset($_SESSION['doctorID']) ? (int)$_SESSION['doctorID'] : null;
@@ -49,6 +49,27 @@ try {
         $status = 'accepted';
     } elseif ($roleID == 4) {
         $status = 'accepted';
+    }
+
+    if ($doctorID) {
+        $sqlConflict = "
+            SELECT appointmentID FROM Appointments 
+            WHERE doctorID = ? 
+              AND date = ? 
+              AND appointmentTime = ?
+              AND appointmentID != ?
+              AND status != 'cancelled'
+            LIMIT 1
+        ";
+        $stmtConflict = $conn->prepare($sqlConflict);
+        $stmtConflict->bind_param('issi', $doctorID, $date, $time, $appointmentID);
+        $stmtConflict->execute();
+        $resConflict = $stmtConflict->get_result();
+        $stmtConflict->close();
+
+        if ($resConflict->num_rows > 0) {
+            throw new Exception('This time slot is already booked for this doctor. Please choose a different time.');
+        }
     }
 
     if ($appointmentID > 0) {
