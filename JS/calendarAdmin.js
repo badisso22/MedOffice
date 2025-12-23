@@ -278,7 +278,7 @@ function openNewAppointment(date) {
 
   editingId = null
 
-  document.getElementById("appointmentDate").value = date
+    document.getElementById("appointmentDate").value = date
   document.getElementById("appointmentDate").min = getTodayDateString()
   document.getElementById("patientSelect").value = ""
   document.getElementById("patientPhone").value = ""
@@ -443,6 +443,13 @@ function generateTimeSlots() {
   const container = document.getElementById("timeSlotsContainer")
   container.innerHTML = ""
 
+  const selectedDate = document.getElementById("appointmentDate").value
+  
+  let bookedTimes = []
+  if (selectedDate && appointments[selectedDate]) {
+    bookedTimes = appointments[selectedDate].map(apt => apt.time)
+  }
+
   const startHour = 9
   const endHour = 18
 
@@ -450,15 +457,20 @@ function generateTimeSlots() {
     for (const minute of [0, 30]) {
       const timeString = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
       const displayTime = formatTime12Hour(hour, minute)
+      const isBooked = bookedTimes.includes(timeString)
 
       const slot = document.createElement("div")
-      slot.className = "time-slot"
+      slot.className = `time-slot ${isBooked ? 'booked' : ''}`
       slot.dataset.time = timeString
       slot.innerHTML = `
         <div class="time-slot-icon">${icons.clock}</div>
         <div class="time-slot-time">${displayTime}</div>
+        ${isBooked ? '<div class="booked-label">Booked</div>' : ''}
       `
-      slot.onclick = () => selectTimeSlot(slot)
+      
+      if (!isBooked) {
+        slot.onclick = () => selectTimeSlot(slot)
+      }
 
       container.appendChild(slot)
     }
@@ -685,14 +697,14 @@ function loadPatientInfo() {
 }
 
 function updateProgressBar(step) {
-  const steps = document.querySelectorAll('.progress-step');
+  const steps = document.querySelectorAll('.progress-step')
   steps.forEach((stepEl, index) => {
     if (index < step) {
-      stepEl.classList.add('active');
+      stepEl.classList.add('active')
     } else {
-      stepEl.classList.remove('active');
+      stepEl.classList.remove('active')
     }
-  });
+  })
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
