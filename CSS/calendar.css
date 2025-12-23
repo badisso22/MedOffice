@@ -1021,3 +1021,24 @@
   transform: translateX(4px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
+.time-slot.booked {
+  opacity: 0.4;
+  background: #f3f4f6;
+  cursor: not-allowed;
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+
+.time-slot.booked .time-slot-time {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
+
+.booked-label {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 0.7rem;
+  color: #ef4444;
+  font-weight: 600;
+}
