@@ -113,11 +113,14 @@ try {
         if ($apt['status'] === 'cancelled') {
             continue;
         }
-        if ($aptTime < $currentTime) {
+
+        if ($apt['status'] === 'completed') {
             $completed[] = $apt;
-        } elseif (!$current && $aptTime >= $currentTime) {
+        } elseif ($apt['status'] === 'accepted' && $aptTime < $currentTime) {
+            $completed[] = $apt;
+        } elseif (!$current && $aptTime >= $currentTime && $apt['status'] !== 'completed') {
             $current = $apt;
-        } else {
+        } else if ($apt['status'] !== 'completed' && $aptTime >= $currentTime) {
             $upcoming[] = $apt;
         }
     }
