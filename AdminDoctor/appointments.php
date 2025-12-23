@@ -9,6 +9,7 @@ session_start();
     <title>Today's Appointments - MedOffice</title>
     <link rel="stylesheet" href="../CSS/general.css">
     <link rel="stylesheet" href="../CSS/appointments.css">
+    <link rel="stylesheet" href="../CSS/admin_modals.css">
 </head>
 <body>
     <nav>
@@ -173,6 +174,25 @@ session_start();
                 <a href="dashboard_ad.php" class="action-btn btn-primary">Back to Dashboard</a>
          </div>
     </main>
+
+    <div id="successEndModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon success">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="modal-header">
+                <h2>Consultation Completed</h2>
+            </div>
+            <div class="modal-body">
+                <p>The appointment has been successfully marked as completed.</p>
+            </div>
+            <div class="modal-actions">
+                <button onclick="closeEndSuccessModal()" class="btn btn-primary">Continue</button>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-bottom">
