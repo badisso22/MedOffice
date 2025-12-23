@@ -184,8 +184,45 @@ function viewRecords(patientID) {
     window.location.href = `view_patient.php?patientID=${patientID}`;
 }
 
-async function endAppointment(appointmentID) {
-    if (!confirm('Mark this appointment as completed?')) return;
+function endAppointment(appointmentID) {
+    showConfirmEndModal(appointmentID);
+}
+
+function showConfirmEndModal(appointmentID) {
+    const confirmHtml = `
+        <div class="modal active" id="confirmEndModal">
+            <div class="modal-content">
+                <div class="modal-icon warning">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="modal-header">
+                    <h2>End Consultation</h2>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to mark this appointment as completed?</p>
+                </div>
+                <div class="modal-actions">
+                    <button onclick="closeConfirmEndModal()" class="btn btn-secondary">Cancel</button>
+                    <button onclick="confirmEndAppointment(${appointmentID})" class="btn btn-primary">Yes, Complete</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', confirmHtml);
+}
+
+function closeConfirmEndModal() {
+    const modal = document.getElementById('confirmEndModal');
+    if (modal) modal.remove();
+}
+
+async function confirmEndAppointment(appointmentID) {
+    closeConfirmEndModal();
 
     try {
         const res = await fetch('../api/end-appointment.php', {
@@ -203,11 +240,25 @@ async function endAppointment(appointmentID) {
             return;
         }
 
-        alert('Appointment completed successfully');
-        location.reload(); 
+        showEndSuccessModal();
 
     } catch (err) {
         console.error(err);
         alert('Network error');
     }
+}
+
+function showEndSuccessModal() {
+    const modal = document.getElementById('successEndModal');
+    if (modal) {
+        modal.classList.add('active');
+    }
+}
+
+function closeEndSuccessModal() {
+    const modal = document.getElementById('successEndModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    location.reload();
 }
