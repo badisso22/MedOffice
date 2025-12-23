@@ -10,9 +10,12 @@ session_start();
     <link rel="stylesheet" href="../CSS/general.css">
     <link rel="stylesheet" href="../CSS/dashboard.css">
     <link rel="stylesheet" href="../CSS/edit_cabinet.css">
+    <link rel="stylesheet" href="../CSS/admin_modals.css">
+
 </head>
 <body>
-    <nav>
+    
+<nav>
         <div class="nav-container">
             <button class="drawer-toggle" onclick="toggleDrawer()">
                 <span></span>
@@ -42,7 +45,6 @@ session_start();
             </div>
         </div>
     </nav>
-
     <div class="drawer" id="drawer">
         <div class="drawer-header">
             <div class="logo">
@@ -52,7 +54,7 @@ session_start();
             <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
         </div>
         <ul class="drawer-menu">
-            <li><a href="dashboard_ad.php">
+            <li><a href="dashboard_ad.php" class="active">
                 <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 Dashboard
             </a></li>
@@ -84,6 +86,14 @@ session_start();
                 <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Appointments
             </a></li>
+            <!--<li><a href="medical_records.php">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                Medical Records
+            </a></li>
+            <li><a href="prescriptions.php">
+                <svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                Prescriptions
+            </a></li>-->
             <li><a href="reports_analytics.php">
                 <svg viewBox="0 0 24 24" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                 Reports
@@ -109,11 +119,11 @@ session_start();
 
         <div class="edit-main-content">
             <div class="form-wrapper">
-                <form class="edit-form" onsubmit="handleSubmit(event)">
+                <form class="edit-form" id="cabinetForm">
                     <div class="form-section">
                         <div class="section-title">
                             <h2>Basic Information</h2>
-                            <p>Update your cabinet's name and operational status</p>
+                            <p>Update your cabinet's name</p>
                         </div>
                         <div class="form-group">
                             <label for="cabinet-name" class="form-label">
@@ -129,20 +139,6 @@ session_start();
                                 required
                             >
                             <p class="form-hint">The official name of your medical cabinet</p>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status" class="form-label">
-                                Operational Status
-                                <span class="required">*</span>
-                            </label>
-                            <select id="status" name="status" class="form-input" required>
-                                <option value="">Select Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                                <option value="maintenance">Maintenance</option>
-                            </select>
-                            <p class="form-hint">Current operational status of your cabinet</p>
                         </div>
                     </div>
 
@@ -177,7 +173,7 @@ session_start();
                                 id="phone" 
                                 name="phone" 
                                 class="form-input"
-                                placeholder="+1 (555) 123-4567"
+                                placeholder="+213 555 123456"
                                 required
                             >
                             <p class="form-hint">Primary phone number for patient inquiries</p>
@@ -208,23 +204,74 @@ session_start();
 
                     <div class="form-section">
                         <div class="section-title">
-                            <h2>Working Hours</h2>
-                            <p>Define your cabinet's operational hours</p>
+                            <h2>Medical Specialty</h2>
+                            <p>Define your cabinet's specialization</p>
                         </div>
                         <div class="form-group">
-                            <label for="working-hours" class="form-label">
-                                Working Hours
-                                <span class="required">*</span>
+                            <label for="specialty" class="form-label">
+                                Cabinet Specialty
                             </label>
                             <input 
                                 type="text" 
-                                id="working-hours" 
-                                name="working-hours" 
+                                id="specialty" 
+                                name="specialty" 
+                                class="form-input"
+                                placeholder="e.g., General Practice, Cardiology"
+                            >
+                            <p class="form-hint">Primary medical specialty of your cabinet</p>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title">
+                            <h2>Working Hours</h2>
+                            <p>Define your cabinet's operational hours</p>
+                        </div>
+                        
+                        <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label for="work-start-time" class="form-label">
+                                    Opening Time
+                                    <span class="required">*</span>
+                                </label>
+                                <input 
+                                    type="time" 
+                                    id="work-start-time" 
+                                    name="work-start-time" 
+                                    class="form-input"
+                                    required
+                                >
+                                <p class="form-hint">When does the cabinet open?</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="work-end-time" class="form-label">
+                                    Closing Time
+                                    <span class="required">*</span>
+                                </label>
+                                <input 
+                                    type="time" 
+                                    id="work-end-time" 
+                                    name="work-end-time" 
+                                    class="form-input"
+                                    required
+                                >
+                                <p class="form-hint">When does the cabinet close?</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="working-hours-text" class="form-label">
+                                Working Hours Description (optional)
+                            </label>
+                            <input 
+                                type="text" 
+                                id="working-hours-text" 
+                                name="working-hours-text" 
                                 class="form-input"
                                 placeholder="Mon-Fri: 9:00 AM - 6:00 PM, Sat: 10:00 AM - 2:00 PM"
-                                required
                             >
-                            <p class="form-hint">Specify your working schedule (e.g., Mon-Fri: 9:00 AM - 6:00 PM)</p>
+                            <p class="form-hint">Human-readable description of your schedule</p>
                         </div>
                     </div>
 
@@ -259,9 +306,9 @@ session_start();
                 <ul class="info-box-list">
                     <li>All fields marked with <span class="required">*</span> are required</li>
                     <li>Changes will be saved immediately upon submission</li>
-                    <li>Email notifications will be sent to registered admins</li>
-                    <li>Cabinet status changes may affect patient appointments</li>
-                    <li>Ensure working hours are in a clear, readable format</li>
+                    <li>Opening and closing times will update the calendar availability</li>
+                    <li>Ensure working hours don't conflict with existing appointments</li>
+                    <li>The working hours description is for display purposes only</li>
                 </ul>
             </div>
         </div>
@@ -287,6 +334,7 @@ session_start();
         </div>
     </footer>
 
+    <script src="../ajax/edit-cabinet.js"></script>
     <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
