@@ -19,14 +19,18 @@ try {
         throw new Exception('Database connection error');
     }
 
-    $raw = file_get_contents('php://input');
-    $input = json_decode($raw, true);
-
-    if (!is_array($input)) {
-        throw new Exception('Invalid request body');
+    $appointmentID = 0;
+    
+    if (!empty($_POST['appointmentID'])) {
+        $appointmentID = (int)$_POST['appointmentID'];
+    } else {
+        $raw = file_get_contents('php://input');
+        $input = json_decode($raw, true);
+        if (is_array($input) && isset($input['appointmentID'])) {
+            $appointmentID = (int)$input['appointmentID'];
+        }
     }
 
-    $appointmentID = isset($input['appointmentID']) ? (int)$input['appointmentID'] : 0;
     if ($appointmentID <= 0) {
         throw new Exception('Invalid appointment ID');
     }
