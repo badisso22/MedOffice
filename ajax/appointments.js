@@ -114,8 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
                 <div class="quick-actions">
-                    <button class="action-btn btn-primary" onclick="viewRecords(${apt.patientID})">View Records</button>
-                    <button class="action-btn btn-secondary" onclick="endAppointment(${apt.appointmentID})">End Consultation</button>
+                    <button class="action-btn btn-primary" onclick="startConsultation(${apt.appointmentID}, ${apt.patientID})">Start Consultation</button>
                 </div>
             </div>
         `;
@@ -180,85 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadAppointments();
 });
 
-function viewRecords(patientID) {
-    window.location.href = `view_patient.php?patientID=${patientID}`;
-}
-
-function endAppointment(appointmentID) {
-    showConfirmEndModal(appointmentID);
-}
-
-function showConfirmEndModal(appointmentID) {
-    const confirmHtml = `
-        <div class="modal active" id="confirmEndModal">
-            <div class="modal-content">
-                <div class="modal-icon warning">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                        <line x1="12" y1="9" x2="12" y2="13"></line>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                    </svg>
-                </div>
-                <div class="modal-header">
-                    <h2>End Consultation</h2>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to mark this appointment as completed?</p>
-                </div>
-                <div class="modal-actions">
-                    <button onclick="closeConfirmEndModal()" class="btn btn-secondary">Cancel</button>
-                    <button onclick="confirmEndAppointment(${appointmentID})" class="btn btn-primary">Yes, Complete</button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', confirmHtml);
-}
-
-function closeConfirmEndModal() {
-    const modal = document.getElementById('confirmEndModal');
-    if (modal) modal.remove();
-}
-
-async function confirmEndAppointment(appointmentID) {
-    closeConfirmEndModal();
-
-    try {
-        const res = await fetch('../api/end-appointment.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({ appointmentID: appointmentID })
-        });
-
-        const json = await res.json();
-        if (!res.ok || !json.success) {
-            alert(json.message || 'Could not end appointment');
-            return;
-        }
-
-        showEndSuccessModal();
-
-    } catch (err) {
-        console.error(err);
-        alert('Network error');
-    }
-}
-
-function showEndSuccessModal() {
-    const modal = document.getElementById('successEndModal');
-    if (modal) {
-        modal.classList.add('active');
-    }
-}
-
-function closeEndSuccessModal() {
-    const modal = document.getElementById('successEndModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-    location.reload();
+function startConsultation(appointmentID, patientID) {
+    window.location.href = `consultation.php?appointmentID=${appointmentID}&patientID=${patientID}`;
 }
