@@ -126,16 +126,9 @@ if ($appointmentID <= 0 || $patientID <= 0) {
                     <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Any additional observations..." required></textarea>
                 </div>
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="nextAppointment">Next Appointment Date <span class="required">*</span></label>
-                        <input type="date" id="nextAppointment" name="nextAppointment" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="medicalFees">Consultation Fees (DZD)</label>
-                        <input type="number" id="medicalFees" name="medicalFees" placeholder="0.00" step="0.01" min="0">
-                    </div>
+                <div class="form-group">
+                    <label for="medicalFees">Consultation Fees (DZD)</label>
+                    <input type="number" id="medicalFees" name="medicalFees" placeholder="0.00" step="0.01" min="0">
                 </div>
 
                 <div class="form-actions">
