@@ -625,7 +625,7 @@
 .wizard-progress::before {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 2rem;
   right: 2rem;
   height: 2px;
