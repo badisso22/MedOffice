@@ -827,8 +827,8 @@
 
 .heartbeat {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 25%;
+  left: 20%;
   transform: translate(-50%, -50%);
   animation: heartbeat 1.5s ease-in-out infinite;
 }
