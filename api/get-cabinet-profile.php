@@ -19,7 +19,24 @@ try {
         throw new Exception('Cabinet ID not found');
     }
 
-    $sql = "SELECT cabinetname, cabinetlocation, contact_email, cabinetphonenumber, cabinetworktime, cabinetspeciality, cabinetbio FROM CabinetInfo WHERE cabinetID = ? LIMIT 1";
+    $sql = "
+        SELECT
+            cabinetname,
+            cabinetlocation,
+            contact_email,
+            cabinetphonenumber,
+            cabinetworktime,
+            cabinetspeciality,
+            cabinetbio,
+            websiteUrl,
+            facebookUrl,
+            twitterUrl,
+            instagramUrl,
+            linkedinUrl
+        FROM CabinetInfo
+        WHERE cabinetID = ?
+        LIMIT 1
+    ";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
@@ -43,15 +60,15 @@ try {
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $doctorsResult = $stmt->get_result();
-    
+
     $doctors = [];
     while ($row = $doctorsResult->fetch_assoc()) {
         $doctors[] = [
-            'id' => (int)$row['doctorID'],
-            'name' => 'Dr. ' . $row['firstName'] . ' ' . $row['lastName'],
-            'specialty' => $row['speciality'],
+            'id'         => (int)$row['doctorID'],
+            'name'       => 'Dr. ' . $row['firstName'] . ' ' . $row['lastName'],
+            'specialty'  => $row['speciality'],
             'experience' => $row['yearsOfExperience'],
-            'bio' => $row['bio']
+            'bio'        => $row['bio']
         ];
     }
     $stmt->close();
@@ -70,76 +87,96 @@ try {
     $pricing = [];
     while ($row = $pricingResult->fetch_assoc()) {
         $pricing[] = [
-            'service' => $row['serviceName'],
-            'price' => (float)$row['price'],
+            'service'     => $row['serviceName'],
+            'price'       => (float)$row['price'],
             'description' => $row['description']
         ];
     }
     $stmt->close();
 
+    $sqlFacilities = "
+        SELECT facility
+        FROM CabinetFacilities
+        WHERE cabinetID = ?
+        ORDER BY facility
+    ";
+    $stmt = $conn->prepare($sqlFacilities);
+    $stmt->bind_param('i', $cabinetID);
+    $stmt->execute();
+    $facilitiesResult = $stmt->get_result();
+
+    $facilities = [];
+    while ($row = $facilitiesResult->fetch_assoc()) {
+        $facilities[] = $row['facility'];
+    }
+    $stmt->close();
 
     $sqlReviews = "
-    SELECT pf.feedback_title, pf.feedback_message, pf.created_at,
-           COALESCE(pf.doctor_competence_rating, 0) as rating,
-           u.username
-    FROM PatientFeedback pf
-    INNER JOIN Users u ON u.userID = pf.patient_id
-    WHERE pf.cabinet_id = ? AND pf.feedback_message IS NOT NULL
-    ORDER BY pf.created_at DESC
-    LIMIT 10
+        SELECT pf.feedback_title, pf.feedback_message, pf.created_at,
+               COALESCE(pf.doctor_competence_rating, 0) as rating,
+               u.username
+        FROM PatientFeedback pf
+        INNER JOIN Users u ON u.userID = pf.patient_id
+        WHERE pf.cabinet_id = ? AND pf.feedback_message IS NOT NULL
+        ORDER BY pf.created_at DESC
+        LIMIT 10
     ";
-
-
     $stmt = $conn->prepare($sqlReviews);
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $reviewsResult = $stmt->get_result();
-    
-    $reviews = [];
-    $totalRating = 0;
-    $ratingCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
-    
-    while ($row = $reviewsResult->fetch_assoc()) {
 
-        $rating = (int)$row['rating'];  
+    $reviews      = [];
+    $totalRating  = 0;
+    $ratingCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+
+    while ($row = $reviewsResult->fetch_assoc()) {
+        $rating = (int)$row['rating'];
         if ($rating > 0) {
             $totalRating += $rating;
             $ratingCounts[$rating]++;
         }
-        
+
         $reviews[] = [
             'username' => $row['username'],
-            'rating' => $rating,
-            'title' => $row['feedback_title'],
-            'message' => $row['feedback_message'],
-            'date' => $row['created_at']
+            'rating'   => $rating,
+            'title'    => $row['feedback_title'],
+            'message'  => $row['feedback_message'],
+            'date'     => $row['created_at']
         ];
-
-    }   
+    }
     $stmt->close();
 
-    $totalReviews = count($reviews);
+    $totalReviews  = count($reviews);
     $averageRating = $totalReviews > 0 ? round($totalRating / $totalReviews, 1) : 0;
 
     $response['success'] = true;
     $response['data'] = [
         'cabinet' => [
-        'name' => $cabinet['cabinetname'],
-        'location' => $cabinet['cabinetlocation'],
-        'email' => $cabinet['contact_email'],
-        'phone' => $cabinet['cabinetphonenumber'],
-        'hours' => $cabinet['cabinetworktime'],
-        'specialty' => $cabinet['cabinetspeciality'],
-        'bio' => $cabinet['cabinetbio']
+            'name'              => $cabinet['cabinetname'],
+            'location'          => $cabinet['cabinetlocation'],
+            'email'             => $cabinet['contact_email'],
+            'phone'             => $cabinet['cabinetphonenumber'],
+            'hours'             => $cabinet['cabinetworktime'],
+            'specialty'         => $cabinet['cabinetspeciality'],
+            'bio'               => $cabinet['cabinetbio'],
+            'websiteUrl'        => $cabinet['websiteUrl'] ?? null,
+            'facebookUrl'       => $cabinet['facebookUrl'] ?? null,
+            'twitterUrl'        => $cabinet['twitterUrl'] ?? null,
+            'instagramUrl'      => $cabinet['instagramUrl'] ?? null,
+            'linkedinUrl'       => $cabinet['linkedinUrl'] ?? null,
+            'establishedYear'   => $cabinet['establishedYear'] ?? null,
+            'additionalServices'=> $cabinet['additionalServices'] ?? null,
         ],
-        'doctors' => $doctors,
-        'reviews' => $reviews,
-        'rating' => [
-            'average' => $averageRating,
-            'total' => $totalReviews,
+        'doctors'    => $doctors,
+        'reviews'    => $reviews,
+        'rating'     => [
+            'average'   => $averageRating,
+            'total'     => $totalReviews,
             'breakdown' => $ratingCounts
         ],
-        'pricing' => $pricing  
+        'pricing'    => $pricing,
+        'facilities' => $facilities
     ];
 
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
@@ -149,4 +186,3 @@ try {
     $response['errors'][] = $e->getMessage();
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
 }
-
