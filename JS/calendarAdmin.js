@@ -439,42 +439,57 @@ function searchPatients() {
   }
 }
 
-function generateTimeSlots() {
-  const container = document.getElementById("timeSlotsContainer")
-  container.innerHTML = ""
+async function generateTimeSlots() {
+    const container = document.getElementById("timeSlotsContainer");
+    container.innerHTML = "";
 
-  const selectedDate = document.getElementById("appointmentDate").value
-  
-  let bookedTimes = []
-  if (selectedDate && appointments[selectedDate]) {
-    bookedTimes = appointments[selectedDate].map(apt => apt.time)
-  }
-
-  const startHour = 9
-  const endHour = 24
-
-  for (let hour = startHour; hour < endHour; hour++) {
-    for (const minute of [0, 30]) {
-      const timeString = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
-      const displayTime = formatTime12Hour(hour, minute)
-      const isBooked = bookedTimes.includes(timeString)
-
-      const slot = document.createElement("div")
-      slot.className = `time-slot ${isBooked ? 'booked' : ''}`
-      slot.dataset.time = timeString
-      slot.innerHTML = `
-        <div class="time-slot-icon">${icons.clock}</div>
-        <div class="time-slot-time">${displayTime}</div>
-        ${isBooked ? '<div class="booked-label">Booked</div>' : ''}
-      `
-      
-      if (!isBooked) {
-        slot.onclick = () => selectTimeSlot(slot)
-      }
-
-      container.appendChild(slot)
+    const selectedDate = document.getElementById("appointmentDate").value;
+    
+    let bookedTimes = [];
+    if (selectedDate && appointments[selectedDate]) {
+        bookedTimes = appointments[selectedDate].map(apt => apt.time);
     }
-  }
+
+    let startHour = 7;
+    let endHour = 18;
+
+    try {
+        const res = await fetch('../api/get-cabinet-info.php');
+        const json = await res.json();
+        if (json.success && json.data.cabinet) {
+            const start = json.data.cabinet.workStartTime;
+            const end = json.data.cabinet.workEndTime;
+            
+            if (start) startHour = parseInt(start.split(':')[0]);
+            if (end) endHour = parseInt(end.split(':')[0]);
+        }
+    } catch (err) {
+        console.warn('Using default hours (9-18)', err);
+    }
+
+    for (let hour = startHour; hour < endHour; hour++) {
+        for (const minute of [0, 30]) {
+            const timeString = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+            const displayTime = formatTime12Hour(hour, minute);
+            
+            const isBooked = bookedTimes.includes(timeString);
+
+            const slot = document.createElement("div");
+            slot.className = `time-slot ${isBooked ? 'booked' : ''}`;
+            slot.dataset.time = timeString;
+            slot.innerHTML = `
+                <div class="time-slot-icon">${icons.clock}</div>
+                <div class="time-slot-time">${displayTime}</div>
+                ${isBooked ? '<div class="booked-label">Booked</div>' : ''}
+            `;
+            
+            if (!isBooked) {
+                slot.onclick = () => selectTimeSlot(slot);
+            }
+
+            container.appendChild(slot);
+        }
+    }
 }
 
 function formatTime12Hour(hour, minute) {
