@@ -143,7 +143,7 @@
     </div>
   </div>
   <br>
-  <a href="dashboard_admin.php" class="btn btn-secondary">← Dashboard</a>
+  <a href="dashboard_ad.php" class="btn btn-secondary">← Dashboard</a>
 </main>
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal modal-large">
