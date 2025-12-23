@@ -1,9 +1,12 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cabinet Management - Admin</title>
+    <title>Cabinet Profile - MedOffice</title>
     <link rel="stylesheet" href="../CSS/general.css">
     <link rel="stylesheet" href="../CSS/about-cabinet.css">
     <link rel="stylesheet" href="../CSS/dashboard.css">
@@ -22,7 +25,7 @@
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Dr. John Doe</span>
+                <span class="user-name">Dr. <?= htmlspecialchars($fullname ?? 'User') ?></span>
                 <div class="top-icons">
                     <a href="messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -100,10 +103,8 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
-
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <div class="back-button-container">
         <a href="dashboard_ad.php" class="back-button">
@@ -118,125 +119,40 @@
         <div class="cabinet-header">
             <img src="https://placeholder.svg?height=110&width=110&query=medical+clinic+logo" alt="Cabinet Logo" class="cabinet-avatar">
             <div class="cabinet-main-info">
-                <h1>Cabinet Name</h1>
+                <h1>Loading...</h1>
                 <div class="cabinet-rating">
                     <span class="rating-stars">★★★★★</span>
-                    <span class="rating-value">4.8</span>
-                    <span class="review-count">(145 reviews)</span>
+                    <span class="rating-value">0</span>
+                    <span class="review-count">(0 reviews)</span>
                 </div>
                 <div class="cabinet-location">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                    <span>ESST, Algiers</span>
-                    <a href="https://maps.app.goo.gl/6zoLACDA4jriLqzN8" target="_blank" class="gps-link">View on Map</a>
+                    <span>Loading...</span>
+                    <a href="#" target="_blank" class="gps-link">View on Map</a>
                 </div>
             </div>
-        </div>
+        </div>  
         <div class="cabinet-bio">
-            <p>Welcome to our professional medical cabinet! We offer a wide range of healthcare services with a dedicated team of doctors and staff. Our mission is to provide quality care and a welcoming environment for all patients.</p>
-        </div>
+            <p id="cabinet-bio-text">Loading...</p>
+         </div>
+   
         <div class="ratings-section">
             <h2>Ratings & Reviews</h2>
             <div class="ratings-overview">
                 <div class="rating-score">
-                    <div class="big-rating">4.8</div>
+                    <div class="big-rating">0</div>
                     <div class="star-display">★★★★★</div>
-                    <div class="total-reviews">145 total reviews</div>
+                    <div class="total-reviews">0 total reviews</div>
                 </div>
                 <div class="rating-breakdown">
-                    <div class="rating-bar-item">
-                        <span class="star-label">5★</span>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: 75%"></div>
-                        </div>
-                        <span class="count">109</span>
-                    </div>
-                    <div class="rating-bar-item">
-                        <span class="star-label">4★</span>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: 15%"></div>
-                        </div>
-                        <span class="count">22</span>
-                    </div>
-                    <div class="rating-bar-item">
-                        <span class="star-label">3★</span>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: 7%"></div>
-                        </div>
-                        <span class="count">10</span>
-                    </div>
-                    <div class="rating-bar-item">
-                        <span class="star-label">2★</span>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: 2%"></div>
-                        </div>
-                        <span class="count">3</span>
-                    </div>
-                    <div class="rating-bar-item">
-                        <span class="star-label">1★</span>
-                        <div class="bar-container">
-                            <div class="bar-fill" style="width: 1%"></div>
-                        </div>
-                        <span class="count">1</span>
-                    </div>
                 </div>
             </div>
         </div>
         <div class="doctors-section">
             <h2>Our Doctors</h2>
             <div class="doctors-grid">
-                <div class="doctor-card" onclick="showDoctorProfile(1)">
-                    <img src="https://placeholder.svg?height=100&width=100&query=male+doctor+portrait" alt="Doctor" class="doctor-image">
-                    <div class="doctor-info">
-                        <h3>Dr. Ahmed Benali</h3>
-                        <p class="doctor-specialty">Cardiologist</p>
-                        <div class="doctor-rating">
-                            <span class="stars">★★★★★</span>
-                            <span class="rating">4.9</span>
-                        </div>
-                        <p class="doctor-experience">15 years experience</p>
-                    </div>
-                </div>
-
-                <div class="doctor-card" onclick="showDoctorProfile(2)">
-                    <img src="https://placeholder.svg?height=100&width=100&query=female+doctor+portrait" alt="Doctor" class="doctor-image">
-                    <div class="doctor-info">
-                        <h3>Dr. Fatima Khelifi</h3>
-                        <p class="doctor-specialty">Pediatrician</p>
-                        <div class="doctor-rating">
-                            <span class="stars">★★★★★</span>
-                            <span class="rating">4.8</span>
-                        </div>
-                        <p class="doctor-experience">12 years experience</p>
-                    </div>
-                </div>
-
-                <div class="doctor-card" onclick="showDoctorProfile(3)">
-                    <img src="https://placeholder.svg?height=100&width=100&query=male+doctor+dermatology" alt="Doctor" class="doctor-image">
-                    <div class="doctor-info">
-                        <h3>Dr. Karim Meziane</h3>
-                        <p class="doctor-specialty">Dermatologist</p>
-                        <div class="doctor-rating">
-                            <span class="stars">★★★★☆</span>
-                            <span class="rating">4.6</span>
-                        </div>
-                        <p class="doctor-experience">10 years experience</p>
-                    </div>
-                </div>
-
-                <div class="doctor-card" onclick="showDoctorProfile(4)">
-                    <img src="https://placeholder.svg?height=100&width=100&query=female+doctor+neurologist" alt="Doctor" class="doctor-image">
-                    <div class="doctor-info">
-                        <h3>Dr. Samira Touati</h3>
-                        <p class="doctor-specialty">Neurologist</p>
-                        <div class="doctor-rating">
-                            <span class="stars">★★★★★</span>
-                            <span class="rating">4.9</span>
-                        </div>
-                        <p class="doctor-experience">18 years experience</p>
-                    </div>
-                </div>
             </div>
-        </div>
+        </div>      
         <div class="reviews-section">
             <div class="reviews-header">
                 <h2>Patient Reviews</h2>
@@ -244,101 +160,6 @@
             </div>
             
             <div class="reviews-list" id="reviewsList">
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://placeholder.svg?height=50&width=50&query=patient+avatar" alt="Patient" class="reviewer-avatar">
-                            <div>
-                                <h4 class="reviewer-name">Sarah M.</h4>
-                                <div class="review-meta">
-                                    <span class="review-stars">★★★★★</span>
-                                    <span class="review-date">2 weeks ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">Excellent service! Dr. Benali was very thorough and took time to explain everything. The staff was friendly and professional. Highly recommend this cabinet!</p>
-                </div>
-
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://placeholder.svg?height=50&width=50&query=male+patient+avatar" alt="Patient" class="reviewer-avatar">
-                            <div>
-                                <h4 class="reviewer-name">Karim B.</h4>
-                                <div class="review-meta">
-                                    <span class="review-stars">★★★★★</span>
-                                    <span class="review-date">1 month ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">Dr. Khelifi is amazing with children. My daughter felt comfortable the entire visit. Clean facility and easy appointment scheduling.</p>
-                </div>
-
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://placeholder.svg?height=50&width=50&query=female+patient+avatar" alt="Patient" class="reviewer-avatar">
-                            <div>
-                                <h4 class="reviewer-name">Amina L.</h4>
-                                <div class="review-meta">
-                                    <span class="review-stars">★★★★☆</span>
-                                    <span class="review-date">1 month ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">Very professional and the treatment was effective. The only issue was waiting time was a bit long, but overall great experience.</p>
-                </div>
-
-                <div class="review-card hidden-review">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://placeholder.svg?height=50&width=50&query=male+patient" alt="Patient" class="reviewer-avatar">
-                            <div>
-                                <h4 class="reviewer-name">Mohamed A.</h4>
-                                <div class="review-meta">
-                                    <span class="review-stars">★★★★★</span>
-                                    <span class="review-date">2 months ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">Outstanding care from Dr. Touati. She accurately diagnosed my condition and the treatment plan worked perfectly. Thank you!</p>
-                </div>
-
-                <div class="review-card hidden-review">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://placeholder.svg?height=50&width=50&query=woman+patient" alt="Patient" class="reviewer-avatar">
-                            <div>
-                                <h4 class="reviewer-name">Nadia K.</h4>
-                                <div class="review-meta">
-                                    <span class="review-stars">★★★★★</span>
-                                    <span class="review-date">2 months ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">I've been coming here for years. The doctors are knowledgeable and caring. The facility is always clean and well-maintained.</p>
-                </div>
-
-                <div class="review-card hidden-review">
-                    <div class="review-header">
-                        <div class="reviewer-info">
-                            <img src="https://placeholder.svg?height=50&width=50&query=senior+patient" alt="Patient" class="reviewer-avatar">
-                            <div>
-                                <h4 class="reviewer-name">Hassan D.</h4>
-                                <div class="review-meta">
-                                    <span class="review-stars">★★★★☆</span>
-                                    <span class="review-date">3 months ago</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">Good medical care and reasonable prices. The receptionist was helpful in scheduling my appointments around my availability.</p>
-                </div>
             </div>
         </div>
 
@@ -346,25 +167,21 @@
             <div class="cabinet-detail-box">
                 <h3>Appointment Pricing</h3>
                 <ul>
-                    <li>General Consultation: <strong>2000 DA</strong></li>
-                    <li>Specialist Visit: <strong>3500 DA</strong></li>
-                    <li>Follow-up: <strong>1500 DA</strong></li>
+                    <li>General Consultation: <strong>2000 DZD</strong></li>
+                    <li>Specialist Visit: <strong>3500 DZD</strong></li>
+                    <li>Follow-up: <strong>1500 DZD</strong></li>
                 </ul>
             </div>
             <div class="cabinet-detail-box">
                 <h3>Specializations</h3>
-                <ul>
-                    <li>Cardiology</li>
-                    <li>Pediatrics</li>
-                    <li>Dermatology</li>
-                    <li>Neurology</li>
+                <ul id="specializations-list">
                 </ul>
             </div>
             <div class="cabinet-detail-box">
                 <h3>Contact</h3>
                 <ul>
-                    <li>Phone: +213 555 123 456</li>
-                    <li>Email: info@med-office.com</li>
+                    <li>Phone: <span id="contact-phone">—</span></li>
+                    <li>Email: <span id="contact-email">—</span></li>
                 </ul>
             </div>
         </div>
@@ -380,46 +197,43 @@
         <div class="modal-content">
             <span class="modal-close" onclick="closeDoctorProfile()">&times;</span>
             <div class="modal-header">
-                <img id="modalDoctorImage" src="/placeholder.svg" alt="Doctor" class="modal-doctor-image">
+                <img id="modalDoctorImage" src="/placeholder.svg" alt="Doctor" class="modal-doctor-image" style="display: none;">
                 <div class="modal-doctor-main">
                     <h2 id="modalDoctorName">Doctor Name</h2>
                     <p id="modalDoctorSpecialty" class="modal-specialty">Specialty</p>
                     <div class="modal-rating">
                         <span class="stars" id="modalDoctorStars">★★★★★</span>
-                        <span class="rating" id="modalDoctorRating">4.9</span>
-                        <span class="review-count" id="modalDoctorReviews">(120 reviews)</span>
+                        <span class="rating" id="modalDoctorRating">0</span>
+                        <span class="review-count" id="modalDoctorReviews">(0 reviews)</span>
                     </div>
                 </div>
             </div>
             <div class="modal-body">
                 <div class="modal-section">
                     <h3>About</h3>
-                    <p id="modalDoctorBio">Experienced medical professional dedicated to providing quality healthcare.</p>
+                    <p id="modalDoctorBio">Experienced medical professional.</p>
                 </div>
                 <div class="modal-section">
                     <h3>Experience</h3>
-                    <p id="modalDoctorExperience">15 years of medical practice</p>
+                    <p id="modalDoctorExperience">—</p>
                 </div>
                 <div class="modal-section">
                     <h3>Education</h3>
                     <ul id="modalDoctorEducation">
-                        <li>Medical Degree - University of Algiers</li>
-                        <li>Specialization in Cardiology - Paris Medical School</li>
+                        <li>No education data available</li>
                     </ul>
                 </div>
                 <div class="modal-section">
                     <h3>Languages</h3>
-                    <p id="modalDoctorLanguages">Arabic, French, English</p>
+                    <p id="modalDoctorLanguages">—</p>
                 </div>
                 <div class="modal-section">
                     <h3>Availability</h3>
-                    <p id="modalDoctorAvailability">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                    <p id="modalDoctorAvailability">See calendar for availability</p>
                 </div>
             </div>
-            <div class="modal-footer">
-            </div>
         </div>
-    </div>
+    </div> 
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -440,127 +254,16 @@
             <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
         </div>
     </footer>
+    <script src="../ajax/cabinet-profile.js"></script>
     <script>
-    const doctors = {
-        1: {
-            name: "Dr. Ahmed Benali",
-            specialty: "Cardiologist",
-            image: "https://placeholder.svg?height=150&width=150&query=male+doctor+portrait",
-            rating: 4.9,
-            reviews: 120,
-            stars: "★★★★★",
-            bio: "Dr. Benali is a highly experienced cardiologist with over 15 years of practice. He specializes in interventional cardiology and has helped thousands of patients with heart-related conditions.",
-            experience: "15 years of medical practice specializing in Cardiology",
-            education: ["Medical Degree - University of Algiers (2008)", "Cardiology Specialization - Paris Medical School (2012)", "Fellowship in Interventional Cardiology - Lyon Hospital (2014)"],
-            languages: "Arabic, French, English",
-            availability: "Monday, Wednesday, Friday: 9:00 AM - 4:00 PM"
-        },
-        2: {
-            name: "Dr. Fatima Khelifi",
-            specialty: "Pediatrician",
-            image: "https://placeholder.svg?height=150&width=150&query=female+doctor+portrait",
-            rating: 4.8,
-            reviews: 98,
-            stars: "★★★★★",
-            bio: "Dr. Khelifi is dedicated to providing compassionate care to children of all ages. She has extensive experience in pediatric care and child development.",
-            experience: "12 years of medical practice specializing in Pediatrics",
-            education: ["Medical Degree - University of Constantine (2011)", "Pediatrics Specialization - CHU Algiers (2015)"],
-            languages: "Arabic, French",
-            availability: "Tuesday, Thursday: 10:00 AM - 6:00 PM, Saturday: 9:00 AM - 2:00 PM"
-        },
-        3: {
-            name: "Dr. Karim Meziane",
-            specialty: "Dermatologist",
-            image: "https://placeholder.svg?height=150&width=150&query=male+doctor+dermatology",
-            rating: 4.6,
-            reviews: 85,
-            stars: "★★★★☆",
-            bio: "Dr. Meziane specializes in both medical and cosmetic dermatology, helping patients achieve healthy skin and confidence.",
-            experience: "10 years of medical practice specializing in Dermatology",
-            education: ["Medical Degree - University of Oran (2013)", "Dermatology Specialization - Nice University Hospital (2017)"],
-            languages: "Arabic, French, English",
-            availability: "Monday - Thursday: 2:00 PM - 7:00 PM"
-        },
-        4: {
-            name: "Dr. Samira Touati",
-            specialty: "Neurologist",
-            image: "https://placeholder.svg?height=150&width=150&query=female+doctor+neurologist",
-            rating: 4.9,
-            reviews: 142,
-            stars: "★★★★★",
-            bio: "Dr. Touati is a renowned neurologist with expertise in treating complex neurological disorders. She is known for her patient-centered approach and diagnostic accuracy.",
-            experience: "18 years of medical practice specializing in Neurology",
-            education: ["Medical Degree - University of Algiers (2005)", "Neurology Specialization - Marseille Medical School (2009)", "Fellowship in Movement Disorders - Geneva Hospital (2011)"],
-            languages: "Arabic, French, English, Spanish",
-            availability: "Monday, Wednesday, Friday: 8:00 AM - 3:00 PM"
+        function toggleDrawer() {
+            const drawer = document.getElementById('drawer');
+            const overlay = document.getElementById('drawerOverlay');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('active');
         }
-    };
 
-    function showDoctorProfile(doctorId) {
-        const doctor = doctors[doctorId];
-        if (!doctor) return;
-
-        document.getElementById('modalDoctorImage').src = doctor.image;
-        document.getElementById('modalDoctorName').textContent = doctor.name;
-        document.getElementById('modalDoctorSpecialty').textContent = doctor.specialty;
-        document.getElementById('modalDoctorStars').textContent = doctor.stars;
-        document.getElementById('modalDoctorRating').textContent = doctor.rating;
-        document.getElementById('modalDoctorReviews').textContent = `(${doctor.reviews} reviews)`;
-        document.getElementById('modalDoctorBio').textContent = doctor.bio;
-        document.getElementById('modalDoctorExperience').textContent = doctor.experience;
-        document.getElementById('modalDoctorLanguages').textContent = doctor.languages;
-        document.getElementById('modalDoctorAvailability').textContent = doctor.availability;
-
-        const educationList = document.getElementById('modalDoctorEducation');
-        educationList.innerHTML = '';
-        doctor.education.forEach(edu => {
-            const li = document.createElement('li');
-            li.textContent = edu;
-            educationList.appendChild(li);
-        });
-
-        document.getElementById('doctorModal').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeDoctorProfile() {
-        document.getElementById('doctorModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    window.onclick = function(event) {
-        const modal = document.getElementById('doctorModal');
-        if (event.target === modal) {
-            closeDoctorProfile();
-        }
-    }
-
-    function toggleDrawer() {
-        const drawer = document.getElementById('drawer');
-        const overlay = document.getElementById('drawerOverlay');
-        drawer.classList.toggle('open');
-        overlay.classList.toggle('active');
-    }
-
-    function logout() {
-        window.location.href = '../index.html';
-    }
-
-    function toggleAllReviews() {
-        const hiddenReviews = document.querySelectorAll('.hidden-review');
-        const btn = document.querySelector('.btn-show-all');
         
-        hiddenReviews.forEach(review => {
-            if (review.style.display === 'block') {
-                review.style.display = 'none';
-                btn.textContent = 'Show All Reviews';
-            } else {
-                review.style.display = 'block';
-                btn.textContent = 'Show Less';
-            }
-        });
-    }
     </script>
-
 </body>
 </html>
