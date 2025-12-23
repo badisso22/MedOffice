@@ -19,7 +19,11 @@ try {
         throw new Exception('Cabinet ID not found');
     }
 
-    $sql = "SELECT cabinetname, cabinetlocation, contact_email, cabinetphonenumber, cabinetworktime, cabinetspeciality, workStartTime, workEndTime FROM CabinetInfo WHERE cabinetID = ? LIMIT 1";
+    $sql = "SELECT cabinetname, cabinetlocation, contact_email, cabinetphonenumber,
+               cabinetworktime, cabinetspeciality, workStartTime, workEndTime,
+               cabinetbio, websiteUrl, facebookUrl, twitterUrl, instagramUrl, linkedinUrl
+        FROM CabinetInfo
+        WHERE cabinetID = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
@@ -44,6 +48,33 @@ try {
     $totalDoctors = $stmt->get_result()->fetch_assoc()['total'];
     $stmt->close();
 
+    $sqlFacilities = "SELECT facility FROM CabinetFacilities WHERE cabinetID = ? ORDER BY facility";
+    $stmt = $conn->prepare($sqlFacilities);
+    $stmt->bind_param('i', $cabinetID);
+    $stmt->execute();
+    $resFacilities = $stmt->get_result();
+    $facilities = [];
+    while ($row = $resFacilities->fetch_assoc()) {
+        $facilities[] = $row['facility'];
+    }
+    $stmt->close();
+
+    $sqlPricing = "SELECT serviceName, price FROM Pricing WHERE cabinetID = ? AND isActive = 1";
+    $stmt = $conn->prepare($sqlPricing);
+    $stmt->bind_param('i', $cabinetID);
+    $stmt->execute();
+    $resPricing = $stmt->get_result();
+    $pricing = [];
+    while ($row = $resPricing->fetch_assoc()) {
+        $pricing[] = [
+            'service' => $row['serviceName'],
+            'price'   => (float)$row['price']
+        ];
+    }
+    $stmt->close();
+
+
+
     $sqlAssistants = "SELECT COUNT(*) as total FROM AssistantProfile WHERE cabinetID = ? AND isArchived = 0";
     $stmt = $conn->prepare($sqlAssistants);
     $stmt->bind_param('i', $cabinetID);
@@ -60,24 +91,34 @@ try {
     $stmt->close();
 
     $response['success'] = true;
-    $response['data'] = [
-        'cabinet' => [
-        'name' => $cabinet['cabinetname'],
-        'location' => $cabinet['cabinetlocation'],
-        'email' => $cabinet['contact_email'],
-        'phone' => $cabinet['cabinetphonenumber'],
-        'hours' => $cabinet['cabinetworktime'],
-        'specialty' => $cabinet['cabinetspeciality'],
-        'workStartTime' => $cabinet['workStartTime'],
-        'workEndTime' => $cabinet['workEndTime']
-        ],
-        'stats' => [
-            'patients' => $totalPatients,
-            'doctors' => $totalDoctors,
-            'assistants' => $totalAssistants,
-            'appointments' => $totalAppointments
-        ]
-    ];
+    $response['success'] = true;
+$response['data'] = [
+    'cabinet' => [
+        'name'              => $cabinet['cabinetname'],
+        'location'          => $cabinet['cabinetlocation'],
+        'email'             => $cabinet['contact_email'],
+        'phone'             => $cabinet['cabinetphonenumber'],
+        'hours'             => $cabinet['cabinetworktime'],
+        'specialty'         => $cabinet['cabinetspeciality'],
+        'workStartTime'     => $cabinet['workStartTime'],
+        'workEndTime'       => $cabinet['workEndTime'],
+        'bio'               => $cabinet['cabinetbio'],
+        'websiteUrl'        => $cabinet['websiteUrl'],
+        'facebookUrl'       => $cabinet['facebookUrl'],
+        'twitterUrl'        => $cabinet['twitterUrl'],
+        'instagramUrl'      => $cabinet['instagramUrl'],
+        'linkedinUrl'       => $cabinet['linkedinUrl'],
+    ],
+    'facilities' => $facilities,
+    'pricing'    => $pricing,
+    'stats'      => [
+        'patients'     => $totalPatients,
+        'doctors'      => $totalDoctors,
+        'assistants'   => $totalAssistants,
+        'appointments' => $totalAppointments
+    ]
+];
+
 
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
 
