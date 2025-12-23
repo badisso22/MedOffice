@@ -19,8 +19,7 @@ try {
         throw new Exception('Cabinet ID not found');
     }
 
-    // Get cabinet info
-    $sql = "SELECT cabinetname, cabinetlocation, contact_email, cabinetphonenumber, cabinetworktime, cabinetspeciality FROM CabinetInfo WHERE cabinetID = ? LIMIT 1";
+    $sql = "SELECT cabinetname, cabinetlocation, contact_email, cabinetphonenumber, cabinetworktime, cabinetspeciality, workStartTime, workEndTime FROM CabinetInfo WHERE cabinetID = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
@@ -31,7 +30,6 @@ try {
         throw new Exception('Cabinet not found');
     }
 
-    // Get stats
     $sqlPatients = "SELECT COUNT(*) as total FROM PatientTable WHERE cabinetID = ? AND archived = 0";
     $stmt = $conn->prepare($sqlPatients);
     $stmt->bind_param('i', $cabinetID);
@@ -64,12 +62,14 @@ try {
     $response['success'] = true;
     $response['data'] = [
         'cabinet' => [
-            'name' => $cabinet['cabinetname'],
-            'location' => $cabinet['cabinetlocation'],
-            'email' => $cabinet['contact_email'],
-            'phone' => $cabinet['cabinetphonenumber'],
-            'hours' => $cabinet['cabinetworktime'],
-            'specialty' => $cabinet['cabinetspeciality']
+        'name' => $cabinet['cabinetname'],
+        'location' => $cabinet['cabinetlocation'],
+        'email' => $cabinet['contact_email'],
+        'phone' => $cabinet['cabinetphonenumber'],
+        'hours' => $cabinet['cabinetworktime'],
+        'specialty' => $cabinet['cabinetspeciality'],
+        'workStartTime' => $cabinet['workStartTime'],
+        'workEndTime' => $cabinet['workEndTime']
         ],
         'stats' => [
             'patients' => $totalPatients,
