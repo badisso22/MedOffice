@@ -146,38 +146,66 @@
   <a href="dashboard_admin.php" class="btn btn-secondary">← Dashboard</a>
 </main>
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
+  <div class="modal modal-large">
     <div class="modal-header">
-      <h3 id="modalTitle">New System Appointment</h3>
+      <h3 id="modalTitle">Step 1: Select Patient</h3>
       <button class="modal-close" onclick="closeModal()">×</button>
     </div>
+    
+    <div class="wizard-progress">
+      <div class="progress-step active">
+        <div class="progress-circle">1</div>
+        <div class="progress-label">Patient</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-circle">2</div>
+        <div class="progress-label">Time</div>
+      </div>
+      <div class="progress-step">
+        <div class="progress-circle">3</div>
+        <div class="progress-label">Details</div>
+      </div>
+    </div>
+    
     <div class="modal-body">
-      <form id="appointmentForm" onsubmit="event.preventDefault(); saveAppointment();">
+      <input type="date" id="appointmentDate" style="display: none;">
+      <input type="text" id="appointmentTime" style="display: none;">
+      
+      <div id="step1" class="wizard-step active">
+        <div class="search-container">
+          <label style="display: block; margin-bottom: 0.75rem; font-weight: 600; color: #1f2937; font-size: 1rem;">Search Patient</label>
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="patientSearch" class="search-input" placeholder="Search by name, ID, or phone..." oninput="searchPatients()">
+          </div>
+        </div>
+        
         <div class="modal-form-group">
           <label for="patientSelect">Select Patient *</label>
-          <select id="patientSelect" required onchange="loadPatientInfo()">
-            <option value="">-- Search and Select Patient --</option>
-            <option value="001" data-phone="0555123456">Samia Boulkrinat (ID: 001)</option>
-            <option value="002" data-phone="0555987654">John Wilson (ID: 002)</option>
-            <option value="003" data-phone="0555456789">Maria Garcia (ID: 003)</option>
+          <select id="patientSelect" size="8" class="patient-select-large" onchange="loadPatientInfo()">
+            <option value="">-- Select Patient --</option>
           </select>
         </div>
+        
         <div class="modal-form-group">
-          <label for="patientPhone">Patient Phone *</label>
-          <input type="tel" id="patientPhone" placeholder="0555123456" readonly style="background-color: #f3f4f6;">
+          <label for="patientPhone">Patient Phone</label>
+          <input type="tel" id="patientPhone" placeholder="Phone number will appear here" readonly style="background-color: #f3f4f6;">
         </div>
-        <div class="modal-form-group">
-          <label for="appointmentDate">Date *</label>
-          <input type="date" id="appointmentDate" required>
-        </div>
-        <div class="modal-form-group">
-          <label for="appointmentTime">Time *</label>
-          <input type="time" id="appointmentTime" required>
-        </div>
+      </div>
+      
+      <div id="step2" class="wizard-step">
+        <p style="color: #6b7280; margin-bottom: 1.5rem; text-align: center;">Select an available time slot for the appointment</p>
+        <div id="timeSlotsContainer" class="time-slots-grid"></div>
+      </div>
+      
+      <div id="step3" class="wizard-step">
         <div class="modal-form-group">
           <label for="appointmentType">Appointment Type *</label>
           <select id="appointmentType" required>
-            <option value="">-- Select --</option>
+            <option value="">-- Select Type --</option>
             <option value="General Consultation">General Consultation</option>
             <option value="Medical Follow-up">Medical Follow-up</option>
             <option value="Emergency">Emergency</option>
@@ -186,14 +214,37 @@
           </select>
         </div>
         <div class="modal-form-group">
-          <label for="notes">Notes (optional)</label>
-          <textarea id="notes" placeholder="Add any additional information..."></textarea>
+          <label for="notes">Additional Notes (optional)</label>
+          <textarea id="notes" placeholder="Add any additional information about this appointment..." style="min-height: 120px;"></textarea>
         </div>
-      </form>
+      </div>
+      
+      <div id="step4" class="wizard-step">
+        <div class="loading-screen">
+          <div class="medical-loader">
+            <svg class="heartbeat" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <div class="pulse-ring"></div>
+          </div>
+          <div class="loading-text">Booking Appointment<span class="loading-dots"></span></div>
+          <div class="loading-subtext">Please wait while we process your request</div>
+        </div>
+      </div>
+      
+      <div id="resultStep" class="wizard-step">
+        <div id="resultContainer"></div>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn-modal btn-modal-secondary" onclick="closeModal()">Cancel</button>
-      <button type="button" class="btn-modal btn-modal-primary" onclick="saveAppointment()">Book Appointment</button>
+    
+    <div class="wizard-footer" id="wizardFooter">
+      <div class="wizard-footer-left">
+        <button type="button" class="btn-modal btn-modal-secondary" onclick="prevStep()" id="prevBtn" style="display: none;">← Previous</button>
+      </div>
+      <div class="wizard-footer-right">
+        <button type="button" class="btn-modal btn-modal-secondary" onclick="closeModal()">Cancel</button>
+        <button type="button" class="btn-modal btn-modal-primary" onclick="nextStep()" id="nextBtn">Next →</button>
+      </div>
     </div>
   </div>
 </div>
