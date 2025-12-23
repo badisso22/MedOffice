@@ -451,7 +451,7 @@ function generateTimeSlots() {
   }
 
   const startHour = 9
-  const endHour = 18
+  const endHour = 24
 
   for (let hour = startHour; hour < endHour; hour++) {
     for (const minute of [0, 30]) {
