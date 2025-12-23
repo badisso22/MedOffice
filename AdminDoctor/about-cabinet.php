@@ -1,4 +1,5 @@
 <?php
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +24,7 @@
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Dr. John Doe</span>
+                <span class="user-name">Dr. <?= htmlspecialchars($fullname ?? 'User') ?></span>
                 <div class="top-icons">
                     <a href="messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -101,7 +102,6 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
@@ -128,27 +128,18 @@
         </div>
     </header>
 
-    <div class="notification-banner success" id="adminNotification" style="display: none;">
-        <span class="notification-icon">
-            <svg viewBox="0 0 24 24" width="20" height="20"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </span>
-        <span id="notificationText">Cabinet information updated successfully</span>
-    </div>
-
     <div class="cabinet-dashboard">
         <div class="glass-card main-info-card">
             <div class="card-header">
                 <div class="header-left">
                     <div class="status-indicator active"></div>
-                    <h2> MedOffice</h2>
+                    <h2 id="cabinet-name">Loading...</h2>
                 </div>
                 <div class="specialty-badge">
                     <svg viewBox="0 0 24 24" width="16" height="16">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
                     </svg>
-                    General Practice
-                    Cardiology
-
+                    <span id="cabinet-specialty">—</span>
                 </div>
             </div>
             
@@ -162,7 +153,7 @@
                     </div>
                     <div class="info-details">
                         <h3>Location</h3>
-                        <p>El achour</p>
+                        <p id="cabinet-location">—</p>
                     </div>
                 </div>
                 
@@ -174,7 +165,8 @@
                     </div>
                     <div class="info-details">
                         <h3>Contact</h3>
-                        <p>+213098763827</p>
+                        <p id="cabinet-phone">—</p>
+                        <p id="cabinet-email" style="font-size: 0.9rem; color: #6b7280;">—</p>
                     </div>
                 </div>
                 
@@ -187,9 +179,7 @@
                     </div>
                     <div class="info-details">
                         <h3>Working Hours</h3>
-                        <p>9am-11am
-                            1pm-5pm
-                        </p>
+                        <p id="cabinet-hours">—</p>
                     </div>
                 </div>
             </div>
@@ -204,7 +194,7 @@
                 <button class="action-btn secondary" onclick="printCabinetInfo()">
                     <svg viewBox="0 0 24 24" width="18" height="18">
                         <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                         <rect x="6" y="14" width="12" height="8"></rect>
                     </svg>
                     Print Details
@@ -224,8 +214,8 @@
                 </div>
                 <div class="stat-content">
                     <h3>Total Patients</h3>
-                    <p class="stat-number">1,247</p>
-                    <span class="stat-change positive">+12% this month</span>
+                    <p class="stat-number" id="stat-patients">—</p>
+                    <span class="stat-change positive">Active</span>
                 </div>
             </div>
 
@@ -239,9 +229,9 @@
                     </svg>
                 </div>
                 <div class="stat-content">
-                    <h3>Appointments</h3>
-                    <p class="stat-number">342</p>
-                    <span class="stat-change positive">+8% this week</span>
+                    <h3>Total Doctors</h3>
+                    <p class="stat-number" id="stat-doctors">—</p>
+                    <span class="stat-change positive">Active</span>
                 </div>
             </div>
 
@@ -253,8 +243,8 @@
                 </div>
                 <div class="stat-content">
                     <h3>Staff Members</h3>
-                    <p class="stat-number">24</p>
-                    <span class="stat-change neutral">Active today</span>
+                    <p class="stat-number" id="stat-assistants">—</p>
+                    <span class="stat-change neutral">Assistants</span>
                 </div>
             </div>
 
@@ -265,14 +255,18 @@
                     </svg>
                 </div>
                 <div class="stat-content">
-                    <h3>Rating</h3>
-                    <p class="stat-number">4.8</p>
-                    <span class="stat-change positive">Excellent</span>
+                    <h3>Appointments</h3>
+                    <p class="stat-number" id="stat-appointments">—</p>
+                    <span class="stat-change positive">This Month</span>
                 </div>
             </div>
         </div>
     </div>
-    <a href="dashboard_admin.php" class="btn btn-white btn-large">←back to dashboard</a>
+
+    <div style="text-align: center; padding: 2rem;">
+        <a href="dashboard_ad.php" class="btn btn-white btn-large">← back to dashboard</a>
+    </div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -294,6 +288,7 @@
         </div>
     </footer>
 
+    <script src="../ajax/admin-about-cabinet.js"></script>
     <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
