@@ -1,5 +1,6 @@
 <?php
 session_start();
+$fullname = $_SESSION['full_name'] ?? 'User';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +26,7 @@ session_start();
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Dr. <?= htmlspecialchars($fullname ?? 'User') ?></span>
+                <span class="user-name">Dr. <?= htmlspecialchars($fullname) ?></span>
                 <div class="top-icons">
                     <a href="messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -53,47 +54,78 @@ session_start();
         </div>
         <ul class="drawer-menu">
             <li><a href="dashboard_ad.php" class="active">
-                <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
                 Dashboard
             </a></li>
             <li><a href="profileAD.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
                 Profile
             </a></li>
             <li><a href="searchP.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
                 Search Patients
             </a></li>
             <li><a href="searchA.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><path d="M17 11h6m-3-3v6"></path></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <path d="M17 11h6m-3-3v6"></path>
+                </svg>
                 Search Assistant
             </a></li>
             <li><a href="calendarAD.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
                 Calendar
             </a></li>
             <li><a href="add-patient.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
                 Add Patient
             </a></li>
             <li><a href="add-assistant.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
                 Add Assistant
             </a></li>
             <li><a href="appointments.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
                 Appointments
             </a></li>
-            <!--<li><a href="medical_records.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                Medical Records
-            </a></li>
-            <li><a href="prescriptions.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                Prescriptions
-            </a></li>-->
             <li><a href="reports_analytics.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
                 Reports
             </a></li>
             <li><a href="settings.php">
@@ -114,6 +146,11 @@ session_start();
             Back to Dashboard
         </a>
     </div>
+    <div class="back-button-container">
+        <a href="edit_cabinet_profile.php" class="back-button">
+            Edit Cabinet Information
+        </a>
+    </div>
 
     <div class="cabinet-profile-social">
         <div class="cabinet-header">
@@ -126,16 +163,20 @@ session_start();
                     <span class="review-count">(0 reviews)</span>
                 </div>
                 <div class="cabinet-location">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
                     <span>Loading...</span>
                     <a href="#" target="_blank" class="gps-link">View on Map</a>
                 </div>
             </div>
-        </div>  
+        </div>
+
         <div class="cabinet-bio">
             <p id="cabinet-bio-text">Loading...</p>
-         </div>
-   
+        </div>
+
         <div class="ratings-section">
             <h2>Ratings & Reviews</h2>
             <div class="ratings-overview">
@@ -144,32 +185,27 @@ session_start();
                     <div class="star-display">★★★★★</div>
                     <div class="total-reviews">0 total reviews</div>
                 </div>
-                <div class="rating-breakdown">
-                </div>
+                <div class="rating-breakdown"></div>
             </div>
         </div>
         <div class="doctors-section">
             <h2>Our Doctors</h2>
-            <div class="doctors-grid">
-            </div>
-        </div>      
+            <div class="doctors-grid"></div>
+        </div>
+
         <div class="reviews-section">
             <div class="reviews-header">
                 <h2>Patient Reviews</h2>
                 <button class="btn-show-all" onclick="toggleAllReviews()">Show All Reviews</button>
             </div>
-            
-            <div class="reviews-list" id="reviewsList">
-            </div>
+            <div class="reviews-list" id="reviewsList"></div>
         </div>
 
         <div class="cabinet-details-grid">
             <div class="cabinet-detail-box">
                 <h3>Appointment Pricing</h3>
-                <ul>
-                    <li>General Consultation: <strong>2000 DZD</strong></li>
-                    <li>Specialist Visit: <strong>3500 DZD</strong></li>
-                    <li>Follow-up: <strong>1500 DZD</strong></li>
+                <ul id="pricing-list">
+                    <li>Loading...</li>
                 </ul>
             </div>
             <div class="cabinet-detail-box">
@@ -178,19 +214,27 @@ session_start();
                 </ul>
             </div>
             <div class="cabinet-detail-box">
+                <h3>Facilities</h3>
+                <ul id="facilities-list">
+                    <li>No facilities information available</li>
+                </ul>
+            </div>
+            <div class="cabinet-detail-box">
                 <h3>Contact</h3>
                 <ul>
                     <li>Phone: <span id="contact-phone">—</span></li>
                     <li>Email: <span id="contact-email">—</span></li>
+                    <li>Website: <a id="contact-website" href="#" target="_blank">—</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="cabinet-social-footer">
             <span>Share this cabinet:</span>
-            <a href="#" class="social-icon">FB</a>
-            <a href="#" class="social-icon">TW</a>
-            <a href="#" class="social-icon">IG</a>
+            <a href="#" id="social-facebook" class="social-icon" target="_blank">FB</a>
+            <a href="#" id="social-twitter" class="social-icon" target="_blank">TW</a>
+            <a href="#" id="social-instagram" class="social-icon" target="_blank">IG</a>
+            <a href="#" id="social-linkedin" class="social-icon" target="_blank">IN</a>
         </div>
     </div>
     <div class="doctor-modal" id="doctorModal">
@@ -233,7 +277,8 @@ session_start();
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -262,8 +307,6 @@ session_start();
             drawer.classList.toggle('open');
             overlay.classList.toggle('active');
         }
-
-        
     </script>
 </body>
 </html>
