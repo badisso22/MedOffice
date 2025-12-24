@@ -1,3 +1,7 @@
+<?php
+session_start();
+$fullname = $_SESSION['full_name'] ?? 'User';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
