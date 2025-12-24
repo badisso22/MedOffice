@@ -17,6 +17,16 @@ if (!($conn instanceof mysqli)) {
     exit;
 }
 
+$role = $_SESSION['role'] ?? '';
+
+if (!in_array($role, ['admin', 'assistant'], true)) {
+    http_response_code(403);
+    $response['message'] = 'Forbidden';
+    echo json_encode($response);
+    exit;
+}
+
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
