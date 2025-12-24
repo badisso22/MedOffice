@@ -6,9 +6,9 @@
   <title>Patient Archive - MedOffice</title>
   <link rel="stylesheet" href="../CSS/general.css" />
   <link rel="stylesheet" href="../CSS/searchP.css" />
-  <link rel="stylesheet" href="../css/unarchive_modal.css" />
+  <link rel="stylesheet" href="../CSS/search_doc.css" />
 </head>
-<body>
+<body data-role="doctor">
   <nav>
     <div class="nav-container">
       <button class="drawer-toggle" onclick="toggleDrawer()">
@@ -16,7 +16,7 @@
         <span></span>
         <span></span>
       </button>
-      <a href="#" class="logo">
+      <a href="dashboard_d.php" class="logo">
         <div class="logo-icon">⚕</div>
         MedOffice
       </a>
@@ -49,47 +49,94 @@
     </div>
     <ul class="drawer-menu">
       <li><a href="dashboard_d.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
         Dashboard
       </a></li>
       <li><a href="profileD.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
         Profile
       </a></li>
       <li><a href="searchP.php" class="active">
-        <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
         Search Patients
       </a></li>
       <li><a href="searchA.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
         Search Assistant
       </a></li>
       <li><a href="calendarD.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
         Calendar
       </a></li>
       <li><a href="add-patient.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
         Add Patient
       </a></li>
       <li><a href="add-assistant.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="8.5" cy="7" r="4"></circle>
+          <line x1="20" y1="8" x2="20" y2="14"></line>
+          <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
         Add Assistant
       </a></li>
       <li><a href="appointments.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
         Appointments
       </a></li>
       <li><a href="medical_records.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
         Medical Records
       </a></li>
       <li><a href="prescriptions.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
         Prescriptions
       </a></li>
       <li><a href="report_analytics.php">
-        <svg viewBox="0 0 24 24" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
         Reports
       </a></li>
       <li><a href="settings.php">
@@ -114,7 +161,7 @@
 
   <div class="container">
     <h1>Archived Patients</h1>
-    <form>
+    <form id="archived-patient-search-form">
       <div class="form-group">
         <label for="searchName">Patient Name</label>
         <input type="text" id="searchName" name="searchName" placeholder="Enter name..." />
@@ -124,7 +171,10 @@
         <button type="reset" class="btn">Clear</button>
       </div>
     </form>
-    <table>
+
+    <div id="archived-patients-result"></div>
+
+    <table id="archived-patients-table">
       <thead>
         <tr>
           <th>ID</th>
@@ -134,31 +184,7 @@
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>002</td>
-          <td>John Wilson</td>
-          <td>45</td>
-          <td>2025-01-10</td>
-          <td>
-            <div class="action-buttons">
-              <a href="view_patient.php" class="action-btn view-btn" title="View">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                  <circle cx="12" cy="12" r="3"></circle>
-                </svg>
-              </a>
-              <a href="javascript:void(0);" onclick="openUnarchiveModal('002', 'John Wilson', '45')" class="action-btn unarchive-btn" title="Unarchive">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="3 8 3 21 21 21 21 8"></polyline>
-                  <rect x="1" y="3" width="22" height="5"></rect>
-                  <line x1="10" y1="12" x2="14" y2="12"></line>
-                  <polyline points="12 12 12 16"></polyline>
-                </svg>
-              </a>
-            </div>
-          </td>
-        </tr>
+      <tbody id="archived-patients-tbody">
       </tbody>
     </table>
     <a href="dashboard_d.php" class="btn btn-white btn-large">←back to the dashboard</a>
@@ -166,7 +192,6 @@
   <div id="unarchiveModal" class="modal-overlay">
     <div class="modal-content">
       <button class="modal-close" onclick="closeUnarchiveModal()">&times;</button>
-      
       <div class="modal-header">
         <div class="modal-warning-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -180,26 +205,28 @@
 
       <div class="modal-body">
         <p class="modal-message">
-          Are you sure you want to unarchive this patient? This action will restore the patient record to the active list.
+          You do not have permission to unarchive patients. Please contact an administrator.
         </p>
 
         <div class="modal-patient-info">
-          <p><strong>Patient ID:</strong> <span id="modalPatientId"></span></p>
-          <p><strong>Name:</strong> <span id="modalPatientName"></span></p>
-          <p><strong>Age:</strong> <span id="modalPatientAge"></span></p>
+          <p><strong>Patient ID:</strong> <span id="unarchive-patient-id"></span></p>
+          <p><strong>Name:</strong> <span id="unarchive-patient-name"></span></p>
+          <p><strong>Age:</strong> <span id="unarchive-patient-age"></span></p>
         </div>
 
         <div class="modal-actions">
-          <button onclick="confirmUnarchive()" class="modal-btn modal-btn-danger">Yes, Unarchive Patient</button>
-          <button onclick="closeUnarchiveModal()" class="modal-btn modal-btn-cancel">Cancel</button>
+          <button id="unarchive-confirm-btn" class="modal-btn modal-btn-danger disabled" disabled>
+            Yes, Unarchive Patient
+          </button>
+          <button id="unarchive-cancel-btn" class="modal-btn modal-btn-cancel">Close</button>
         </div>
       </div>
     </div>
   </div>
-  <div id="successModal" class="modal-overlay">
+
+  <div id="unarchiveSuccessModal" class="modal-overlay">
     <div class="modal-content">
-      <button class="modal-close" onclick="closeSuccessModal()">&times;</button>
-      
+      <button class="modal-close" onclick="closeUnarchiveSuccessModal()">&times;</button>
       <div class="modal-header">
         <div class="success-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -211,23 +238,18 @@
 
       <div class="modal-body">
         <p class="modal-message">
-          The patient record has been successfully moved to the archive. You can restore it at any time from the archived patients section.
+          The patient record has been successfully moved to the archive.
         </p>
 
         <div class="archived-patient-info">
-          <p><strong>Patient ID:</strong> <span id="successPatientId"></span></p>
-          <p><strong>Name:</strong> <span id="successPatientName"></span></p>
-          <p><strong>Age:</strong> <span id="successPatientAge"></span></p>
-          <p><strong>Status:</strong> <span style="color: #16a34a; font-weight: 600;">Active</span></p>
-        </div>
-
-        <div class="info-box">
-          <p>📋 The patient is now available in your active patient list</p>
+          <p><strong>Patient ID:</strong> <span id="unarchive-success-id"></span></p>
+          <p><strong>Name:</strong> <span id="unarchive-success-name"></span></p>
+          <p><strong>Age:</strong> <span id="unarchive-success-age"></span></p>
+          <p><strong>Status:</strong> <span id="unarchive-success-status" style="color: #16a34a; font-weight: 600;"></span></p>
         </div>
 
         <div class="action-buttons-success">
-          <a href="searchP.php" class="btn-large btn-primary">Back to Patient List</a>
-          <a href="dashboard_d.php" class="btn-large btn-secondary">Go to Dashboard</a>
+          <button id="unarchive-success-ok-btn" class="modal-btn modal-btn-cancel">OK</button>
         </div>
       </div>
     </div>
@@ -253,7 +275,9 @@
       <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
     </div>
   </footer>
-  <script src="../JS/archive_patient.js"></script>
+
+  <script src="../JS/admin_archive_patient.js"></script>
+  <script src="../ajax/admin_archive_patient.js"></script>
   <script>
     function toggleDrawer() {
       const drawer = document.getElementById('drawer');
