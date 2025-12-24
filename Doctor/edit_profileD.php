@@ -1,3 +1,14 @@
+<?php
+session_start();
+if (
+  empty($_SESSION['loggedIn']) ||
+  !isset($_SESSION['userID']) ||
+  !in_array((int)$_SESSION['roleID'], [2, 3], true)
+) {
+  header('Location: ../Auth/login.php');
+  exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,89 +16,173 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit Doctor Profile</title>
   <link rel="stylesheet" href="../CSS/profile.css" />
-  <link rel="stylesheet" href="../CSS/form_validation.css" />
+  <link rel="stylesheet" href="../CSS/profile_d.css" />
+  <link rel="stylesheet" href="../CSS/doctor_edit.css" />
 </head>
 <body>
-  <div class="profile-wrapper">
-    <div class="profile-header">
-      <h1 class="profile-title">Edit Doctor Profile</h1>
+  <div class="edit-wrapper">
+    <div class="edit-header">
+      <h1 class="edit-title">Edit Doctor Profile</h1>
+      <p class="edit-subtitle">Update your professional information</p>
     </div>
-    <div class="profile-card">
-      <div class="avatar-container">
-        <img src="https://ui-avatars.com/api/?name=Dr.+Sarah+Johnson&background=06b6d4&color=fff&size=140" class="profile-avatar" alt="Dr. Sarah Johnson" />
-        <div class="status-badge doctor-badge">Available</div>
-      </div>
+
+    <form class="edit-form" id="doctorEditForm" method="POST" enctype="multipart/form-data">
       
-      <form id="editProfileForm" method="POST" action="#">
-        <div class="profile-section">
-          <div class="section-header">
-            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            <h2 class="section-title">Personal Information</h2>
+      <div class="form-section">
+        <h2 class="form-section-title">Profile Photo</h2>
+        <div class="photo-upload-container">
+          <div class="photo-preview">
+            <img 
+              src="" 
+              alt="Profile Photo" 
+              id="photoPreview" />
           </div>
-          <div class="section-content">
-            <div class="info-row" style="flex-direction: column; align-items: stretch;">
-              <label class="info-label" for="fullname">Full Name:</label>
-              <input type="text" id="fullname" name="fullname" class="form-input" value="Dr. Sarah Johnson" required />
-            </div>
-            <div class="info-row" style="flex-direction: column; align-items: stretch;">
-              <label class="info-label" for="email">Email:</label>
-              <input type="email" id="email" name="email" class="form-input" value="sarah.johnson@medic-office.com" required />
-            </div>
-            <div class="info-row" style="flex-direction: column; align-items: stretch;">
-              <label class="info-label" for="phone">Phone:</label>
-              <input type="tel" id="phone" name="phone" class="form-input" value="5551234567" required pattern="[0-9]{10}" />
-            </div>
-            <div class="info-row" style="flex-direction: column; align-items: stretch;">
-              <label class="info-label" for="address">Address:</label>
-              <input type="text" id="address" name="address" class="form-input" value="Algiers Medical Center, Cheraga" required />
-            </div>
+          <div class="photo-upload-controls">
+            <label for="photoUpload" class="upload-btn">
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Choose Photo
+            </label>
+            <input type="file" id="photoUpload" name="photo" accept="image/*" style="display: none;" />
+            <p class="upload-hint">JPG, PNG or GIF (Max 5MB)</p>
           </div>
         </div>
+      </div>
 
-        <div class="profile-section">
-          <div class="section-header">
-            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 7h16"></path>
-              <path d="M9 11h0"></path>
-              <path d="M15 11h0"></path>
-              <path d="M9 15h0"></path>
-              <path d="M15 15h0"></path>
-              <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-            </svg>
-            <h2 class="section-title">Professional Information</h2>
+      <div class="form-section">
+        <h2 class="form-section-title">Personal Information</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+            <input type="text" id="firstName" name="firstName" class="form-input" required />
           </div>
-          <div class="section-content">
-            <div class="info-row" style="flex-direction: column; align-items: stretch;">
-              <label class="info-label" for="specialization">Specialization:</label>
-              <input type="text" id="specialization" name="specialization" class="form-input" value="Cardiology" required />
-            </div>
-            <div class="info-row" style="flex-direction: column; align-items: stretch;">
-              <label class="info-label" for="license">License Number:</label>
-              <input type="text" id="license" name="license" class="form-input" value="MED-2020-789456" required />
-            </div>
+          
+          <div class="form-group">
+            <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+            <input type="text" id="lastName" name="lastName" class="form-input" required />
           </div>
-        </div>
 
-        <div class="profile-actions">
-          <a href="profileD.php" class="btn btn-secondary">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-            Cancel
-          </a>
-          <button type="submit" class="btn btn-primary">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 13l4 4L19 7"></path>
-            </svg>
-            Save Changes
-          </button>
+          <div class="form-group">
+            <label for="email" class="form-label">Email <span class="required">*</span></label>
+            <input type="email" id="email" name="email" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label">Phone Number <span class="required">*</span></label>
+            <input type="tel" id="phone" name="phone" class="form-input" required />
+          </div>
+
+          <div class="form-group full-width">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" id="address" name="address" class="form-input" />
+          </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="form-section-title">Professional Information</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="specialty" class="form-label">Specialty <span class="required">*</span></label>
+            <select id="specialty" name="specialty" class="form-input" required>
+              <option value="">Select Specialty</option>
+              <option value="Pediatrician">Pediatrician</option>
+              <option value="Cardiology">Cardiologist</option>
+              <option value="Dermatology">Dermatologist</option>
+              <option value="Neurology">Neurologist</option>
+              <option value="Orthopedic">Orthopedic Surgeon</option>
+              <option value="General">General Practitioner</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="licenseNumber" class="form-label">License Number <span class="required">*</span></label>
+            <input type="text" id="licenseNumber" name="licenseNumber" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label for="experience" class="form-label">Years of Experience <span class="required">*</span></label>
+            <input type="number" id="experience" name="experience" class="form-input" min="0" required />
+          </div>
+
+          <div class="form-group">
+            <label for="consultationFee" class="form-label">Consultation Fee (DZD)</label>
+            <input type="number" id="consultationFee" name="consultationFee" class="form-input" min="0" />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="form-section-title">About</h2>
+        <div class="form-group">
+          <label for="about" class="form-label">Professional Summary</label>
+          <textarea id="about" name="about" class="form-textarea" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="form-section-title">Education</h2>
+        <div id="educationContainer">
+        </div>
+        <button type="button" class="btn-add" onclick="addEducation()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Add Education
+        </button>
+      </div>
+
+      <div class="form-section">
+        <h2 class="form-section-title">Certifications</h2>
+        <div id="certificationContainer">
+        </div>
+        <button type="button" class="btn-add" onclick="addCertification()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Add Certification
+        </button>
+      </div>
+
+      <div class="form-section">
+        <h2 class="form-section-title">Languages</h2>
+        <div class="form-group">
+          <label class="form-label">Languages Spoken (comma separated)</label>
+          <input type="text" id="languages" name="languages" class="form-input"
+                 placeholder="e.g., Arabic, French, English" />
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2 class="form-section-title">Availability</h2>
+        <div class="availability-grid" id="availabilityGrid">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a href="profileD.php" class="btn btn-secondary">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"></path>
+          </svg>
+          Cancel
+        </a>
+        <button type="submit" class="btn btn-primary">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          Save Changes
+        </button>
+      </div>
+    </form>
   </div>
-  <script src="../JS/form_validation.js"></script>
+
+  <script src="../ajax/admin-edit-profile.js"></script>
 </body>
 </html>
