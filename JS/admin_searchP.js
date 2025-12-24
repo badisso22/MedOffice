@@ -4,19 +4,25 @@ let patientToArchive = null;
 let patientName = '';
 let patientAge = '';
 
+function isDoctorPage() {
+  return (document.body.dataset.role || '').toLowerCase() === 'doctor';
+}
+
 function openArchiveModalWithData(patientID, name, age) {
+  if (isDoctorPage()) return; 
+
   patientToArchive = patientID;
   patientName = name;
   patientAge = age;
 
-  const modal = document.getElementById('archiveModal');
-  const idEl = document.getElementById('archive-patient-id');
+  const modal  = document.getElementById('archiveModal');
+  const idEl   = document.getElementById('archive-patient-id');
   const nameEl = document.getElementById('archive-patient-name');
-  const ageEl = document.getElementById('archive-patient-age');
+  const ageEl  = document.getElementById('archive-patient-age');
 
-  if (idEl) idEl.textContent = String(patientID).padStart(3, '0');
+  if (idEl)   idEl.textContent   = String(patientID).padStart(3, '0');
   if (nameEl) nameEl.textContent = name;
-  if (ageEl) ageEl.textContent = age || 'N/A';
+  if (ageEl)  ageEl.textContent  = age || 'N/A';
 
   if (modal) modal.classList.add('active');
 }
@@ -30,15 +36,17 @@ function closeArchiveModal() {
 }
 
 function openSuccessModal() {
-  const modal = document.getElementById('successModal');
-  const idEl = document.getElementById('success-patient-id');
-  const nameEl = document.getElementById('success-patient-name');
-  const ageEl = document.getElementById('success-patient-age');
+  if (isDoctorPage()) return; 
+
+  const modal    = document.getElementById('successModal');
+  const idEl     = document.getElementById('success-patient-id');
+  const nameEl   = document.getElementById('success-patient-name');
+  const ageEl    = document.getElementById('success-patient-age');
   const statusEl = document.getElementById('success-patient-status');
 
-  if (idEl) idEl.textContent = String(patientToArchive).padStart(3, '0');
-  if (nameEl) nameEl.textContent = patientName;
-  if (ageEl) ageEl.textContent = patientAge || 'N/A';
+  if (idEl)     idEl.textContent     = String(patientToArchive).padStart(3, '0');
+  if (nameEl)   nameEl.textContent   = patientName;
+  if (ageEl)    ageEl.textContent    = patientAge || 'N/A';
   if (statusEl) statusEl.textContent = 'Archived';
 
   if (modal) modal.classList.add('active');
@@ -50,6 +58,8 @@ function closeSuccessModal() {
 }
 
 async function confirmArchive() {
+  if (isDoctorPage()) return; 
+
   if (!patientToArchive) {
     closeArchiveModal();
     return;
@@ -94,6 +104,8 @@ async function confirmArchive() {
 }
 
 document.addEventListener('click', (event) => {
+  if (isDoctorPage()) return;
+
   const archiveModal = document.getElementById('archiveModal');
   const successModal = document.getElementById('successModal');
 
@@ -106,6 +118,8 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
+  if (isDoctorPage()) return;
+
   if (event.key === 'Escape') {
     closeArchiveModal();
     closeSuccessModal();
@@ -113,12 +127,16 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const confirmBtn = document.getElementById('archive-confirm-btn');
-  const cancelBtn = document.getElementById('archive-cancel-btn');
+  if (isDoctorPage()) {
+    return;
+  }
+
+  const confirmBtn   = document.getElementById('archive-confirm-btn');
+  const cancelBtn    = document.getElementById('archive-cancel-btn');
   const successOkBtn = document.getElementById('success-ok-btn');
 
-  if (confirmBtn) confirmBtn.addEventListener('click', confirmArchive);
-  if (cancelBtn) cancelBtn.addEventListener('click', closeArchiveModal);
+  if (confirmBtn)   confirmBtn.addEventListener('click', confirmArchive);
+  if (cancelBtn)    cancelBtn.addEventListener('click', closeArchiveModal);
   if (successOkBtn) {
     successOkBtn.addEventListener('click', () => {
       closeSuccessModal();
