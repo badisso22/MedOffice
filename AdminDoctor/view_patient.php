@@ -70,10 +70,6 @@ if ($patientID <= 0) {
             <div class="info-value" id="patient-gender"></div>
           </div>
           <div class="info-card">
-            <div class="info-label">Blood Type</div>
-            <div class="info-value" id="patient-blood-type"></div>
-          </div>
-          <div class="info-card">
             <div class="info-label">Phone</div>
             <div class="info-value" id="patient-phone"></div>
           </div>
