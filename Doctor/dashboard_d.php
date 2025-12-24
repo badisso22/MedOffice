@@ -56,7 +56,7 @@ $messagesQuery->close();
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Dr. John Doe</span>
+                <span class="user-name">Dr.<?= htmlspecialchars($fullname ?? 'User') ?></span>
                 <div class="top-icons">
                     <a href="messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -143,7 +143,7 @@ $messagesQuery->close();
     <main class="dashboard-main">
         <section class="dashboard-hero">
             <div class="hero-badge">Doctor Portal</div>
-            <h1>Welcome back, <span class="highlight">Dr. John Doe</span></h1>
+            <h1>Welcome back, <span class="highlight">Dr.<?= htmlspecialchars($fullname ?? 'User') ?></span></h1>
             <p>Manage your patients, appointments, and medical records from your personalized dashboard</p>
         </section>
         <section class="dashboard-content">
