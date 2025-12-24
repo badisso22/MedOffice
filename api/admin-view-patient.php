@@ -4,7 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-require '../config/config.php'; 
+require '../config/config.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -106,13 +106,57 @@ try {
             'relationship' => $patient['ec_relationship'] ?? null,
         ],
     ];
-
     $data['medical_history'] = [];
+    $mhSql = "
+        SELECT consultationdate, symptoms, diagnosis
+        FROM PatientConsultationInfo
+        WHERE PatientID = ?
+        ORDER BY consultationdate DESC
+        LIMIT 5
+    ";
+    $mhStmt = $conn->prepare($mhSql);
+    if ($mhStmt) {
+        $mhStmt->bind_param('i', $patientID);
+        $mhStmt->execute();
+        $mhRes = $mhStmt->get_result();
+
+        while ($row = $mhRes->fetch_assoc()) {
+            $label = !empty($row['consultationdate'])
+                ? date('Y-m-d', strtotime($row['consultationdate']))
+                : 'Consultation';
+
+            $valueParts = [];
+            if (!empty($row['symptoms'])) {
+                $valueParts[] = 'Symptoms: ' . $row['symptoms'];
+            }
+            if (!empty($row['diagnosis'])) {
+                $valueParts[] = 'Diagnosis: ' . $row['diagnosis'];
+            }
+
+            $data['medical_history'][] = [
+                'label' => $label,
+                'value' => $valueParts ? implode(' | ', $valueParts) : 'No details',
+            ];
+        }
+        $mhStmt->close();
+    }
     $data['recent_visits'] = [
-        'last_visit_date'  => $patient['last_visit'],
-        'last_visit_reason'=> null,
-        'next_appointment' => null,
+        'last_visit_date'   => null,
+        'last_visit_reason' => null,
+        'next_appointment'  => null,
     ];
+
+    if (!empty($data['medical_history'])) {
+        $first = $data['medical_history'][0];
+        $data['recent_visits']['last_visit_date'] = $first['label'];
+        $data['recent_visits']['last_visit_reason'] = null;
+        if (isset($first['value'])) {
+            $parts = explode('Diagnosis:', $first['value']);
+            if (count($parts) > 1) {
+                $data['recent_visits']['last_visit_reason'] = trim($parts[1]);
+            }
+        }
+    }
     $data['prescriptions'] = [];
 
     $response['success'] = true;
