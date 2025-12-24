@@ -134,7 +134,6 @@ $messagesQuery->close();
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
