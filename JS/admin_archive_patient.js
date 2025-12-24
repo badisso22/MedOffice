@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (successOkBtn) {
     successOkBtn.addEventListener('click', () => {
       closeUnarchiveSuccessModal();
-      window.location.href = 'archived_patients.php';
+      window.location.href = 'archived_patient.php';
     });
   }
 });
