@@ -182,7 +182,7 @@ $messagesQuery->close();
                     </a>
                 </div>
             </div>
-            <div class="section-group">
+           <!--- <div class="section-group">
                 <div class="section-header">
                     <h2>Assistant Management</h2>
                 </div>
@@ -220,7 +220,7 @@ $messagesQuery->close();
                         <p>View archived assistant records and past staff information</p>
                     </a>
                 </div>
-            </div>
+            </div>--->
             <div class="section-group">
                 <div class="section-header">
                     <h2>Scheduling & Appointments</h2>
