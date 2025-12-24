@@ -4,19 +4,25 @@ let patientToUnarchive = null;
 let patientName = '';
 let patientAge = '';
 
+function isDoctorPage() {
+  return (document.body.dataset.role || '').toLowerCase() === 'doctor';
+}
+
 function openUnarchiveModalWithData(patientID, name, age) {
+  if (isDoctorPage()) return; 
+
   patientToUnarchive = patientID;
   patientName = name;
   patientAge = age;
 
-  const modal = document.getElementById('unarchiveModal');
-  const idEl = document.getElementById('unarchive-patient-id');
+  const modal  = document.getElementById('unarchiveModal');
+  const idEl   = document.getElementById('unarchive-patient-id');
   const nameEl = document.getElementById('unarchive-patient-name');
-  const ageEl = document.getElementById('unarchive-patient-age');
+  const ageEl  = document.getElementById('unarchive-patient-age');
 
-  if (idEl) idEl.textContent = String(patientID).padStart(3, '0');
+  if (idEl)   idEl.textContent   = String(patientID).padStart(3, '0');
   if (nameEl) nameEl.textContent = name;
-  if (ageEl) ageEl.textContent = age || 'N/A';
+  if (ageEl)  ageEl.textContent  = age || 'N/A';
 
   if (modal) modal.classList.add('active');
 }
@@ -30,15 +36,17 @@ function closeUnarchiveModal() {
 }
 
 function openUnarchiveSuccessModal() {
-  const modal = document.getElementById('unarchiveSuccessModal');
-  const idEl = document.getElementById('unarchive-success-id');
-  const nameEl = document.getElementById('unarchive-success-name');
-  const ageEl = document.getElementById('unarchive-success-age');
+  if (isDoctorPage()) return; 
+
+  const modal    = document.getElementById('unarchiveSuccessModal');
+  const idEl     = document.getElementById('unarchive-success-id');
+  const nameEl   = document.getElementById('unarchive-success-name');
+  const ageEl    = document.getElementById('unarchive-success-age');
   const statusEl = document.getElementById('unarchive-success-status');
 
-  if (idEl) idEl.textContent = String(patientToUnarchive).padStart(3, '0');
-  if (nameEl) nameEl.textContent = patientName;
-  if (ageEl) ageEl.textContent = patientAge || 'N/A';
+  if (idEl)     idEl.textContent     = String(patientToUnarchive).padStart(3, '0');
+  if (nameEl)   nameEl.textContent   = patientName;
+  if (ageEl)    ageEl.textContent    = patientAge || 'N/A';
   if (statusEl) statusEl.textContent = 'Active';
 
   if (modal) modal.classList.add('active');
@@ -50,6 +58,8 @@ function closeUnarchiveSuccessModal() {
 }
 
 async function confirmUnarchive() {
+  if (isDoctorPage()) return; 
+
   if (!patientToUnarchive) {
     closeUnarchiveModal();
     return;
@@ -94,8 +104,10 @@ async function confirmUnarchive() {
 }
 
 document.addEventListener('click', (event) => {
+  if (isDoctorPage()) return;
+
   const unarchiveModal = document.getElementById('unarchiveModal');
-  const successModal = document.getElementById('unarchiveSuccessModal');
+  const successModal   = document.getElementById('unarchiveSuccessModal');
 
   if (event.target === unarchiveModal) {
     closeUnarchiveModal();
@@ -106,6 +118,8 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
+  if (isDoctorPage()) return; 
+
   if (event.key === 'Escape') {
     closeUnarchiveModal();
     closeUnarchiveSuccessModal();
@@ -113,16 +127,20 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const confirmBtn = document.getElementById('unarchive-confirm-btn');
-  const cancelBtn = document.getElementById('unarchive-cancel-btn');
+  if (isDoctorPage()) {
+    return;
+  }
+
+  const confirmBtn   = document.getElementById('unarchive-confirm-btn');
+  const cancelBtn    = document.getElementById('unarchive-cancel-btn');
   const successOkBtn = document.getElementById('unarchive-success-ok-btn');
 
-  if (confirmBtn) confirmBtn.addEventListener('click', confirmUnarchive);
-  if (cancelBtn)  cancelBtn.addEventListener('click', closeUnarchiveModal);
+  if (confirmBtn)   confirmBtn.addEventListener('click', confirmUnarchive);
+  if (cancelBtn)    cancelBtn.addEventListener('click', closeUnarchiveModal);
   if (successOkBtn) {
     successOkBtn.addEventListener('click', () => {
       closeUnarchiveSuccessModal();
-      window.location.href = 'archived_patient.php';
+      window.location.href = 'archive_patient.php';
     });
   }
 });
