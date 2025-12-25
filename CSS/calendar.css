@@ -1042,3 +1042,13 @@
   color: #ef4444;
   font-weight: 600;
 }
+
+.time-slot.past-time-slot {
+  opacity: 0.4;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+.time-slot.past-time-slot .time-slot-time {
+  text-decoration: line-through;
+  color: #9ca3af;
+}
