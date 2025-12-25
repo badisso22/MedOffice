@@ -86,7 +86,6 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
@@ -112,7 +111,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="stat-number">5</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Total Pending</div>
                 </div>
             </div>
@@ -123,7 +122,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="stat-number">12</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Accepted Today</div>
                 </div>
             </div>
@@ -135,7 +134,7 @@
                     </svg>
                 </div>
                 <div>
-                    <div class="stat-number">2</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Declined</div>
                 </div>
             </div>
@@ -143,161 +142,23 @@
         <div class="requests-section">
             <div class="section-header">
                 <h2>Pending Requests</h2>
-                <button class="btn btn-secondary">
+                <button class="btn btn-secondary" id="refreshRequests">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M23 4v6h-6"/>
-                        <path d="M1 20v-6h6"/>
-                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36M20.49 15a9 9 0 0 1-14.85 3.36"/>
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36M20.49 15a9 9 0 0 1-14.85 3.36"></path>
                     </svg>
                     Refresh
                 </button>
             </div>
 
-            <div class="requests-container">
-                <div class="request-card">
-                    <div class="card-header">
-                        <div class="patient-info">
-                            <div class="patient-avatar">JD</div>
-                            <div>
-                                <h3 class="patient-name">John Doe</h3>
-                                <p class="patient-type">Patient Request</p>
-                            </div>
-                        </div>
-                        <span class="status-badge status-pending">Pending</span>
-                    </div>
-
-                    <div class="card-content">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                        <path d="M16 2v4M8 2v4M3 10h18"/>
-                                    </svg>
-                                    Date
-                                </span>
-                                <span class="info-value">15/11/2024</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <polyline points="12 6 12 12 16 14"/>
-                                    </svg>
-                                    Time
-                                </span>
-                                <span class="info-value">10:30 AM</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                    </svg>
-                                    Reason
-                                </span>
-                                <span class="info-value">General Checkup</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-actions">
-                        <form method="post" class="action-form">
-                            <input type="hidden" name="appointment_id" value="1">
-                            <button type="submit" name="accept" class="btn btn-accept">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                                Accept
-                            </button>
-                        </form>
-                        <form method="post" class="action-form">
-                            <input type="hidden" name="appointment_id" value="1">
-                            <button type="submit" name="decline" class="btn btn-decline">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"/>
-                                    <line x1="6" y1="6" x2="18" y2="18"/>
-                                </svg>
-                                Decline
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                <div class="request-card">
-                    <div class="card-header">
-                        <div class="patient-info">
-                            <div class="patient-avatar">SM</div>
-                            <div>
-                                <h3 class="patient-name">Sarah Miller</h3>
-                                <p class="patient-type">Patient Request</p>
-                            </div>
-                        </div>
-                        <span class="status-badge status-pending">Pending</span>
-                    </div>
-
-                    <div class="card-content">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <span class="info-label">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                        <path d="M16 2v4M8 2v4M3 10h18"/>
-                                    </svg>
-                                    Date
-                                </span>
-                                <span class="info-value">16/11/2024</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"/>
-                                        <polyline points="12 6 12 12 16 14"/>
-                                    </svg>
-                                    Time
-                                </span>
-                                <span class="info-value">02:00 PM</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                                    </svg>
-                                    Reason
-                                </span>
-                                <span class="info-value">Follow-up Consultation</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card-actions">
-                        <form method="post" class="action-form">
-                            <input type="hidden" name="appointment_id" value="2">
-                            <button type="submit" name="accept" class="btn btn-accept">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                                Accept
-                            </button>
-                        </form>
-                        <form method="post" class="action-form">
-                            <input type="hidden" name="appointment_id" value="2">
-                            <button type="submit" name="decline" class="btn btn-decline">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="18" y1="6" x2="6" y2="18"/>
-                                    <line x1="6" y1="6" x2="18" y2="18"/>
-                                </svg>
-                                Decline
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            <div class="requests-container"></div>
         </div>
         <div class="nav-cta">
             <a href="dashboard_a.php" class="btn btn-primary" aria-label="Back to Dashboard">&larr; Back to Dashboard</a>
         </div>
     </main>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -318,6 +179,8 @@
             <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
         </div>
     </footer>
+
+    <script src="../ajax/manage_appointments.js"></script>
     <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
