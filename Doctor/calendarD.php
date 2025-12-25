@@ -104,7 +104,6 @@ $fullname = $_SESSION['full_name'] ?? 'User';
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
    </div>
   <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
