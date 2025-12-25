@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../config/config.php'; 
+require_once '../config/config.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -35,7 +35,27 @@ try {
 
     if ($firstName === '') $response['errors'][] = 'First name is required';
     if ($lastName === '')  $response['errors'][] = 'Last name is required';
-    if ($dob === '')       $response['errors'][] = 'Date of birth is required';
+
+    if ($dob === '') {
+        $response['errors'][] = 'Date of birth is required';
+    } else {
+        $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+        $today   = new DateTime('today');
+
+        if (!$dobDate) {
+            $response['errors'][] = 'Invalid date of birth format';
+        } else {
+            $diff     = $dobDate->diff($today);
+            $ageYears = $diff->y;
+
+            if ($dobDate > $today) {
+                $response['errors'][] = 'Are you seriously adding someone who wasn’t born yet 🥲';
+            } elseif ($ageYears < 1) {
+                $response['errors'][] = 'Patient must be at least 1 year old';
+            }
+        }
+    }
+
     if ($gender === '')    $response['errors'][] = 'Gender is required';
     if ($address === '')   $response['errors'][] = 'Address is required';
     if ($phone === '')     $response['errors'][] = 'Phone is required';
@@ -124,8 +144,17 @@ try {
 
     $conn->commit();
 
+    $dobDate = DateTime::createFromFormat('Y-m-d', $dob);
+    $today   = new DateTime('today');
+    $ageYears = $dobDate ? $dobDate->diff($today)->y : null;
+
+    $successMessage = 'Patient added successfully';
+    if ($ageYears !== null && $ageYears < 10) {
+        $successMessage = "Our cute little patient {$firstName} {$lastName} was added to the family 🩷";
+    }
+
     $response['success'] = true;
-    $response['message'] = 'Patient added successfully';
+    $response['message'] = $successMessage;
     $response['data'] = [
         'userID'    => $userId,
         'username'  => $username,
