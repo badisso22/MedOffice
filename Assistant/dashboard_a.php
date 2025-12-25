@@ -42,6 +42,7 @@ $messagesQuery->close();
     <title>Assistant Dashboard - MedOffice</title>
     <link rel="stylesheet" href="../CSS/general.css">
     <link rel="stylesheet" href="../CSS/dashboard.css">
+    <link rel="stylesheet" href="../CSS/shifts.css">
 </head>
 <body>
     <nav>
@@ -126,12 +127,66 @@ $messagesQuery->close();
     </div>
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-
     <main class="dashboard-main">
         <section class="dashboard-hero">
             <div class="hero-badge">Assistant Portal</div>
             <h1>Welcome back, <span class="highlight">Assistant Kim</span></h1>
             <p>Manage your patients and appointments from your personalized dashboard</p>
+        </section>
+        <section class="shift-controls">
+        <div class="shift-card">
+            <div class="shift-info">
+            <div class="shift-header-row">
+                <div class="shift-header-left">
+                <div class="shift-icon-pill">
+                    <span class="shift-icon-dot"></span>
+                    <span class="shift-icon-text">Today’s shift</span>
+                </div>
+                <h2 class="shift-title">Session overview</h2>
+                </div>
+                <div class="shift-status-row">
+                <span class="shift-status-dot" id="shiftStatusDot"></span>
+                <span class="shift-status-text" id="shiftStatusText">Off shift</span>
+                </div>
+            </div>
+
+            <p class="shift-subtitle">
+                Track your active work session and keep analytics accurate.
+            </p>
+
+            <div class="shift-time-row">
+                <div class="shift-time-item">
+                <span class="shift-time-label">Started</span>
+                <span class="shift-time-value" id="shiftStartDisplay">—</span>
+                </div>
+                <div class="shift-time-item">
+                <span class="shift-time-label">Worked</span>
+                <span class="shift-time-value" id="shiftDurationDisplay">0h 00m</span>
+                </div>
+            </div>
+            </div>
+
+            <div class="shift-actions">
+            <button class="btn-shift btn-shift-start" id="btnStartShift">
+                <span class="btn-shift-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                </svg>
+                </span>
+                <span>Start session</span>
+            </button>
+            <button class="btn-shift btn-shift-end" id="btnEndShift" disabled>
+                <span class="btn-shift-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <rect x="9" y="9" width="6" height="6"></rect>
+                </svg>
+                </span>
+                <span>End session</span>
+            </button>
+            </div>
+        </div>
         </section>
         <section class="dashboard-content">
             
@@ -283,16 +338,13 @@ $messagesQuery->close();
             <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
         </div>
     </footer>
-
+    <script src="../ajax/assistant_shift.js"></script>
     <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
             const overlay = document.getElementById('drawerOverlay');
             drawer.classList.toggle('open');
             overlay.classList.toggle('active');
-        }
-        function logout() {
-            window.location.href = '../index.html';
         }
     </script>
 </body>
