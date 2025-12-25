@@ -52,7 +52,18 @@ function isDateInPast(dateString) {
 
 function getTodayDateString() {
   const today = new Date()
-  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(
+    today.getDate(),
+  ).padStart(2, "0")}`
+}
+
+function isDateTimeInPast(dateStr, timeStr) {
+  if (!dateStr) return false
+  const [h, m] = timeStr.split(":").map(Number)
+  const dt = new Date(dateStr + "T00:00:00")
+  dt.setHours(h, m, 0, 0)
+  const now = new Date()
+  return dt < now
 }
 
 async function loadPatientsList() {
@@ -134,7 +145,9 @@ function renderCalendar() {
     const dayApts = appointments[dateKey] || []
 
     html += `
-      <div class="cal-day-cell ${isToday ? "today" : ""} ${dayApts.length > 0 ? "has-appointments" : ""} ${isPast ? "past-date" : ""}" 
+      <div class="cal-day-cell ${isToday ? "today" : ""} ${
+      dayApts.length > 0 ? "has-appointments" : ""
+    } ${isPast ? "past-date" : ""}" 
            data-date="${dateKey}"
            onclick="${isPast ? "" : `handleDayClick(event, '${dateKey}')`}">
         <div class="cal-day-number">${day}</div>
@@ -213,7 +226,9 @@ function showDayAppointmentsModal(date, dayApts) {
                     </div>
                   </div>
                   <div class="day-apt-actions">
-                    <button class="day-apt-btn-edit" onclick="editAppointment('${date}', ${apt.id}); closeDayApptsModal();">
+                    <button class="day-apt-btn-edit" onclick="editAppointment('${date}', ${
+                  apt.id
+                }); closeDayApptsModal();">
                       Edit
                     </button>
                     <button class="day-apt-btn-delete" onclick="confirmDelete('${date}', ${apt.id})">
@@ -278,7 +293,7 @@ function openNewAppointment(date) {
 
   editingId = null
 
-    document.getElementById("appointmentDate").value = date
+  document.getElementById("appointmentDate").value = date
   document.getElementById("appointmentDate").min = getTodayDateString()
   document.getElementById("patientSelect").value = ""
   document.getElementById("patientPhone").value = ""
@@ -440,56 +455,63 @@ function searchPatients() {
 }
 
 async function generateTimeSlots() {
-    const container = document.getElementById("timeSlotsContainer");
-    container.innerHTML = "";
+  const container = document.getElementById("timeSlotsContainer")
+  container.innerHTML = ""
 
-    const selectedDate = document.getElementById("appointmentDate").value;
-    
-    let bookedTimes = [];
-    if (selectedDate && appointments[selectedDate]) {
-        bookedTimes = appointments[selectedDate].map(apt => apt.time);
+  const selectedDate = document.getElementById("appointmentDate").value
+
+  let bookedTimes = []
+  if (selectedDate && appointments[selectedDate]) {
+    bookedTimes = appointments[selectedDate].map((apt) => apt.time)
+  }
+
+  let startHour = 7
+  let endHour = 18
+
+  try {
+    const res = await fetch("../api/get-cabinet-info.php")
+    const json = await res.json()
+    if (json.success && json.data.cabinet) {
+      const start = json.data.cabinet.workStartTime
+      const end = json.data.cabinet.workEndTime
+
+      if (start) startHour = parseInt(start.split(":")[0])
+      if (end) endHour = parseInt(end.split(":")[0])
     }
+  } catch (err) {
+    console.warn("Using default hours (7-18)", err)
+  }
 
-    let startHour = 7;
-    let endHour = 18;
+  for (let hour = startHour; hour < endHour; hour++) {
+    for (const minute of [0, 30]) {
+      const timeString = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`
+      const displayTime = formatTime12Hour(hour, minute)
 
-    try {
-        const res = await fetch('../api/get-cabinet-info.php');
-        const json = await res.json();
-        if (json.success && json.data.cabinet) {
-            const start = json.data.cabinet.workStartTime;
-            const end = json.data.cabinet.workEndTime;
-            
-            if (start) startHour = parseInt(start.split(':')[0]);
-            if (end) endHour = parseInt(end.split(':')[0]);
+      const isBooked = bookedTimes.includes(timeString)
+      const isPastTime = isDateTimeInPast(selectedDate, timeString)
+
+      const slot = document.createElement("div")
+      slot.className = `time-slot ${isBooked ? "booked" : ""} ${isPastTime ? "past-time-slot" : ""}`
+      slot.dataset.time = timeString
+      slot.innerHTML = `
+        <div class="time-slot-icon">${icons.clock}</div>
+        <div class="time-slot-time">${displayTime}</div>
+        ${
+          isBooked
+            ? '<div class="booked-label">Booked</div>'
+            : isPastTime
+            ? '<div class="booked-label">Past</div>'
+            : ""
         }
-    } catch (err) {
-        console.warn('Using default hours (9-18)', err);
+      `
+
+      if (!isBooked && !isPastTime) {
+        slot.onclick = () => selectTimeSlot(slot)
+      }
+
+      container.appendChild(slot)
     }
-
-    for (let hour = startHour; hour < endHour; hour++) {
-        for (const minute of [0, 30]) {
-            const timeString = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-            const displayTime = formatTime12Hour(hour, minute);
-            
-            const isBooked = bookedTimes.includes(timeString);
-
-            const slot = document.createElement("div");
-            slot.className = `time-slot ${isBooked ? 'booked' : ''}`;
-            slot.dataset.time = timeString;
-            slot.innerHTML = `
-                <div class="time-slot-icon">${icons.clock}</div>
-                <div class="time-slot-time">${displayTime}</div>
-                ${isBooked ? '<div class="booked-label">Booked</div>' : ''}
-            `;
-            
-            if (!isBooked) {
-                slot.onclick = () => selectTimeSlot(slot);
-            }
-
-            container.appendChild(slot);
-        }
-    }
+  }
 }
 
 function formatTime12Hour(hour, minute) {
@@ -690,6 +712,7 @@ function goToToday() {
   currentDate = new Date()
   loadAppointments()
 }
+
 function showNotification(message, type) {
   const notification = document.createElement("div")
   notification.className = `notification notification-${type} show`
@@ -700,6 +723,7 @@ function showNotification(message, type) {
     setTimeout(() => notification.remove(), 300)
   }, 3000)
 }
+
 function loadPatientInfo() {
   const select = document.getElementById("patientSelect")
   const selectedOption = select.options[select.selectedIndex]
@@ -712,12 +736,12 @@ function loadPatientInfo() {
 }
 
 function updateProgressBar(step) {
-  const steps = document.querySelectorAll('.progress-step')
+  const steps = document.querySelectorAll(".progress-step")
   steps.forEach((stepEl, index) => {
     if (index < step) {
-      stepEl.classList.add('active')
+      stepEl.classList.add("active")
     } else {
-      stepEl.classList.remove('active')
+      stepEl.classList.remove("active")
     }
   })
 }
