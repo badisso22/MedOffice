@@ -17,9 +17,12 @@ if (!($conn instanceof mysqli)) {
     exit;
 }
 
-$role = $_SESSION['role'] ?? '';
+$rawRole = $_SESSION['role'] ?? ($_SESSION['roleID'] ?? '');
+$role = is_numeric($rawRole) ? (int)$rawRole : strtolower(trim((string)$rawRole));
 
-if (!in_array($role, ['admin', 'assistant'], true)) {
+$allowed = ['admin', 'assistant', 2, 4];
+
+if (!in_array($role, $allowed, true)) {
     http_response_code(403);
     $response['message'] = 'Forbidden';
     echo json_encode($response);
