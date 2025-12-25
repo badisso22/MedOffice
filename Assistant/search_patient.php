@@ -180,7 +180,7 @@ session_start();
         </div>
       </div>
       <div class="modal-actions">
-        <button id="success-ok-btn" class="btn btn-primary">Back to Patient List</button>
+        <button onclick="window.location.href='search_patient.php'" class="btn btn-primary">Back to Patient List</button>
         <button onclick="window.location.href='dashboard_a.php'" class="btn btn-secondary">Go to Dashboard</button>
       </div>
     </div>
