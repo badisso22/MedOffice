@@ -28,7 +28,7 @@
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
                     </a>
-                    <a href="dashboard_a.php" class="icon-btn" title="Notifications">
+                    <a href="notifications.php" class="icon-btn" title="Notifications">
                         <svg viewBox="0 0 24 24">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
@@ -76,10 +76,6 @@
                 <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Waiting List
             </a></li>
-            <li><a href="notes.php">
-                <svg viewBox="0 0 24 24" width="20" height="20"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                Notes
-            </a></li>
             <li><a href="settings.php">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -87,136 +83,42 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+
     <main class="appointments-main">
         <section class="appointments-hero">
-            <div class="hero-badge">Performance Report</div>
+            <div class="hero-badge">Shift History</div>
             <h1>Work <span class="highlight">Analytics</span></h1>
-            <p class="date-display">Your professional metrics and work statistics</p>
+            <p class="date-display">Weekly overview of your shifts and cabinet activity</p>
         </section>
 
         <div class="appointments-container analytics-container">
             <div class="analytics-grid">
                 <div class="analytics-card">
-                    <div class="analytics-value">38.5</div>
+                    <div class="analytics-value" id="hoursWorkedValue">0h 00m</div>
                     <div class="analytics-label">Hours Worked</div>
                     <div class="analytics-subtext">This week</div>
                 </div>
 
                 <div class="analytics-card">
-                    <div class="analytics-value">47</div>
-                    <div class="analytics-label">Patients Served</div>
-                    <div class="analytics-subtext">This week</div>
+                    <div class="analytics-value" id="appointmentsWeekValue">0</div>
+                    <div class="analytics-label">Appointments (Cabinet)</div>
+                    <div class="analytics-subtext">On your working days</div>
                 </div>
 
                 <div class="analytics-card">
-                    <div class="analytics-value">15.2m</div>
-                    <div class="analytics-label">Avg. Consultation Time</div>
-                    <div class="analytics-subtext">Per patient</div>
-                </div>
-
-                <div class="analytics-card">
-                    <div class="analytics-value">94%</div>
-                    <div class="analytics-label">On-Time Rate</div>
-                    <div class="analytics-subtext">Appointments on schedule</div>
+                    <div class="analytics-value" id="avgDailyHoursValue">0h 00m</div>
+                    <div class="analytics-label">Avg. Daily Hours</div>
+                    <div class="analytics-subtext">Days with shifts</div>
                 </div>
             </div>
+
             <div class="report-section">
-                <div class="section-title">Daily Breakdown</div>
-
-                <div class="breakdown-item">
-                    <span class="breakdown-label">Monday</span>
-                    <span class="breakdown-time">7h 45m</span>
-                    <span class="breakdown-patients">9 patients</span>
+                <div class="section-title">Weekly Shift Breakdown</div>
+                <div id="dailyBreakdownContainer">
                 </div>
-
-                <div class="breakdown-item">
-                    <span class="breakdown-label">Tuesday</span>
-                    <span class="breakdown-time">8h 15m</span>
-                    <span class="breakdown-patients">10 patients</span>
-                </div>
-
-                <div class="breakdown-item">
-                    <span class="breakdown-label">Wednesday</span>
-                    <span class="breakdown-time">7h 30m</span>
-                    <span class="breakdown-patients">9 patients</span>
-                </div>
-
-                <div class="breakdown-item">
-                    <span class="breakdown-label">Thursday</span>
-                    <span class="breakdown-time">8h 20m</span>
-                    <span class="breakdown-patients">11 patients</span>
-                </div>
-
-                <div class="breakdown-item">
-                    <span class="breakdown-label">Friday</span>
-                    <span class="breakdown-time">6h 45m</span>
-                    <span class="breakdown-patients">8 patients</span>
-                </div>
-
-                <div class="summary-grid">
-                    <div class="summary-item">
-                        <div class="summary-label">Total Hours</div>
-                        <div class="summary-value">38h 35m</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-label">Total Patients</div>
-                        <div class="summary-value">47</div>
-                    </div>
-                    <div class="summary-item">
-                        <div class="summary-label">Avg. Daily Hours</div>
-                        <div class="summary-value">7h 43m</div>
-                    </div>
-                </div>
-            </div>
-            <div class="report-section">
-                <div class="section-title">Performance Metrics</div>
-
-                <table class="metrics-table">
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>This Week</th>
-                            <th>Last Week</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Average Response Time</td>
-                            <td>2.3 minutes</td>
-                            <td>2.8 minutes</td>
-                            <td><span class="status-badge status-excellent">Excellent</span></td>
-                        </tr>
-                        <tr>
-                            <td>Patient Wait Time Average</td>
-                            <td>8.5 minutes</td>
-                            <td>10.2 minutes</td>
-                            <td><span class="status-badge status-excellent">Excellent</span></td>
-                        </tr>
-                        <tr>
-                            <td>Queue Management Score</td>
-                            <td>91/100</td>
-                            <td>87/100</td>
-                            <td><span class="status-badge status-good">Good</span></td>
-                        </tr>
-                        <tr>
-                            <td>Task Completion Rate</td>
-                            <td>96%</td>
-                            <td>94%</td>
-                            <td><span class="status-badge status-excellent">Excellent</span></td>
-                        </tr>
-                        <tr>
-                            <td>Records Accuracy</td>
-                            <td>98.5%</td>
-                            <td>97.8%</td>
-                            <td><span class="status-badge status-excellent">Excellent</span></td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
 
@@ -230,7 +132,7 @@
             <p>&copy; 2025 MedOffice. All rights reserved. HIPAA-compliant medical practice management.</p>
         </div>
     </footer>
-
+    <script src="../ajax/assistant_analytics.js"></script>
     <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
