@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +13,7 @@
     <link rel="stylesheet" href="../CSS/form_validation.css">
 </head>
 <body>
-     <nav>
+  <nav>
         <div class="nav-container">
             <button class="drawer-toggle" onclick="toggleDrawer()">
                 <span></span>
@@ -24,7 +27,7 @@
             <div class="nav-cta">
                 <span class="user-name">Assistant Kim</span>
                 <div class="top-icons">
-                    <a href="messages.php" class="icon-btn" title="Chat">
+                    <a href="assistant_messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
@@ -69,7 +72,7 @@
                 <svg viewBox="0 0 24 24" width="20" height="20"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                 Add Patient
             </a></li>
-            <li><a href="mannage_appointments.php">
+            <li><a href="manage_appointments.php">
                 <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Manage Appointments
             </a></li>
@@ -88,12 +91,11 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
-  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 
-    <main class="dashboard-main">
+  <main class="dashboard-main">
         <section class="form-hero">
             <div class="hero-badge">Patient Registration</div>
             <h1>Add New <span class="highlight">Patient</span></h1>
@@ -101,7 +103,17 @@
         </section>
 
         <section class="form-container">
-            <form method="post" class="modern-form">
+            <div id="patient-success-modal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <h2 id="patient-success-text">Patient Successfully Added</h2>
+                    <p>The patient has been created.</p>
+                    <button id="patient-modal-ok" class="btn btn-primary">OK</button>
+                    <a href="patients-list.php" class="btn btn-secondary">Go to Patients List</a>
+                </div>
+            </div>
+            <div id="patient-result"></div>
+
+            <form id="patient-form" method="post" action="add_patient.php" class="modern-form">
                 <div class="form-section">
                     <div class="form-section-header">
                         <div class="section-icon">
@@ -112,7 +124,7 @@
                         </div>
                         <h2>Personal Information</h2>
                     </div>
-                    
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="firstName">First Name</label>
@@ -160,7 +172,7 @@
                         </div>
                         <h2>Login Credentials</h2>
                     </div>
-                    
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="username">Username</label>
@@ -189,20 +201,16 @@
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary btn-large">
-                        <svg viewBox="0 0 24 24" width="20" height="20">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="8.5" cy="7" r="4"></circle>
-                            <line x1="20" y1="8" x2="20" y2="14"></line>
-                            <line x1="23" y1="11" x2="17" y2="11"></line>
-                        </svg>
                         Add Patient
                     </button>
                     <button type="reset" class="btn btn-secondary btn-large">Reset Form</button>
                     <a href="dashboard_a.php" class="btn btn-white btn-large">Cancel</a>
                 </div>
             </form>
+            <div id="patient-result"></div>
         </section>
     </main>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -224,7 +232,7 @@
         </div>
     </footer>
     <script src="../JS/form_validation.js"></script>
-
+    <script src="../ajax/add-patient.js"></script>
     <script>
         function toggleDrawer() {
             const drawer = document.getElementById('drawer');
