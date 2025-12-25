@@ -7,61 +7,61 @@
   <link rel="stylesheet" href="../CSS/general.css" />
   <link rel="stylesheet" href="../CSS/view_patient.css" />
 </head>
-<body>
+<body data-role="doctor">
   <nav>
-    <div class="nav-container">
-      <a href="dashboard_d.php" class="logo">
-        <div class="logo-icon">⚕</div>
-        MedOffice
-      </a>
-        <div class="nav-cta">
-            <span class="user-name">Assistant Kim</span>
-            <div class="top-icons">
-                <a href="messages.php" class="icon-btn" title="Chat">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </a>
-                <a href="notifications.php" class="icon-btn" title="Notifications">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-                    <span class="notification-badge">3</span>
-                </a>
+        <div class="nav-container">
+            <button class="drawer-toggle" onclick="toggleDrawer()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a href="#" class="logo">
+                <div class="logo-icon">⚕</div>
+                MedOffice
+            </a>
+            <div class="nav-cta">
+                <span class="user-name">Assistant Kim</span>
+                <div class="top-icons">
+                    <a href="assistant_messages.php" class="icon-btn" title="Chat">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </a>
+                    <a href="notifications.php" class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-  </nav>
-
+    </nav>
   <div class="container">
     <div class="patient-top-row">
       <div class="header-section">
         <div class="patient-header">
-          <div class="patient-avatar">SB</div>
+          <div class="patient-avatar" id="patient-avatar">SB</div>
           <div class="patient-info">
-            <h1 class="patient-name">Samia Boulkrinat</h1>
-            <p class="patient-id">Patient ID: <strong>001</strong></p>
-            <span class="status-badge">Active Patient</span>
+            <h1 class="patient-name" id="patient-name">Samia Boulkrinat</h1>
+            <p class="patient-id">Patient ID: <strong id="patient-id">001</strong></p>
+            <span class="status-badge" id="patient-status">Active Patient</span>
           </div>
         </div>
 
         <div class="info-grid">
           <div class="info-card">
             <div class="info-label">Age</div>
-            <div class="info-value">29 years</div>
+            <div class="info-value" id="patient-age">29 years</div>
           </div>
           <div class="info-card">
             <div class="info-label">Gender</div>
-            <div class="info-value">Female</div>
-          </div>
-          <div class="info-card">
-            <div class="info-label">Blood Type</div>
-            <div class="info-value">O+</div>
+            <div class="info-value" id="patient-gender">Female</div>
           </div>
           <div class="info-card">
             <div class="info-label">Phone</div>
-            <div class="info-value">+213 555 123 456</div>
+            <div class="info-value" id="patient-phone">+213 555 123 456</div>
           </div>
         </div>
       </div>
@@ -70,37 +70,19 @@
         <h2 class="section-title">Contact Information</h2>
         <div class="detail-row">
           <span class="detail-label">Email</span>
-          <span class="detail-value">samia.boulkrinat@email.com</span>
+          <span class="detail-value" id="patient-email">samia.boulkrinat@email.com</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Phone</span>
-          <span class="detail-value">+213 555 123 456</span>
+          <span class="detail-value" id="patient-phone-2">+213 555 123 456</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Address</span>
-          <span class="detail-value">123 Medical Street, Algiers, Algeria</span>
+          <span class="detail-value" id="patient-address">123 Medical Street, Algiers, Algeria</span>
         </div>
         <div class="detail-row">
           <span class="detail-label">Emergency Contact</span>
-          <span class="detail-value">Ahmed Boulkrinat - +213 555 789 012</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-sections-row">
-      <div class="section section-half">
-        <h2 class="section-title">Recent Visits</h2>
-        <div class="detail-row">
-          <span class="detail-label">Last Visit</span>
-          <span class="detail-value">October 15, 2025</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Reason</span>
-          <span class="detail-value">Regular Checkup</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Next Appointment</span>
-          <span class="detail-value">November 12, 2025</span>
+          <span class="detail-value" id="patient-emergency">Ahmed Boulkrinat - +213 555 789 012</span>
         </div>
       </div>
     </div>
@@ -130,16 +112,6 @@
     </div>
   </footer>
 
-  <script>
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const tabName = this.getAttribute('data-tab');
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById(tabName).classList.add('active');
-      });
-    });
-  </script>
+  <script src="../ajax/admin_view_patient.js"></script>
 </body>
 </html>
