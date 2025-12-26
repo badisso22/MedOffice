@@ -14,11 +14,11 @@
     </div>
     <div class="profile-card">
       <div class="avatar-container">
-        <img src="https://ui-avatars.com/api/?name=Samia+Boulekrinate&background=0891b2&color=fff&size=140" class="profile-avatar" alt="Samia Boulekrinate" />
+        <img id="editProfileAvatar" class="profile-avatar" src="" alt="Patient Avatar" />
         <div class="status-badge">Active</div>
       </div>
       
-      <form id="editProfileForm" method="POST" action="#">
+      <form id="editProfileForm">
         <div class="profile-section">
           <div class="section-header">
             <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -30,19 +30,19 @@
           <div class="section-content">
             <div class="info-row" style="flex-direction: column; align-items: stretch;">
               <label class="info-label" for="fullname">Full Name:</label>
-              <input type="text" id="fullname" name="fullname" class="form-input" value="Samia Boulekrinate" required />
+              <input type="text" id="fullname" name="fullname" class="form-input" required />
             </div>
             <div class="info-row" style="flex-direction: column; align-items: stretch;">
               <label class="info-label" for="email">Email:</label>
-              <input type="email" id="email" name="email" class="form-input" value="samia.bk@medic-office.com" required />
+              <input type="email" id="email" name="email" class="form-input" required />
             </div>
             <div class="info-row" style="flex-direction: column; align-items: stretch;">
               <label class="info-label" for="phone">Phone:</label>
-              <input type="tel" id="phone" name="phone" class="form-input" value="2130000000" required pattern="[0-9]{10}" />
+              <input type="tel" id="phone" name="phone" class="form-input" required />
             </div>
             <div class="info-row" style="flex-direction: column; align-items: stretch;">
               <label class="info-label" for="address">Address:</label>
-              <input type="text" id="address" name="address" class="form-input" value="Algiers, el achour" required />
+              <input type="text" id="address" name="address" class="form-input" required />
             </div>
           </div>
         </div>
@@ -62,7 +62,7 @@
           <div class="section-content">
             <div class="info-row" style="flex-direction: column; align-items: stretch;">
               <label class="info-label" for="username">Username:</label>
-              <input type="text" id="username" name="username" class="form-input" value="SamiaB" required minlength="3" />
+              <input type="text" id="username" name="username" class="form-input" required minlength="3" />
             </div>
           </div>
         </div>
@@ -84,6 +84,8 @@
       </form>
     </div>
   </div>
+
+  <script src="../ajax/patient_edit_profile.js"></script>
   <script src="../JS/form_validation.js"></script>
 </body>
 </html>
