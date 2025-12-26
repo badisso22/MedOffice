@@ -15,7 +15,7 @@
                 <span></span>
                 <span></span>
             </button>
-            <a href="#" class="logo">
+            <a href="dashboard_p.php" class="logo">
                 <div class="logo-icon">⚕</div>
                 MedOffice
             </a>
@@ -83,7 +83,6 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
@@ -104,7 +103,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <path d="m21 21-4.35-4.35"></path>
                 </svg>
-                <input type="text" placeholder="Search by record type, date, or doctor...">
+                <input type="text" id="recordsSearch" placeholder="Search by record type, date, or doctor...">
             </div>
         </div>
 
@@ -119,98 +118,23 @@
                     </svg>
                     <h2>Medical History</h2>
                 </div>
-                <div class="records-list">
-                    <div class="record-item" onclick="viewRecord('hypertension')">
-                        <div class="record-info">
-                            <div class="record-title">Hypertension Diagnosis</div>
-                            <div class="record-meta">
-                                <span>Diagnosed: Sept 15, 2024</span>
-                                <span>Dr. Sarah Johnson</span>
-                                <span>Status: Active</span>
-                            </div>
-                        </div>
-                        <div class="record-actions">
-                            <button class="btn-action btn-view" onclick="event.stopPropagation(); viewRecord('hypertension')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                View Details
-                            </button>
-                            <button class="btn-action btn-download">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Download
-                            </button>
-                        </div>
-                    </div>
-                    <div class="record-item" onclick="viewRecord('diabetes')">
-                        <div class="record-info">
-                            <div class="record-title">Diabetes Type 2</div>
-                            <div class="record-meta">
-                                <span>Diagnosed: March 22, 2023</span>
-                                <span>Dr. Ahmed Mohamed</span>
-                                <span>Status: Active</span>
-                            </div>
-                        </div>
-                        <div class="record-actions">
-                            <button class="btn-action btn-view" onclick="event.stopPropagation(); viewRecord('diabetes')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                View Details
-                            </button>
-                            <button class="btn-action btn-download">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Download
-                            </button>
-                        </div>
-                    </div>
+                <div class="records-list" id="recordsList">
                 </div>
             </div>
+
             <div class="records-section">
                 <div class="section-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M6 9l6-3 6 3v6l-6 3-6-3z"></path>
                         <line x1="12" y1="12" x2="12" y2="21"></line>
                     </svg>
-                    <h2>Latest Lab Results - Nov 2, 2025</h2>
+                    <h2>Latest Lab Results</h2>
                 </div>
-                <div class="lab-results-grid">
-                    <div class="lab-card" onclick="viewRecord('labs-blood-glucose')">
-                        <div class="lab-name">Blood Glucose</div>
-                        <div class="lab-value">115</div>
-                        <div class="lab-unit">mg/dL</div>
-                        <div class="status-badge status-elevated">Elevated</div>
-                    </div>
-                    <div class="lab-card" onclick="viewRecord('labs-cholesterol')">
-                        <div class="lab-name">Cholesterol</div>
-                        <div class="lab-value">185</div>
-                        <div class="lab-unit">mg/dL</div>
-                        <div class="status-badge status-normal">Normal</div>
-                    </div>
-                    <div class="lab-card" onclick="viewRecord('labs-hdl')">
-                        <div class="lab-name">HDL</div>
-                        <div class="lab-value">52</div>
-                        <div class="lab-unit">mg/dL</div>
-                        <div class="status-badge status-normal">Normal</div>
-                    </div>
-                    <div class="lab-card" onclick="viewRecord('labs-ldl')">
-                        <div class="lab-name">LDL</div>
-                        <div class="lab-value">110</div>
-                        <div class="lab-unit">mg/dL</div>
-                        <div class="status-badge status-normal">Normal</div>
-                    </div>
+                <div class="lab-results-grid" id="labResults">
+                    <p style="color:#6b7280;">No lab results available.</p>
                 </div>
             </div>
+
             <div class="records-section">
                 <div class="section-header">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -220,61 +144,8 @@
                     </svg>
                     <h2>Imaging & Diagnostics</h2>
                 </div>
-                <div class="records-list">
-                    <div class="record-item" onclick="viewRecord('chest-xray')">
-                        <div class="record-info">
-                            <div class="record-title">Chest X-Ray</div>
-                            <div class="record-meta">
-                                <span>Date: Oct 28, 2025</span>
-                                <span>Result: Normal</span>
-                                <span>Dr. Lisa Martinez</span>
-                            </div>
-                        </div>
-                        <div class="record-actions">
-                            <button class="btn-action btn-view" onclick="event.stopPropagation(); viewRecord('chest-xray')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                View Details
-                            </button>
-                            <button class="btn-action btn-download">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Download
-                            </button>
-                        </div>
-                    </div>
-                    <div class="record-item" onclick="viewRecord('ecg')">
-                        <div class="record-info">
-                            <div class="record-title">ECG (Electrocardiogram)</div>
-                            <div class="record-meta">
-                                <span>Date: Oct 20, 2025</span>
-                                <span>Result: Normal Rhythm</span>
-                                <span>Dr. Ahmed Mohamed</span>
-                            </div>
-                        </div>
-                        <div class="record-actions">
-                            <button class="btn-action btn-view" onclick="event.stopPropagation(); viewRecord('ecg')">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                                View Details
-                            </button>
-                            <button class="btn-action btn-download">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                Download
-                            </button>
-                        </div>
-                    </div>
+                <div class="records-list" id="imagingList">
+                    <p style="color:#6b7280;">No imaging records available.</p>
                 </div>
             </div>
         </div>
@@ -314,12 +185,9 @@
         }
 
         function viewRecord(recordId) {
-            window.location.href = `record_details.php`;
-        }
-
-        function logout() {
-            window.location.href = '../index.html';
+            window.location.href = 'record_details.php?id=' + encodeURIComponent(recordId);
         }
     </script>
+    <script src="../ajax/patient_records.js"></script>
 </body>
 </html>
