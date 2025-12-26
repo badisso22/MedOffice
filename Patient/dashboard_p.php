@@ -152,7 +152,6 @@ $appointmentsQuery->close();
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
@@ -309,9 +308,6 @@ $appointmentsQuery->close();
             const overlay = document.getElementById('drawerOverlay');
             drawer.classList.toggle('open');
             overlay.classList.toggle('active');
-        }
-        function logout() {
-            window.location.href = '../index.html';
         }
     </script>
 </body>
