@@ -60,6 +60,7 @@ $fullName  = trim($firstName . ' ' . $lastName);
             </div>
         </div>
     </nav>
+
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Navigation</h3>
@@ -201,7 +202,9 @@ $fullName  = trim($firstName . ' ' . $lastName);
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to archive user <strong id="archiveUserName"></strong>?</p>
-                <p style="color: var(--text-tertiary); font-size: 0.875rem; margin-top: 0.5rem;">Archived users will be moved to historical records.</p>
+                <p style="color: var(--text-tertiary); font-size: 0.875rem; margin-top: 0.5rem;">
+                    Archived users will be moved to historical records.
+                </p>
                 <input type="hidden" id="archiveUserId">
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" onclick="closeArchiveUserModal()">Cancel</button>
@@ -231,6 +234,7 @@ $fullName  = trim($firstName . ' ' . $lastName);
                         <label for="addCabinet">Cabinet</label>
                         <select id="addCabinet" name="cabinet" required>
                             <option value="">Select Cabinet</option>
+                            <!-- you can fill from CabinetInfo via AJAX later -->
                         </select>
                     </div>
                     <div class="form-group">
@@ -248,6 +252,7 @@ $fullName  = trim($firstName . ' ' . $lastName);
 
     <div id="toastContainer" class="toast-container"></div>
     <script src="../JS/superadmin.js"></script>
+    <script src="../JS/superadmin_users.js"></script>
     <script src="../ajax/superadmin_users.js"></script>
 </body>
 </html>
