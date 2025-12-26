@@ -1,3 +1,16 @@
+<?php
+session_start();
+require '../config/config.php';
+
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || $_SESSION['roleID'] != 1) {
+    header("Location: ../login-forms/login.php");
+    exit();
+}
+
+$firstName = $_SESSION['firstName'] ?? 'Super';
+$lastName  = $_SESSION['lastName'] ?? 'Admin';
+$fullName  = trim($firstName . ' ' . $lastName);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,12 +54,13 @@
                     <span class="notification-badge">3</span>
                 </div>
                 <div class="user-menu">
-                    <span class="user-name">Admin</span>
+                    <span class="user-name"><?= htmlspecialchars($fullName) ?></span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
         </div>
     </nav>
+
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Navigation</h3>
@@ -108,6 +122,7 @@
             </a></li>
         </ul>
     </aside>
+
     <main class="main-content">
         <div class="view-header">
             <button class="back-btn" onclick="window.location.href='users.php'">
@@ -122,19 +137,19 @@
 
         <div class="user-profile-header">
             <div class="profile-avatar">
-                <img src="/placeholder.svg?height=120&width=120" alt="User Avatar">
-                <span class="status-indicator active"></span>
+                <img id="vuAvatar" src="/placeholder.svg?height=120&width=120" alt="User Avatar">
+                <span class="status-indicator active" id="vuStatusIndicator"></span>
             </div>
             <div class="profile-info">
-                <h2>Dr. John Pork</h2>
-                <p class="user-id">USR-001</p>
+                <h2 id="vuFullName">Loading...</h2>
+                <p class="user-id" id="vuUserCode"></p>
                 <div class="profile-badges">
-                    <span class="badge active">Active</span>
-                    <span class="badge">Admin</span>
+                    <span class="badge active" id="vuStatusBadge">Active</span>
+                    <span class="badge" id="vuRoleBadge">Admin</span>
                 </div>
             </div>
             <div class="profile-actions">
-                <button class="btn-secondary">
+                <button class="btn-secondary" id="vuEditBtn">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
@@ -156,26 +171,27 @@
                 <div class="card-content">
                     <div class="info-row">
                         <span class="info-label">Full Name</span>
-                        <span class="info-value">Dr. John Pork</span>
+                        <span class="info-value" id="vuPIFullName">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Email</span>
-                        <span class="info-value">john.prok@medoffice.com</span>
+                        <span class="info-value" id="vuPIEmail">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Phone</span>
-                        <span class="info-value">054833771615</span>
+                        <span class="info-value" id="vuPIPhone">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">License Number</span>
-                        <span class="info-value">MD-12345678</span>
+                        <span class="info-value" id="vuPILicense">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Specialization</span>
-                        <span class="info-value">General Practice</span>
+                        <span class="info-value" id="vuPISpeciality">—</span>
                     </div>
                 </div>
             </div>
+
             <div class="detail-card">
                 <div class="card-header">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -187,26 +203,27 @@
                 <div class="card-content">
                     <div class="info-row">
                         <span class="info-label">Cabinet Name</span>
-                        <span class="info-value">ESST MedOffice</span>
+                        <span class="info-value" id="vuCabinetName">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Cabinet ID</span>
-                        <span class="info-value">CAB-001</span>
+                        <span class="info-value" id="vuCabinetID">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Role</span>
-                        <span class="info-value">Primary Admin</span>
+                        <span class="info-value" id="vuCabinetRole">Primary Admin</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Joined Date</span>
-                        <span class="info-value">Jan 15, 2024</span>
+                        <span class="info-value" id="vuCabinetJoined">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Address</span>
-                        <span class="info-value">123 esst,algiers<br>el achour oued el romane</span>
+                        <span class="info-value" id="vuCabinetAddress">—</span>
                     </div>
                 </div>
             </div>
+
             <div class="detail-card">
                 <div class="card-header">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -218,26 +235,29 @@
                 <div class="card-content">
                     <div class="info-row">
                         <span class="info-label">Status</span>
-                        <span class="info-value"><span class="badge active">Active</span></span>
+                        <span class="info-value" id="vuAccStatus">
+                            <span class="badge active">Active</span>
+                        </span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Last Login</span>
-                        <span class="info-value">2 hours ago</span>
+                        <span class="info-value" id="vuAccLastLogin">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Created Date</span>
-                        <span class="info-value">Jan 15, 2024</span>
+                        <span class="info-value" id="vuAccCreated">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Last Modified</span>
-                        <span class="info-value">Nov 28, 2024</span>
+                        <span class="info-value" id="vuAccModified">—</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Total Sessions</span>
-                        <span class="info-value">342 sessions</span>
+                        <span class="info-value" id="vuAccSessions">—</span>
                     </div>
                 </div>
             </div>
+
             <div class="detail-card">
                 <div class="card-header">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -290,6 +310,7 @@
                 </div>
             </div>
         </div>
+
         <div class="detail-card" style="margin-top: 2rem;">
             <div class="card-header">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -298,7 +319,7 @@
                 <h3>Recent Activity</h3>
             </div>
             <div class="card-content">
-                <div class="activity-timeline">
+                <div class="activity-timeline" id="vuActivityTimeline">
                     <div class="activity-item">
                         <div class="activity-icon">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -306,44 +327,8 @@
                             </svg>
                         </div>
                         <div class="activity-details">
-                            <p class="activity-title">Updated cabinet settings</p>
-                            <p class="activity-time">2 hours ago</p>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
-                        <div class="activity-details">
-                            <p class="activity-title">Added new staff member</p>
-                            <p class="activity-time">1 day ago</p>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                            </svg>
-                        </div>
-                        <div class="activity-details">
-                            <p class="activity-title">Modified appointment schedule</p>
-                            <p class="activity-time">3 days ago</p>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                            </svg>
-                        </div>
-                        <div class="activity-details">
-                            <p class="activity-title">Generated monthly report</p>
-                            <p class="activity-time">5 days ago</p>
+                            <p class="activity-title">Activity will be loaded or configured here.</p>
+                            <p class="activity-time">—</p>
                         </div>
                     </div>
                 </div>
@@ -352,5 +337,6 @@
     </main>
 
     <script src="../JS/superadmin.js"></script>
+    <script src="../ajax/superadmin_view_user.js"></script>
 </body>
 </html>
