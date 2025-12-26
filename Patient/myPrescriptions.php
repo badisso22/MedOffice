@@ -15,7 +15,7 @@
                 <span></span>
                 <span></span>
             </button>
-            <a href="#" class="logo">
+            <a href="dashboard_p.php" class="logo">
                 <div class="logo-icon">⚕</div>
                 MedOffice
             </a>
@@ -48,7 +48,7 @@
             <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
         </div>
         <ul class="drawer-menu">
-            <li><a href="dashboard_p.php" class="active">
+            <li><a href="dashboard_p.php">
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 Dashboard
             </a></li>
@@ -60,7 +60,7 @@
                 <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Calendar
             </a></li>
-            <li><a href="calendarP.php">
+            <li><a href="myAppointments.php">
                 <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                 Appointments
             </a></li>
@@ -68,14 +68,10 @@
                 <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                 Medical Records
             </a></li>
-            <li><a href="myPrescriptions.php">
+            <li><a href="myPrescriptions.php" class="active">
                 <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                 Prescriptions
             </a></li>
-          <!--  <li><a href="myPrescriptions.php">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                Consultations
-            </a></li>-->
             <li><a href="about_cabinet.php">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 Cabinet Info
@@ -95,7 +91,7 @@
                     <line x1="16" y1="10" x2="14" y2="14" stroke="white" stroke-width="1"/>
                     <line x1="10" y1="14" x2="12" y2="17" stroke="white" stroke-width="1"/>
                     <line x1="14" y1="14" x2="12" y2="17" stroke="white" stroke-width="1"/>
-                </svg>                Med Ai
+                </svg> Med Ai
             </a></li>
             <li><a href="settings.php">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,7 +100,6 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
@@ -117,124 +112,13 @@
         </div>
 
         <div class="filter-tabs">
-            <button class="filter-tab active" onclick="filterPrescriptions('all')">All</button>
-            <button class="filter-tab" onclick="filterPrescriptions('active')">Active</button>
-            <button class="filter-tab" onclick="filterPrescriptions('expiring')">Expiring Soon</button>
-            <button class="filter-tab" onclick="filterPrescriptions('expired')">Expired</button>
+            <button class="filter-tab active" data-filter="all" onclick="filterPrescriptions('all', event)">All</button>
+            <button class="filter-tab" data-filter="active" onclick="filterPrescriptions('active', event)">Active</button>
+            <button class="filter-tab" data-filter="expiring" onclick="filterPrescriptions('expiring', event)">Expiring Soon</button>
+            <button class="filter-tab" data-filter="expired" onclick="filterPrescriptions('expired', event)">Expired</button>
         </div>
 
-        <div class="prescriptions-grid">
-            <div class="prescription-card" onclick="viewDetails('lisinopril')">
-                <div class="card-header">
-                    <div class="medicine-info">
-                        <h3>Lisinopril</h3>
-                        <p>ACE Inhibitor - Blood Pressure</p>
-                    </div>
-                    <span class="status-badge badge-active">Active</span>
-                </div>
-
-                <div class="refills-info">
-                    <strong>3</strong> <small>refills remaining</small>
-                </div>
-
-                <div class="card-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Dosage</span>
-                        <span class="detail-value">10 mg</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Frequency</span>
-                        <span class="detail-value">Once daily</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Prescribed</span>
-                        <span class="detail-value">Sept 15, 2025</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">By</span>
-                        <span class="detail-value">Dr. Sarah Johnson</span>
-                    </div>
-                </div>
-
-                <div class="card-actions">
-                    <button class="btn-action btn-primary">Refill Now</button>
-                    <button class="btn-action btn-secondary">Details</button>
-                </div>
-            </div>
-            <div class="prescription-card" onclick="viewDetails('metformin')">
-                <div class="card-header">
-                    <div class="medicine-info">
-                        <h3>Metformin</h3>
-                        <p>Diabetes Medication</p>
-                    </div>
-                    <span class="status-badge badge-active">Active</span>
-                </div>
-
-                <div class="refills-info">
-                    <strong>5</strong> <small>refills remaining</small>
-                </div>
-
-                <div class="card-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Dosage</span>
-                        <span class="detail-value">500 mg</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Frequency</span>
-                        <span class="detail-value">Three times daily</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Prescribed</span>
-                        <span class="detail-value">March 22, 2025</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">By</span>
-                        <span class="detail-value">Dr. Ahmed Mohamed</span>
-                    </div>
-                </div>
-
-                <div class="card-actions">
-                    <button class="btn-action btn-primary">Refill Now</button>
-                    <button class="btn-action btn-secondary">Details</button>
-                </div>
-            </div>
-            <div class="prescription-card" onclick="viewDetails('omeprazole')">
-                <div class="card-header">
-                    <div class="medicine-info">
-                        <h3>Omeprazole</h3>
-                        <p>Acid Reflux - PPH</p>
-                    </div>
-                    <span class="status-badge badge-expiring">Expiring Soon</span>
-                </div>
-
-                <div class="refills-info">
-                    <strong>0</strong> <small>refills remaining</small>
-                </div>
-
-                <div class="card-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Dosage</span>
-                        <span class="detail-value">20 mg</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Frequency</span>
-                        <span class="detail-value">Once daily</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Expires</span>
-                        <span class="detail-value">Dec 10, 2025</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">By</span>
-                        <span class="detail-value">Dr. Sarah Johnson</span>
-                    </div>
-                </div>
-
-                <div class="card-actions">
-                    <button class="btn-action btn-primary">Request Refill</button>
-                    <button class="btn-action btn-secondary">Details</button>
-                </div>
-            </div>
+        <div class="prescriptions-grid" id="prescriptionsGrid">
         </div>
     </section>
 
@@ -276,19 +160,26 @@
             overlay.classList.toggle('active');
         }
 
-        function filterPrescriptions(type) {
+        function filterPrescriptions(type, event) {
             const tabs = document.querySelectorAll('.filter-tab');
             tabs.forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event) event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.prescription-card');
+            cards.forEach(card => {
+                const status = card.dataset.status; 
+                if (type === 'all' || status === type) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         }
 
-        function viewDetails(medicineId) {
-            window.location.href = `#`;
-        }
-
-        function logout() {
-            window.location.href = '../index.html';
+        function viewDetails(prescriptionId) {
+            window.location.href = 'prescription_details.php?id=' + encodeURIComponent(prescriptionId);
         }
     </script>
+    <script src="../ajax/patient_prescriptions.js"></script>
 </body>
 </html>
