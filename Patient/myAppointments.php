@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID']) || $_SESSION['roleID'] != 5) {
+    header('Location: ../login-forms/login.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,12 +22,12 @@
                 <span></span>
                 <span></span>
             </button>
-            <a href="#" class="logo">
+            <a href="dashboard_p.php" class="logo">
                 <div class="logo-icon">⚕</div>
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Patient Samia</span>
+                <span class="user-name">My Appointments</span>
                 <div class="top-icons">
                     <a href="patient_messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -49,35 +56,59 @@
         </div>
         <ul class="drawer-menu">
             <li><a href="dashboard_p.php" class="active">
-                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
                 Dashboard
             </a></li>
             <li><a href="profileP.php">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
                 My Profile
             </a></li>
             <li><a href="calendarP.php">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
                 Calendar
             </a></li>
-            <li><a href="calendarP.php">
-                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <li><a href="myAppointments.php">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
                 Appointments
             </a></li>
             <li><a href="myRecords.php">
-                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
                 Medical Records
             </a></li>
             <li><a href="myPrescriptions.php">
-                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                <svg viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
                 Prescriptions
             </a></li>
-          <!--  <li><a href="myPrescriptions.php">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                Consultations
-            </a></li>-->
             <li><a href="about_cabinet.php">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
                 Cabinet Info
             </a></li>
             <li><a href="medAi.php">
@@ -95,7 +126,8 @@
                     <line x1="16" y1="10" x2="14" y2="14" stroke="white" stroke-width="1"/>
                     <line x1="10" y1="14" x2="12" y2="17" stroke="white" stroke-width="1"/>
                     <line x1="14" y1="14" x2="12" y2="17" stroke="white" stroke-width="1"/>
-                </svg>                Med Ai
+                </svg>
+                Med Ai
             </a></li>
             <li><a href="settings.php">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -104,7 +136,6 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
@@ -120,123 +151,14 @@
         </div>
 
         <div class="filter-section">
-            <button class="filter-btn active" onclick="filterAppointments('all', this)">All</button>
-            <button class="filter-btn" onclick="filterAppointments('upcoming', this)">Upcoming</button>
-            <button class="filter-btn" onclick="filterAppointments('completed', this)">Completed</button>
-            <button class="filter-btn" onclick="filterAppointments('cancelled', this)">Cancelled</button>
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">Upcoming</button>
+            <button class="filter-btn">Completed</button>
+            <button class="filter-btn">Cancelled</button>
         </div>
 
         <div class="appointments-grid" id="appointmentsGrid">
-            <div class="appointment-card">
-                <div class="card-header">
-                    <div class="doctor-header">
-                        <div class="doctor-info">
-                            <div class="doctor-avatar">DR</div>
-                            <div class="doctor-details">
-                                <h3>Dr. Sarah Johnson</h3>
-                                <p class="doctor-specialty">Cardiologist</p>
-                            </div>
-                        </div>
-                        <span class="status-badge status-upcoming">Upcoming</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="appointment-info">
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                            <span class="info-label">Date:</span>
-                            <span class="info-value">Nov 10, 2025</span>
-                        </div>
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span class="info-label">Time:</span>
-                            <span class="info-value">10:30 AM</span>
-                        </div>
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                            <span class="info-label">Location:</span>
-                            <span class="info-value">Room 305, Building A</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button class="btn-small btn-details" onclick="window.location.href='appointments_details.php'">View Details</button>
-                    <button class="btn-small btn-cancel" onclick="window.location.href='cancel_appointment.php'">Cancel</button>
-                </div>
-            </div>
-            <div class="appointment-card">
-                <div class="card-header">
-                    <div class="doctor-header">
-                        <div class="doctor-info">
-                            <div class="doctor-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">AM</div>
-                            <div class="doctor-details">
-                                <h3>Dr. Ahmed Mohamed</h3>
-                                <p class="doctor-specialty">General Practitioner</p>
-                            </div>
-                        </div>
-                        <span class="status-badge status-completed">Completed</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="appointment-info">
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                            <span class="info-label">Date:</span>
-                            <span class="info-value">Nov 3, 2025</span>
-                        </div>
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span class="info-label">Time:</span>
-                            <span class="info-value">2:00 PM</span>
-                        </div>
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/></svg>
-                            <span class="info-label">Notes:</span>
-                            <span class="info-value">Check-up Done</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button class="btn-small btn-details" onclick="window.location.href='appointments_details.php'">View Details</button>
-                </div>
-            </div>
-            <div class="appointment-card">
-                <div class="card-header">
-                    <div class="doctor-header">
-                        <div class="doctor-info">
-                            <div class="doctor-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">LM</div>
-                            <div class="doctor-details">
-                                <h3>Dr. Lisa Martinez</h3>
-                                <p class="doctor-specialty">Dermatologist</p>
-                            </div>
-                        </div>
-                        <span class="status-badge status-upcoming">Upcoming</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="appointment-info">
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                            <span class="info-label">Date:</span>
-                            <span class="info-value">Nov 15, 2025</span>
-                        </div>
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span class="info-label">Time:</span>
-                            <span class="info-value">3:45 PM</span>
-                        </div>
-                        <div class="info-row">
-                            <svg class="info-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                            <span class="info-label">Location:</span>
-                            <span class="info-value">Clinic B, Floor 2</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button class="btn-small btn-details" onclick="window.location.href='appointments_details.php'">View Details</button>
-                    <button class="btn-small btn-cancel" onclick="window.location.href='cancel_appointment.php'">Cancel</button>
-                </div>
-            </div>
+            <!-- JS injects appointment cards -->
         </div>
     </main>
 
@@ -275,16 +197,7 @@
             drawer.classList.toggle('open');
             overlay.classList.toggle('active');
         }
-
-        function filterAppointments(status, button) {
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
-
-        function logout() {
-            window.location.href = '#';
-        }
     </script>
+    <script src="../ajax/myAppointments.js"></script>
 </body>
 </html>
