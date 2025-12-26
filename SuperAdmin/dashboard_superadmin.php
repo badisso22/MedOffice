@@ -1,3 +1,42 @@
+<?php
+session_start();
+require '../config/config.php';
+
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || $_SESSION['roleID'] != 1) {
+    header("Location: ../login-forms/login.php");
+    exit();
+}
+
+$userID    = $_SESSION['userID'];
+$userEmail = $_SESSION['email'] ?? '';
+
+$profileQuery = $conn->prepare(
+    "SELECT u.username, up.firstName, up.lastName, up.dateOfBirth, up.gender, up.address, up.phoneNumber 
+     FROM Users u 
+     LEFT JOIN UserProfile up ON u.userID = up.userID 
+     WHERE u.userID = ?"
+);
+$profileQuery->bind_param("i", $userID);
+$profileQuery->execute();
+$profileResult = $profileQuery->get_result();
+$userProfile   = $profileResult->fetch_assoc();
+$profileQuery->close();
+
+$firstName = $userProfile['firstName'] ?? 'Super';
+$lastName  = $userProfile['lastName'] ?? 'Admin';
+$fullName  = trim($firstName . ' ' . $lastName);
+
+$messagesQuery = $conn->prepare(
+    "SELECT COUNT(*) as unread FROM Messages WHERE recipientID = ? AND isRead = 0"
+);
+$messagesQuery->bind_param("i", $userID);
+$messagesQuery->execute();
+$messagesResult = $messagesQuery->get_result();
+$messagesRow    = $messagesResult->fetch_assoc();
+$unreadMessages = $messagesRow['unread'] ?? 0;
+$messagesQuery->close();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,11 +76,14 @@
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
                         </svg>
                     </a>
-                    <span class="notification-badge">3</span>
+                    <?php if ($unreadMessages > 0): ?>
+                        <span class="notification-badge"><?= (int)$unreadMessages ?></span>
+                    <?php else: ?>
+                        <span class="notification-badge">0</span>
+                    <?php endif; ?>
                 </div>
                 <div class="user-menu">
-                    <span class="user-name">Admin</span>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <span class="user-name"><?= htmlspecialchars($fullName) ?></span>
                 </div>
             </div>
         </div>
@@ -110,7 +152,7 @@
     <main class="main-content">
         <div class="greeting-section">
             <div class="greeting-content">
-                <h1>Welcome back, Admin</h1>
+                <h1>Welcome back, <?= htmlspecialchars($fullName) ?></h1>
                 <p>Here's your system status at a glance</p>
             </div>
             <div class="greeting-time">
@@ -220,10 +262,12 @@
         }
         updateTime();
         setInterval(updateTime, 60000);
+
         function performAction(action) {
             console.log('Perform action:', action);
             alert('Action "' + action + '" initiated successfully!');
         }
+
     </script>
 </body>
 </html>
