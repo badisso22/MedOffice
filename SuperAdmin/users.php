@@ -1,3 +1,16 @@
+<?php
+session_start();
+require '../config/config.php';
+
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || $_SESSION['roleID'] != 1) {
+    header("Location: ../login-forms/login.php");
+    exit();
+}
+
+$firstName = $_SESSION['firstName'] ?? 'Super';
+$lastName  = $_SESSION['lastName'] ?? 'Admin';
+$fullName  = trim($firstName . ' ' . $lastName);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +54,7 @@
                     <span class="notification-badge">3</span>
                 </div>
                 <div class="user-menu">
-                    <span class="user-name">Admin</span>
+                    <span class="user-name"><?= htmlspecialchars($fullName) ?></span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
@@ -108,6 +121,7 @@
             </a></li>
         </ul>
     </aside>
+
     <main class="main-content">
         <div class="section-header">
             <div>
@@ -122,6 +136,7 @@
                 Add Admin User
             </button>
         </div>
+
         <div class="tabs-container" style="margin-bottom: 2rem;">
             <div class="tabs">
                 <a href="users.php" class="tab active">Active Users</a>
@@ -143,55 +158,11 @@
                     </tr>
                 </thead>
                 <tbody id="usersTableBody">
-                    <tr>
-                        <td>USR-001</td>
-                        <td>Dr. John Smith</td>
-                        <td>john.smith@medcabinet.com</td>
-                        <td>Downtown Medical Center</td>
-                        <td><span class="badge active">Active</span></td>
-                        <td>2 hours ago</td>
-                        <td>
-                            <div class="action-buttons-large">
-                                <a href="view_user.php?id=USR-001" class="action-btn-large">View</a>
-                                <button class="action-btn-large" onclick="openEditUserModal('USR-001', 'Dr. John Smith', 'john.smith@medcabinet.com', 'Downtown Medical Center')">Edit</button>
-                                <button class="action-btn-large danger" onclick="openArchiveUserModal('USR-001', 'Dr. John Smith')">Archive</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>USR-002</td>
-                        <td>Dr. Sarah Johnson</td>
-                        <td>sarah.j@healthcenter.com</td>
-                        <td>City Health Clinic</td>
-                        <td><span class="badge active">Active</span></td>
-                        <td>30 mins ago</td>
-                        <td>
-                            <div class="action-buttons-large">
-                                <a href="view_user.php?id=USR-002" class="action-btn-large">View</a>
-                                <button class="action-btn-large" onclick="openEditUserModal('USR-002', 'Dr. Sarah Johnson', 'sarah.j@healthcenter.com', 'City Health Clinic')">Edit</button>
-                                <button class="action-btn-large danger" onclick="openArchiveUserModal('USR-002', 'Dr. Sarah Johnson')">Archive</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>USR-003</td>
-                        <td>Dr. Michael Chen</td>
-                        <td>m.chen@westside.med</td>
-                        <td>Westside Medical Group</td>
-                        <td><span class="badge inactive">Inactive</span></td>
-                        <td>3 days ago</td>
-                        <td>
-                            <div class="action-buttons-large">
-                                <a href="view_user.php?id=USR-003" class="action-btn-large">View</a>
-                                <button class="action-btn-large" onclick="openEditUserModal('USR-003', 'Dr. Michael Chen', 'm.chen@westside.med', 'Westside Medical Group')">Edit</button>
-                                <button class="action-btn-large danger" onclick="openArchiveUserModal('USR-003', 'Dr. Michael Chen')">Archive</button>
-                            </div>
-                        </td>
-                    </tr>
                 </tbody>
             </table>
         </div>
     </main>
+
     <div id="editUserModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -221,6 +192,7 @@
             </div>
         </div>
     </div>
+
     <div id="archiveUserModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,6 +210,7 @@
             </div>
         </div>
     </div>
+
     <div id="addUserModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -258,9 +231,6 @@
                         <label for="addCabinet">Cabinet</label>
                         <select id="addCabinet" name="cabinet" required>
                             <option value="">Select Cabinet</option>
-                            <option value="Downtown Medical Center">Downtown Medical Center</option>
-                            <option value="City Health Clinic">City Health Clinic</option>
-                            <option value="Westside Medical Group">Westside Medical Group</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -278,6 +248,6 @@
 
     <div id="toastContainer" class="toast-container"></div>
     <script src="../JS/superadmin.js"></script>
-    <script src="../JS/superadmin_users.js"></script>
+    <script src="../ajax/superadmin_users.js"></script>
 </body>
 </html>
