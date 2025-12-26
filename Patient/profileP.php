@@ -13,9 +13,10 @@
     </div>
     <div class="profile-card">
       <div class="avatar-container">
-        <img src="https://ui-avatars.com/api/?name=Kim+Park&background=0891b2&color=fff&size=140" class="profile-avatar" alt="Kim Park" />
+        <img id="profileAvatar" class="profile-avatar" src="" alt="Patient Avatar" />
         <div class="status-badge">Active</div>
       </div>
+
       <div class="profile-section">
         <div class="section-header">
           <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -27,26 +28,27 @@
         <div class="section-content">
           <div class="info-row">
             <span class="info-label">Patient ID:</span>
-            <span class="info-value">1</span>
+            <span class="info-value" id="pfPatientId">-</span>
           </div>
           <div class="info-row">
             <span class="info-label">Full Name:</span>
-            <span class="info-value">Samia Boulekrinate</span>
+            <span class="info-value" id="pfFullName">-</span>
           </div>
           <div class="info-row">
             <span class="info-label">Email:</span>
-            <span class="info-value">samia.bk@medic-office.com</span>
+            <span class="info-value" id="pfEmail">-</span>
           </div>
           <div class="info-row">
             <span class="info-label">Phone:</span>
-            <span class="info-value">+2130000000</span>
+            <span class="info-value" id="pfPhone">-</span>
           </div>
           <div class="info-row">
             <span class="info-label">Address:</span>
-            <span class="info-value">Algiers, el achour</span>
+            <span class="info-value" id="pfAddress">-</span>
           </div>
         </div>
       </div>
+
       <div class="profile-section">
         <div class="section-header">
           <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -62,14 +64,15 @@
         <div class="section-content">
           <div class="info-row">
             <span class="info-label">Username:</span>
-            <span class="info-value">SamiaB</span>
+            <span class="info-value" id="pfUsername">-</span>
           </div>
           <div class="info-row">
             <span class="info-label">Registration Date:</span>
-            <span class="info-value">Nov 1, 2025</span>
+            <span class="info-value" id="pfRegDate">-</span>
           </div>
         </div>
       </div>
+
       <div class="profile-actions">
         <a href="dashboard_p.php" class="btn btn-secondary">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -87,5 +90,7 @@
       </div>
     </div>
   </div>
+
+  <script src="../ajax/patient_profile.js"></script>
 </body>
 </html>
