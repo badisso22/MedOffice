@@ -1,4 +1,16 @@
-</html>
+<?php
+session_start();
+require '../config/config.php';
+
+if (!isset($_SESSION['loggedIn']) || $_SESSION['loggedIn'] !== true || $_SESSION['roleID'] != 1) {
+    header("Location: ../login-forms/login.php");
+    exit();
+}
+
+$firstName = $_SESSION['firstName'] ?? 'Super';
+$lastName  = $_SESSION['lastName'] ?? 'Admin';
+$fullName  = trim($firstName . ' ' . $lastName);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +54,7 @@
                     <span class="notification-badge">3</span>
                 </div>
                 <div class="user-menu">
-                    <span class="user-name">Admin</span>
+                    <span class="user-name"><?= htmlspecialchars($fullName) ?></span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
@@ -65,7 +77,7 @@
                 </svg>
                 <span>Overview</span>
             </a></li>
-            <li><a href="users.php" class="menu-item active">
+            <li><a href="users.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                     <circle cx="9" cy="7" r="4"></circle>
@@ -73,6 +85,12 @@
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                 </svg>
                 <span>User Management</span>
+            </a></li>
+            <li><a href="archived_users.php" class="menu-item active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                </svg>
+                <span>Archived Users</span>
             </a></li>
             <li><a href="cabinets.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -103,12 +121,13 @@
             <li><a href="superadmin_settings.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M1 12h6m6 0h6m-17.78 7.78l4.24-4.24m3.08-3.08l4.24-4.24"></path>
+                    <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m3.08 3.08l4.24 4.24M1 12h6m6 0h6m-17.78 7.78l4.24-4.24m3.08-3.08l4.24-4.24"></path>
                 </svg>
                 <span>Settings</span>
             </a></li>
         </ul>
     </aside>
+
     <main class="main-content">
         <div class="section-header">
             <div>
@@ -132,54 +151,30 @@
                         <th>Full Name</th>
                         <th>Email</th>
                         <th>Cabinet</th>
-                        <th>Archived Date</th>
+                        <th>Status</th>
+                        <th>Last Login</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="archivedUsersTableBody">
-                    <tr>
-                        <td>USR-007</td>
-                        <td>Dr. Emily Roberts</td>
-                        <td>emily.r@oldclinic.com</td>
-                        <td>Old Town Clinic</td>
-                        <td>Nov 15, 2024</td>
-                        <td>
-                            <div class="action-buttons-large">
-                                <a href="view_user.php?id=USR-007" class="action-btn-large">View</a>
-                                <button class="action-btn-large success" onclick="openUnarchiveUserModal('USR-007', 'Dr. Emily Roberts')">Unarchive</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>USR-009</td>
-                        <td>Dr. David Wilson</td>
-                        <td>d.wilson@legacy.med</td>
-                        <td>Legacy Medical</td>
-                        <td>Oct 28, 2024</td>
-                        <td>
-                            <div class="action-buttons-large">
-                                <a href="view_user.php?id=USR-009" class="action-btn-large">View</a>
-                                <button class="action-btn-large success" onclick="openUnarchiveUserModal('USR-009', 'Dr. David Wilson')">Unarchive</button>
-                            </div>
-                        </td>
-                    </tr>
+                <tbody id="usersTableBody">
                 </tbody>
             </table>
         </div>
     </main>
-    <div id="unarchiveUserModal" class="modal">
+
+    <div id="restoreUserModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Unarchive User</h2>
-                <button class="modal-close" onclick="closeUnarchiveUserModal()">&times;</button>
+                <h2>Restore User</h2>
+                <button class="modal-close" onclick="closeRestoreUserModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to restore user <strong id="unarchiveUserName"></strong>?</p>
+                <p>Are you sure you want to restore user <strong id="restoreUserName"></strong>?</p>
                 <p style="color: var(--text-tertiary); font-size: 0.875rem; margin-top: 0.5rem;">The user will be moved back to active users.</p>
-                <input type="hidden" id="unarchiveUserId">
+                <input type="hidden" id="restoreUserId">
                 <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeUnarchiveUserModal()">Cancel</button>
-                    <button type="button" class="btn-success" onclick="handleUnarchiveUser()">Unarchive User</button>
+                    <button type="button" class="btn-secondary" onclick="closeRestoreUserModal()">Cancel</button>
+                    <button type="button" class="btn-success" onclick="handleRestoreUser()">Restore User</button>
                 </div>
             </div>
         </div>
@@ -187,6 +182,6 @@
 
     <div id="toastContainer" class="toast-container"></div>
     <script src="../JS/superadmin.js"></script>
-    <script src="../JS/superadmin_archived_users.js"></script>
+    <script src="../ajax/superadmin_users.js"></script>
 </body>
 </html>
