@@ -1,9 +1,12 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Active Cabinets - Admin Dashboard</title>
+    <title>Cabinet Management - Superadmin</title>
     <link rel="stylesheet" href="../CSS/superadmin.css">
 </head>
 <body>
@@ -27,20 +30,8 @@
                 <span class="logo-text">Super Admin Hub</span>
             </div>
             <div class="nav-right">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search...">
-                </div>
-                <div class="notification-bell">
-                    <a href="notifications.php" class="bell-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                        </svg>
-                    </a>
-                    <span class="notification-badge">3</span>
-                </div>
                 <div class="user-menu">
-                    <span class="user-name">Admin</span>
+                    <span class="user-name">Super Admin</span>
                     <button class="logout-btn" onclick="logout()">Logout</button>
                 </div>
             </div>
@@ -80,12 +71,6 @@
                 </svg>
                 <span>Cabinet Management</span>
             </a></li>
-            <li><a href="messages.php" class="menu-item">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <span>Messages</span>
-            </a></li>
             <li><a href="billing.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
@@ -99,7 +84,7 @@
                 </svg>
                 <span>Security</span>
             </a></li>
-            <li><a href="superadmin_settings.php" class="menu-item">
+            <li><a href="settings.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m3.08 3.08l4.24 4.24M1 12h6m6 0h6m-17.78 7.78l4.24-4.24m3.08-3.08l4.24-4.24"></path>
@@ -113,23 +98,25 @@
         <div class="section-header">
             <div>
                 <h1>Cabinet Management</h1>
-                <p>Manage all available cabinets and their status</p>
+                <p>Manage all medical cabinets and their status</p>
             </div>
-            <a href="create_cabinet.php" class="btn btn-primary">
+            <button class="btn btn-primary" onclick="openCreateModal()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
                 Add Cabinet
-            </a>
+            </button>
         </div>
 
-        <div class="tabs-container" style="margin-bottom: 2rem;">
-            <div class="tabs">
-                <a href="cabinets.php" class="tab active">Active Cabinets</a>
-                <a href="suspended_cabinets.php" class="tab">Suspended Cabinets</a>
-                <a href="archived_cabinets.php" class="tab">Archived Cabinets</a>
-            </div>
+        <div class="filters-container" style="margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center;">
+            <input type="text" id="cabinetSearch" placeholder="Search by name or location..." style="flex: 1; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
+            <select id="statusFilter" style="padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 0.5rem;">
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+                <option value="archived">Archived</option>
+            </select>
         </div>
 
         <div class="metrics-grid" style="margin-bottom: 2rem;">
@@ -141,8 +128,8 @@
                     </svg>
                 </div>
                 <div class="metric-content">
-                    <h3>Total Active</h3>
-                    <p class="metric-value">34</p>
+                    <h3>Total Cabinets</h3>
+                    <p class="metric-value" data-stat="total">0</p>
                     <span class="metric-status positive">Operational</span>
                 </div>
             </div>
@@ -154,9 +141,9 @@
                     </svg>
                 </div>
                 <div class="metric-content">
-                    <h3>Occupied</h3>
-                    <p class="metric-value">28</p>
-                    <span class="metric-status">82% utilization</span>
+                    <h3>Active</h3>
+                    <p class="metric-value" data-stat="active">0</p>
+                    <span class="metric-status">Online & Running</span>
                 </div>
             </div>
             <div class="metric-card">
@@ -168,9 +155,9 @@
                     </svg>
                 </div>
                 <div class="metric-content">
-                    <h3>Available</h3>
-                    <p class="metric-value">6</p>
-                    <span class="metric-status">Ready for use</span>
+                    <h3>Suspended</h3>
+                    <p class="metric-value" data-stat="suspended">0</p>
+                    <span class="metric-status">Temporarily Offline</span>
                 </div>
             </div>
         </div>
@@ -180,65 +167,82 @@
                 <thead>
                     <tr>
                         <th>Cabinet ID</th>
+                        <th>Name</th>
                         <th>Location</th>
-                        <th>Type</th>
-                        <th>Capacity</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th>Status</th>
-                        <th>Last Updated</th>
+                        <th>Created</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>CAB-001</td>
-                        <td>Building A - Floor 1</td>
-                        <td>Standard</td>
-                        <td>25/30</td>
-                        <td><span class="badge active">Active</span></td>
-                        <td>1 hour ago</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn" onclick="window.location.href='view_cabinet.php?id=1'">View</button>
-                                <button class="action-btn edit" onclick="editCabinet(1, 'CAB-001', 'Building A - Floor 1', 'Standard', '30')">Edit</button>
-                                <button class="action-btn archive" onclick="archiveCabinet(1, 'CAB-001')">Archive</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CAB-002</td>
-                        <td>Building A - Floor 2</td>
-                        <td>Premium</td>
-                        <td>18/20</td>
-                        <td><span class="badge active">Active</span></td>
-                        <td>2 hours ago</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn" onclick="window.location.href='view_cabinet.php?id=2'">View</button>
-                                <button class="action-btn edit" onclick="editCabinet(2, 'CAB-002', 'Building A - Floor 2', 'Premium', '20')">Edit</button>
-                                <button class="action-btn archive" onclick="archiveCabinet(2, 'CAB-002')">Archive</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>CAB-003</td>
-                        <td>Building B - Floor 1</td>
-                        <td>Standard</td>
-                        <td>12/30</td>
-                        <td><span class="badge active">Active</span></td>
-                        <td>3 hours ago</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn" onclick="window.location.href='view_cabinet.php?id=3'">View</button>
-                                <button class="action-btn edit" onclick="editCabinet(3, 'CAB-003', 'Building B - Floor 1', 'Standard', '30')">Edit</button>
-                                <button class="action-btn archive" onclick="archiveCabinet(3, 'CAB-003')">Archive</button>
-                            </div>
-                        </td>
-                    </tr>
+                <tbody id="cabinetsTable">
+                    <tr><td colspan="8" style="text-align: center; padding: 2rem; color: #9ca3af;">Loading...</td></tr>
                 </tbody>
             </table>
         </div>
     </main>
-    <div id="viewCabinetModal" class="modal">
+
+    <dialog id="addCabinetModal" class="modal">
+        <div class="modal-content">
+            <div id="step1" class="wizard-step active">
+                <div class="modal-header">
+                    <h2>Create New Cabinet</h2>
+                    <button class="modal-close" onclick="closeModal('addCabinetModal')">&times;</button>
+                </div>
+                <form id="cabinetInfoForm" onsubmit="handleCabinetInfo(event)">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="cabinetName">Cabinet Name *</label>
+                            <input type="text" id="cabinetName" name="cabinetname" placeholder="e.g., ESST Medical Cabinet" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cabinetLocation">Location *</label>
+                            <input type="text" id="cabinetLocation" name="cabinetlocation" placeholder="Full address" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cabinetPhone">Phone Number *</label>
+                            <input type="tel" id="cabinetPhone" name="cabinetphonenumber" placeholder="e.g., +213555443321" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cabinetEmail">Email *</label>
+                            <input type="email" id="cabinetEmail" name="contact_email" placeholder="contact@cabinet.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cabinetSpecialty">Specialty</label>
+                            <input type="text" id="cabinetSpecialty" name="cabinetspeciality" placeholder="e.g., Cardiology, General Medicine">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subscriptionPlan">Subscription Plan *</label>
+                            <select id="subscriptionPlan" name="subscription_plan" required>
+                                <option value="">Select a plan</option>
+                                <option value="basic">Basic</option>
+                                <option value="standard">Standard</option>
+                                <option value="premium">Premium</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('addCabinetModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Cabinet</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="creatingStep" class="wizard-step" style="display: none; text-align: center; padding: 3rem;">
+                <div style="display: inline-block; animation: spin 1s linear infinite;">⏳</div>
+                <h3 style="margin-top: 1.5rem;">Creating Cabinet...</h3>
+                <p style="color: #9ca3af;">Setting up your medical cabinet...</p>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="viewCabinetModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Cabinet Details</h2>
@@ -247,87 +251,165 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Cabinet ID</label>
-                    <p id="viewCabinetId" style="font-weight: 600; color: var(--text-primary);"></p>
+                    <p id="viewCabinetId" style="font-weight: 600; color: var(--text-primary); background: #f3f4f6; padding: 0.75rem; border-radius: 0.5rem;"></p>
+                </div>
+                <div class="form-group">
+                    <label>Cabinet Name</label>
+                    <p id="viewCabinetName" style="color: var(--text-primary);"></p>
                 </div>
                 <div class="form-group">
                     <label>Location</label>
-                    <p id="viewLocation" style="color: var(--text-primary);"></p>
+                    <p id="viewCabinetLocation" style="color: var(--text-primary);"></p>
                 </div>
                 <div class="form-group">
-                    <label>Type</label>
-                    <p id="viewType" style="color: var(--text-primary);"></p>
+                    <label>Email</label>
+                    <p id="viewContactEmail" style="color: var(--text-primary);"></p>
                 </div>
                 <div class="form-group">
-                    <label>Capacity</label>
-                    <p id="viewCapacity" style="color: var(--text-primary);"></p>
+                    <label>Phone</label>
+                    <p id="viewPhone" style="color: var(--text-primary);"></p>
+                </div>
+                <div class="form-group">
+                    <label>Specialty</label>
+                    <p id="viewSpeciality" style="color: var(--text-primary);"></p>
+                </div>
+                <div class="form-group">
+                    <label>Subscription Plan</label>
+                    <p id="viewPlan" style="color: var(--text-primary);"></p>
                 </div>
                 <div class="form-group">
                     <label>Status</label>
                     <p id="viewStatus" style="color: var(--text-primary);"></p>
                 </div>
+                <div class="form-group">
+                    <label>Created Date</label>
+                    <p id="viewCreatedAt" style="color: var(--text-primary);"></p>
+                </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeModal('viewCabinetModal')">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="closeModal('viewCabinetModal')">Close</button>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="editCabinetModal" class="modal">
+    </dialog>
+
+    <dialog id="editCabinetModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Edit Cabinet</h2>
                 <button class="modal-close" onclick="closeModal('editCabinetModal')">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="editCabinetForm" onsubmit="handleEditCabinet(event)">
-                    <input type="hidden" id="editCabinetDbId">
+            <form id="editCabinetForm" onsubmit="handleEditSubmit(event)">
+                <input type="hidden" id="editCabinetId">
+                <div class="modal-body">
                     <div class="form-group">
-                        <label for="editCabinetId">Cabinet ID</label>
-                        <input type="text" id="editCabinetId" name="cabinetId" required>
+                        <label for="editCabinetName">Cabinet Name *</label>
+                        <input type="text" id="editCabinetName" name="cabinetname" required>
                     </div>
                     <div class="form-group">
-                        <label for="editLocation">Location</label>
-                        <input type="text" id="editLocation" name="location" required>
+                        <label for="editCabinetLocation">Location *</label>
+                        <input type="text" id="editCabinetLocation" name="cabinetlocation" required>
+                    </div>
+                   <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value" id="cabinetEmail">N/A</span>
+                    </div>
+
+                    <div class="info-item">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value" id="cabinetPhone">N/A</span>
+                    </div>
+
+                    <div class="info-item">
+                    <span class="info-label">Created At</span>
+                    <span class="info-value" id="createdAt">N/A</span>
                     </div>
                     <div class="form-group">
-                        <label for="editType">Type</label>
-                        <select id="editType" name="type" required>
-                            <option value="Standard">Standard</option>
-                            <option value="Premium">Premium</option>
-                            <option value="Compact">Compact</option>
-                            <option value="Large">Large</option>
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" name="status">
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="archived">Archived</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="editCapacity">Capacity</label>
-                        <input type="number" id="editCapacity" name="capacity" min="1" required>
-                    </div>
-                    <div class="modal-actions">
-                        <button type="button" class="btn-secondary" onclick="closeModal('editCabinetModal')">Cancel</button>
-                        <button type="submit" class="btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div id="archiveCabinetModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Archive Cabinet</h2>
-                <button class="modal-close" onclick="closeModal('archiveCabinetModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to archive cabinet <strong id="archiveCabinetId"></strong>?</p>
-                <p style="color: var(--text-tertiary); font-size: 0.9rem; margin-top: 0.5rem;">Archived cabinets will be moved to historical records.</p>
-                <input type="hidden" id="archiveCabinetDbId">
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeModal('archiveCabinetModal')">Cancel</button>
-                    <button type="button" class="btn-danger" onclick="handleArchiveCabinet()">Archive Cabinet</button>
                 </div>
-            </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editCabinetModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
         </div>
-    </div>
+    </dialog>
 
-    <script src="../JS/superadmin.js"></script>
-    <script src="../JS/superadmin_cabinets.js"></script>
+    <script src="../ajax/superadmin_cabinets.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout.php';
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.close();
+            if (modalId === 'addCabinetModal') {
+                document.getElementById('step1').style.display = 'block';
+                document.getElementById('creatingStep').style.display = 'none';
+                document.getElementById('cabinetInfoForm').reset();
+            }
+        }
+
+        function openCreateModal() {
+            document.getElementById('addCabinetModal').showModal();
+        }
+
+        async function handleCabinetInfo(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('creatingStep').style.display = 'block';
+
+            const result = await cabinetManager.createCabinet(data);
+            if (result.success) {
+                form.reset();
+                closeModal('addCabinetModal');
+                cabinetManager.loadCabinets();
+                showNotification('Cabinet created successfully', 'success');
+            } else {
+                document.getElementById('step1').style.display = 'block';
+                document.getElementById('creatingStep').style.display = 'none';
+                showNotification(result.errors?.[0] || 'Creation failed', 'error');
+            }
+        }
+
+        async function handleEditSubmit(e) {
+            e.preventDefault();
+            const cabinetId = document.getElementById('editCabinetId').value;
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            const result = await cabinetManager.updateCabinet(cabinetId, data);
+            if (result.success) {
+                form.reset();
+                closeModal('editCabinetModal');
+                cabinetManager.loadCabinets();
+                showNotification('Cabinet updated successfully', 'success');
+            } else {
+                showNotification(result.errors?.[0] || 'Update failed', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cabinetManager.loadCabinets();
+        });
+    </script>
 </body>
 </html>
