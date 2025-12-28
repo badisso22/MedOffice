@@ -47,6 +47,7 @@
             </div>
         </div>
     </nav>
+
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>Navigation</h3>
@@ -64,6 +65,7 @@
                 </svg>
                 <span>Overview</span>
             </a></li>
+
             <li><a href="users.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -73,6 +75,7 @@
                 </svg>
                 <span>User Management</span>
             </a></li>
+
             <li><a href="cabinets.php" class="menu-item active">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -80,12 +83,14 @@
                 </svg>
                 <span>Cabinet Management</span>
             </a></li>
+
             <li><a href="messages.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
                 <span>Messages</span>
             </a></li>
+
             <li><a href="billing.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
@@ -93,12 +98,14 @@
                 </svg>
                 <span>Billing & Revenue</span>
             </a></li>
+
             <li><a href="security.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
                 <span>Security</span>
             </a></li>
+
             <li><a href="superadmin_settings.php" class="menu-item">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -108,6 +115,7 @@
             </a></li>
         </ul>
     </aside>
+
     <main class="main-content">
         <div class="cabinet-view-container">
             <a href="cabinets.php" class="back-button">
@@ -119,23 +127,27 @@
 
             <div class="cabinet-header">
                 <div class="cabinet-logo" id="cabinetLogo">CA</div>
+
                 <div class="cabinet-header-info">
-                    <h1 id="cabinetName">Cabinet A - Building 1</h1>
-                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;" id="cabinetLocation">Building A - Floor 1, Room 101</p>
+                    <h1 id="cabinetName">Loading...</h1>
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;" id="cabinetLocation">Loading...</p>
+
                     <div class="cabinet-meta">
                         <div class="cabinet-meta-item">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="10"></circle>
                             </svg>
-                            <span class="badge active" id="cabinetStatus">Active</span>
+                            <span class="badge active" id="cabinetStatus">Loading...</span>
                         </div>
+
                         <div class="cabinet-meta-item">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             </svg>
-                            <span id="cabinetType">Premium</span>
+                            <span id="cabinetType">Loading...</span>
                         </div>
                     </div>
+
                     <div class="action-buttons-view">
                         <button class="btn-primary" onclick="openEditCabinetModal()">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -144,6 +156,7 @@
                             </svg>
                             Edit Cabinet
                         </button>
+
                         <button class="btn-danger" onclick="openArchiveCabinetModal()">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="21 8 21 21 3 21 3 8"></polyline>
@@ -167,17 +180,20 @@
                         </div>
                         <h3>Cabinet Information</h3>
                     </div>
+
                     <div class="info-item">
                         <span class="info-label">Cabinet ID</span>
-                        <span class="info-value" id="cabinetId">CAB-001</span>
+                        <span class="info-value" id="cabinetId">Loading...</span>
                     </div>
+
                     <div class="info-item">
                         <span class="info-label">Type</span>
-                        <span class="info-value" id="cabinetTypeInfo">Premium</span>
+                        <span class="info-value" id="cabinetTypeInfo">Loading...</span>
                     </div>
+
                     <div class="info-item">
                         <span class="info-label">Last Updated</span>
-                        <span class="info-value" id="lastUpdated">2 hours ago</span>
+                        <span class="info-value" id="lastUpdated">Loading...</span>
                     </div>
                 </div>
 
@@ -190,22 +206,25 @@
                         </div>
                         <h3>GPS Location</h3>
                     </div>
+
                     <div class="map-container">
-                        <iframe 
+                        <iframe
                             id="cabinetMap"
-                            width="100%" 
-                            height="350" 
-                            frameborder="0" 
-                            style="border:0; border-radius: 8px;" 
+                            width="100%"
+                            height="350"
+                            frameborder="0"
+                            style="border:0; border-radius: 8px;"
                             referrerpolicy="no-referrer-when-downgrade"
                             src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=33.5731,-7.5898&zoom=15"
                             allowfullscreen>
                         </iframe>
                     </div>
+
                     <div class="info-item" style="margin-top: 16px;">
                         <span class="info-label">Address</span>
-                        <span class="info-value" id="cabinetAddress">esst , medoffice , el achour , algiers</span>
+                        <span class="info-value" id="cabinetAddress">Loading...</span>
                     </div>
+
                     <div class="location-actions" style="margin-top: 12px; display: flex; gap: 8px;">
                         <button class="btn-secondary" onclick="openInMaps()" style="flex: 1;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
@@ -214,6 +233,7 @@
                             </svg>
                             Open in Maps
                         </button>
+
                         <button class="btn-secondary" onclick="copyCoordinates()" style="flex: 1;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -234,6 +254,7 @@
                         </div>
                         <h3>Operating Hours</h3>
                     </div>
+
                     <table class="schedule-table">
                         <tbody>
                             <tr>
@@ -261,14 +282,17 @@
                         </div>
                         <h3>Cabinet Specialties</h3>
                     </div>
+
                     <div class="info-item">
                         <span class="info-label">Primary</span>
-                        <span class="info-value" id="primarySpecialty">Cardiology</span>
+                        <span class="info-value" id="primarySpecialty">Loading...</span>
                     </div>
+
                     <div class="info-item">
                         <span class="info-label">Secondary</span>
                         <span class="info-value" id="secondarySpecialty">General Medicine</span>
                     </div>
+
                     <div class="info-item">
                         <span class="info-label">Services</span>
                         <span class="info-value" id="specialtyServices">Diagnostics, Consultations, Emergency Care</span>
@@ -286,6 +310,7 @@
                     </div>
                     <h3>Cabinet Administrator</h3>
                 </div>
+
                 <div id="adminInfo">
                     <div class="admin-card">
                         <div class="admin-avatar">JD</div>
@@ -296,10 +321,12 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </main>
+
     <script src="../JS/superadmin.js"></script>
-    <script src="../JS/superadmin_view_cabinet.js"></script>
+    <script src="../ajax/superadmin_view_cabinet.js"></script>
     <script>
         function openEditCabinetModal() {
             alert('Edit cabinet functionality - will open modal');
