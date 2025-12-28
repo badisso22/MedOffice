@@ -116,7 +116,7 @@ $cabinetID = $_GET['id'] ?? 0;
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
 
     <div class="back-button-container">
-        <a href="dashboard_ad.php" class="back-button">
+        <a href="dashboard_p.php" class="back-button">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
