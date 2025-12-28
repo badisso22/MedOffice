@@ -25,7 +25,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   line-height: 1.6;
@@ -757,7 +757,8 @@ body {
   color: var(--text-primary);
 }
 
-.modal-close, .close-modal {
+.modal-close,
+.close-modal {
   background: none;
   border: none;
   color: var(--text-tertiary);
@@ -773,7 +774,8 @@ body {
   transition: all 0.2s;
 }
 
-.modal-close:hover, .close-modal:hover {
+.modal-close:hover,
+.close-modal:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
 }
@@ -826,7 +828,8 @@ body {
   font-family: inherit;
 }
 
-.modal-actions, .modal-footer {
+.modal-actions,
+.modal-footer {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
@@ -1142,7 +1145,7 @@ body {
   font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom:0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 .wizard-step {
@@ -1159,12 +1162,12 @@ body {
 
 @keyframes fadeIn {
   from {
-      opacity: 0;
-      transform: translateY(10px);
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
-      opacity: 1;
-      transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -1185,7 +1188,7 @@ body {
 
 @keyframes spin {
   to {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -1210,10 +1213,10 @@ body {
 
 @keyframes scaleIn {
   from {
-      transform: scale(0);
+    transform: scale(0);
   }
   to {
-      transform: scale(1);
+    transform: scale(1);
   }
 }
 
@@ -1230,7 +1233,6 @@ body {
 .valid {
   border-color: green;
 }
-
 
 .tabs-container {
   background: var(--bg-card);
