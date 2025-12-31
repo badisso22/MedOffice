@@ -3,6 +3,9 @@ header('Content-Type: application/json');
 session_start();
 require("../config/config.php");
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 if (!isset($conn) || $conn->connect_error) {
     echo json_encode([
         'success' => false,
