@@ -44,9 +44,16 @@ try {
     $params = [];
     $types  = '';
 
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : null;
+    if ($cabinetID !== null) {
+        $sql    .= " AND p.cabinetID = ?";
+        $types  .= 'i';
+        $params[] = $cabinetID;
+    }
+
     if ($searchName !== '') {
-        $sql .= " AND CONCAT(p.firstname, ' ', p.lastname) LIKE ? ";
-        $params[] = '%'.$searchName.'%';
+        $sql    .= " AND CONCAT(p.firstname, ' ', p.lastname) LIKE ? ";
+        $params[] = '%' . $searchName . '%';
         $types   .= 's';
     }
 
@@ -55,7 +62,7 @@ try {
     if ($params) {
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
-            throw new Exception('Prepare failed: '.$conn->error);
+            throw new Exception('Prepare failed: ' . $conn->error);
         }
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
@@ -65,7 +72,7 @@ try {
     }
 
     if (!$result) {
-        throw new Exception('Query failed: '.$conn->error);
+        throw new Exception('Query failed: ' . $conn->error);
     }
 
     $patients = [];
@@ -86,7 +93,7 @@ try {
 
     $response['success'] = true;
     $response['message'] = 'Archived patients loaded';
-    $response['data'] = ['patients' => $patients];
+    $response['data']    = ['patients' => $patients];
 
     echo json_encode($response);
 } catch (Exception $e) {
