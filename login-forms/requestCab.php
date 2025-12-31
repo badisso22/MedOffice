@@ -12,14 +12,17 @@
         <div class="login-card">
             <div class="login-header">
                 <div class="logo">
-                <div class="logo-icon">⚕</div>
-                MedOffice
-            </div>
+                    <div class="logo-icon">⚕</div>
+                    MedOffice
+                </div>
                 <h2>Welcome to our provided service</h2>
-                <p>Please note that to ensure a safe and professional environment for all of us, you need to create a cabinet after making sure with our team that it's genuine</p>
+                <p>
+                    Please note that to ensure a safe and professional environment for all of us,
+                    you need to create a cabinet after making sure with our team that it's genuine.
+                </p>
             </div>
 
-            <form class="login-form">
+            <form class="login-form" id="requestCabForm">
                 <div class="form-group">
                     <label for="first-name">First name:</label>
                     <input 
@@ -30,6 +33,7 @@
                         required
                     >
                 </div>
+
                 <div class="form-group">
                     <label for="last-name">Last name:</label>
                     <input 
@@ -40,6 +44,7 @@
                         required
                     >
                 </div>
+
                 <div class="form-group">
                     <label for="email">Email Address:</label>
                     <input 
@@ -50,19 +55,30 @@
                         required
                     >
                 </div>
+
                 <div class="form-group">
                     <label for="message">Message:</label>
-                    <textarea id="message" name="message" rows="6" placeholder="Type your message here..." required></textarea>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        rows="6" 
+                        placeholder="Type your message here..." 
+                        required
+                    ></textarea>
                 </div>
 
                 <button type="submit" class="btn-primary">Request your cabinet</button>
             </form>
-
+            <div id="request_result" class="form-result"></div>
             <div class="login-footer">
-                <p class="back-home"><a href="../index.html">← Back to Home</a></p>
+                <p class="back-home">
+                    <a href="../index.html">← Back to Home</a>
+                </p>
             </div>
         </div>
     </div>
-        <script src="../JS/form_validation.js"></script>
+
+    <script src="../JS/form_validation.js"></script>
+    <script src="../ajax/requestCab.js"></script>
 </body>
 </html>
