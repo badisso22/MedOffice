@@ -12,7 +12,7 @@ $response = [
     'success' => false,
     'message' => '',
     'doctors' => [],
-    'errors' => []
+    'errors'  => [],
 ];
 
 try {
@@ -44,8 +44,15 @@ try {
     $params = [];
     $types  = '';
 
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : null;
+    if ($cabinetID !== null) {
+        $sql    .= " AND dp.cabinetID = ?";
+        $types  .= 'i';
+        $params[] = $cabinetID;
+    }
+
     if ($searchName !== '') {
-        $sql .= " AND CONCAT(up.firstName, ' ', up.lastName) LIKE ?";
+        $sql    .= " AND CONCAT(up.firstName, ' ', up.lastName) LIKE ?";
         $params[] = '%' . $searchName . '%';
         $types   .= 's';
     }
