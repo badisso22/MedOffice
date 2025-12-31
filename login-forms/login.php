@@ -10,8 +10,8 @@ $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $emailOrUsername = $_POST["emailOrUsername"] ?? "";
-    $password = $_POST["password"] ?? "";
-    $remember = isset($_POST["remember"]);
+    $password        = $_POST["password"] ?? "";
+    $remember        = isset($_POST["remember"]);
 
     if (empty($emailOrUsername) || empty($password)) {
         $error = "Email/Username and password are required.";
@@ -32,75 +32,85 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $user = $result->fetch_assoc();
 
             if (password_verify($password, $user["password"])) {
-                $_SESSION["userID"] = $user["userID"];
-                $_SESSION["email"] = $user["email"];
-                $_SESSION["roleID"] = $user["roleID"];
+                $_SESSION["userID"]   = (int)$user["userID"];
+                $_SESSION["email"]    = $user["email"];
+                $_SESSION["roleID"]   = (int)$user["roleID"];
                 $_SESSION["roleName"] = $user["roleName"];
                 $_SESSION["loggedIn"] = true;
 
-                if ($user["roleID"] == 3) {
-                    $sqlDoctor = "SELECT doctorID, cabinetID FROM DoctorProfile WHERE userID = ? LIMIT 1";
+                $_SESSION['doctorID']        = null;
+                $_SESSION['assistantID']     = null;
+                $_SESSION['patientID']       = null;
+                $_SESSION['activeCabinetID'] = null;
+
+                $userId = (int)$user["userID"];
+                $roleId = (int)$user["roleID"];
+
+                if ($roleId === 2 || $roleId === 3) {
+                    $sqlDoctor = "
+                        SELECT doctorID, cabinetID 
+                        FROM DoctorProfile 
+                        WHERE userID = ? 
+                        ORDER BY cabinetID ASC 
+                        LIMIT 1
+                    ";
                     $stmtDoctor = $conn->prepare($sqlDoctor);
-                    $stmtDoctor->bind_param('i', $user["userID"]);
+                    $stmtDoctor->bind_param('i', $userId);
                     $stmtDoctor->execute();
                     $resDoctor = $stmtDoctor->get_result();
-                    $doctor = $resDoctor->fetch_assoc();
+                    $doctor    = $resDoctor->fetch_assoc();
                     $stmtDoctor->close();
 
                     if ($doctor) {
-                        $_SESSION['doctorID'] = $doctor['doctorID'];
-                        $_SESSION['cabinetID'] = $doctor['cabinetID'];
+                        $_SESSION['doctorID']        = (int)$doctor['doctorID'];
+                        $_SESSION['activeCabinetID'] = (int)$doctor['cabinetID'];
                     }
                 }
 
-                if ($user["roleID"] == 2) {
-                    $sqlAdmin = "SELECT cabinetID FROM DoctorProfile WHERE userID = ? LIMIT 1";
-                    $stmtAdmin = $conn->prepare($sqlAdmin);
-                    $stmtAdmin->bind_param('i', $user["userID"]);
-                    $stmtAdmin->execute();
-                    $resAdmin = $stmtAdmin->get_result();
-                    $admin = $resAdmin->fetch_assoc();
-                    $stmtAdmin->close();
-
-                    if ($admin) {
-                        $_SESSION['cabinetID'] = $admin['cabinetID'];
-                    } else {
-                        $_SESSION['cabinetID'] = 1;
-                    }
-                }
-
-                if ($user["roleID"] == 4) {
-                    $sqlAssistant = "SELECT assistantID, cabinetID FROM AssistantProfile WHERE userID = ? LIMIT 1";
+                if ($roleId === 4) {
+                    $sqlAssistant = "
+                        SELECT assistantID, cabinetID 
+                        FROM AssistantProfile 
+                        WHERE userID = ? 
+                        ORDER BY cabinetID ASC 
+                        LIMIT 1
+                    ";
                     $stmtAssistant = $conn->prepare($sqlAssistant);
-                    $stmtAssistant->bind_param('i', $user["userID"]);
+                    $stmtAssistant->bind_param('i', $userId);
                     $stmtAssistant->execute();
                     $resAssistant = $stmtAssistant->get_result();
-                    $assistant = $resAssistant->fetch_assoc();
+                    $assistant    = $resAssistant->fetch_assoc();
                     $stmtAssistant->close();
 
                     if ($assistant) {
-                        $_SESSION['assistantID'] = $assistant['assistantID'];
-                        $_SESSION['cabinetID'] = $assistant['cabinetID'];
+                        $_SESSION['assistantID']     = (int)$assistant['assistantID'];
+                        $_SESSION['activeCabinetID'] = (int)$assistant['cabinetID'];
                     }
                 }
 
-                if ($user["roleID"] == 5) {
-                    $sqlPatient = "SELECT patientID, cabinetID FROM PatientTable WHERE userID = ? LIMIT 1";
+                if ($roleId === 5) {
+                    $sqlPatient = "
+                        SELECT patientID, cabinetID 
+                        FROM PatientTable 
+                        WHERE userID = ? 
+                        ORDER BY cabinetID ASC 
+                        LIMIT 1
+                    ";
                     $stmtPatient = $conn->prepare($sqlPatient);
-                    $stmtPatient->bind_param('i', $user["userID"]);
+                    $stmtPatient->bind_param('i', $userId);
                     $stmtPatient->execute();
                     $resPatient = $stmtPatient->get_result();
-                    $patient = $resPatient->fetch_assoc();
+                    $patient    = $resPatient->fetch_assoc();
                     $stmtPatient->close();
 
                     if ($patient) {
-                        $_SESSION['patientID'] = $patient['patientID'];
-                        $_SESSION['cabinetID'] = $patient['cabinetID'];
+                        $_SESSION['patientID']       = (int)$patient['patientID'];
+                        $_SESSION['activeCabinetID'] = (int)$patient['cabinetID'];
                     }
                 }
 
                 $updateLogin = $conn->prepare("UPDATE Users SET last_login = NOW() WHERE userID = ?");
-                $updateLogin->bind_param("i", $user["userID"]);
+                $updateLogin->bind_param("i", $userId);
                 $updateLogin->execute();
                 $updateLogin->close();
 
@@ -109,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     setcookie("remember", "1", time() + (30 * 24 * 60 * 60), "/");
                 }
 
-                switch ($user["roleID"]) {
+                switch ($roleId) {
                     case 1:
                         header("Location: ../SuperAdmin/dashboard_superadmin.php");
                         break;
@@ -218,6 +228,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         </div>
     </div>
+
     <div id="errorModal" class="modal-overlay">
         <div class="modal-content error-modal">
             <div class="modal-icon error-icon">
@@ -268,11 +279,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             setTimeout(() => {
                 modal.classList.add("active");
             }, 100);
-        }      
+        }
         function closeErrorModal() {
             const modal = document.getElementById("errorModal");
             modal.classList.remove("active");
-        } 
+        }
         document.getElementById("errorModal")?.addEventListener("click", function(e) {
             if (e.target === this) {
                 closeErrorModal();
