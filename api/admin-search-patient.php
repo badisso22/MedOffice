@@ -1,5 +1,9 @@
 <?php
-require_once '../config/config.php'; 
+session_start();
+
+error_log('activeCabinetID in session: ' . ($_SESSION['activeCabinetID'] ?? 'NULL'));
+
+require_once '../config/config.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -37,16 +41,16 @@ try {
         FROM PatientTable p
         LEFT JOIN Users u ON u.userID = p.userID
         WHERE 1 = 1
-        AND p.archived = 0
+          AND p.archived = 0
     ";
 
     $params = [];
     $types  = '';
 
-    $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : null;
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : null;
     if ($cabinetID !== null) {
-        $sql   .= " AND p.cabinetID = ?";
-        $types .= 'i';
+        $sql    .= " AND p.cabinetID = ?";
+        $types  .= 'i';
         $params[] = $cabinetID;
     }
 
@@ -78,8 +82,8 @@ try {
     while ($row = $result->fetch_assoc()) {
         $age = null;
         if (!empty($row['dateofbirth']) && $row['dateofbirth'] !== '0000-00-00') {
-            $dob  = new DateTime($row['dateofbirth']);
-            $age  = $today->diff($dob)->y;
+            $dob = new DateTime($row['dateofbirth']);
+            $age = $today->diff($dob)->y;
         }
 
         $patients[] = [
