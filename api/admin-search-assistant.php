@@ -4,15 +4,15 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-require '../config/config.php'; 
+require '../config/config.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
 $response = [
-    'success' => false,
-    'message' => '',
-    'assistants' => [],
-    'errors' => []
+    'success'     => false,
+    'message'     => '',
+    'assistants'  => [],
+    'errors'      => []
 ];
 
 try {
@@ -43,8 +43,15 @@ try {
     $params = [];
     $types  = '';
 
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : null;
+    if ($cabinetID !== null) {
+        $sql    .= " AND ap.cabinetID = ?";
+        $types  .= 'i';
+        $params[] = $cabinetID;
+    }
+
     if ($searchName !== '') {
-        $sql .= " AND CONCAT(up.firstName, ' ', up.lastName) LIKE ?";
+        $sql    .= " AND CONCAT(up.firstName, ' ', up.lastName) LIKE ?";
         $params[] = '%' . $searchName . '%';
         $types   .= 's';
     }
@@ -91,8 +98,8 @@ try {
 
 } catch (Exception $e) {
     http_response_code(500);
-    $response['success'] = false;
-    $response['message'] = 'Server error';
+    $response['success']  = false;
+    $response['message']  = 'Server error';
     $response['errors'][] = $e->getMessage();
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
 }
