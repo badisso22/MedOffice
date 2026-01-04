@@ -14,7 +14,7 @@ try {
         throw new Exception('Database connection error');
     }
 
-    $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 0;
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : 0;
     if ($cabinetID <= 0) {
         throw new Exception('Cabinet ID not found');
     }
@@ -50,7 +50,7 @@ try {
     $instagram  = trim($input['instagram']  ?? '');
     $linkedin   = trim($input['linkedin']   ?? '');
 
-    $facilities = $input['facilities'] ?? [];
+    $facilities         = $input['facilities'] ?? [];
     $additionalServices = trim($input['additionalServices'] ?? '');
 
     $priceGeneral    = isset($input['priceGeneral'])    ? (float)$input['priceGeneral']    : 0;
@@ -77,7 +77,9 @@ try {
     if (is_array($specializationsArr)) {
         foreach ($specializationsArr as $s) {
             $s = trim($s);
-            if ($s !== '') $specialties[] = $s;
+            if ($s !== '') {
+                $specialties[] = $s;
+            }
         }
     }
     if ($otherSpecs !== '') {
@@ -88,45 +90,48 @@ try {
     }
     $specialtyStr = implode(', ', $specialties);
 
-$sql = "
-    UPDATE CabinetInfo
-    SET cabinetname        = ?,
-        cabinetlocation    = ?,
-        contact_email      = ?,
-        cabinetphonenumber = ?,
-        cabinetspeciality  = ?,
-        workStartTime      = NULLIF(?, ''),
-        workEndTime        = NULLIF(?, ''),
-        cabinetworktime    = ?,
-        cabinetbio         = NULLIF(?, ''),
-        websiteUrl         = NULLIF(?, ''),
-        facebookUrl        = NULLIF(?, ''),
-        twitterUrl         = NULLIF(?, ''),
-        instagramUrl       = NULLIF(?, ''),
-        linkedinUrl        = NULLIF(?, '')
-    WHERE cabinetID = ?
-";
+    $sql = "
+        UPDATE CabinetInfo
+        SET cabinetname        = ?,
+            cabinetlocation    = ?,
+            contact_email      = ?,
+            cabinetphonenumber = ?,
+            cabinetspeciality  = ?,
+            workStartTime      = NULLIF(?, ''),
+            workEndTime        = NULLIF(?, ''),
+            cabinetworktime    = ?,
+            cabinetbio         = NULLIF(?, ''),
+            websiteUrl         = NULLIF(?, ''),
+            facebookUrl        = NULLIF(?, ''),
+            twitterUrl         = NULLIF(?, ''),
+            instagramUrl       = NULLIF(?, ''),
+            linkedinUrl        = NULLIF(?, '')
+        WHERE cabinetID = ?
+    ";
 
-$stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
 
-$stmt->bind_param(
-    'ssssssssssssssi',  
-    $cabinetName,
-    $address,
-    $email,
-    $phone,
-    $specialtyStr,
-    $workStartTime,
-    $workEndTime,
-    $workingHoursText,
-    $cabinetBio,
-    $website,
-    $facebook,
-    $twitter,
-    $instagram,
-    $linkedin,
-    $cabinetID
-);
+    $stmt->bind_param(
+        'ssssssssssssssi',
+        $cabinetName,
+        $address,
+        $email,
+        $phone,
+        $specialtyStr,
+        $workStartTime,
+        $workEndTime,
+        $workingHoursText,
+        $cabinetBio,
+        $website,
+        $facebook,
+        $twitter,
+        $instagram,
+        $linkedin,
+        $cabinetID
+    );
 
     if (!$stmt->execute()) {
         throw new Exception('Failed to update cabinet info: ' . $stmt->error);
@@ -146,16 +151,16 @@ $stmt->bind_param(
             if ($stmt) {
                 foreach ($facilities as $f) {
                     $fTrim = trim($f);
-                    if ($fTrim === '') continue;
+                    if ($fTrim === '') {
+                        continue;
+                    }
                     $stmt->bind_param('is', $cabinetID, $fTrim);
                     $stmt->execute();
                 }
                 $stmt->close();
             }
         }
-    }
 
-    if ($isNewForm) {
         $pricingData = [
             'General Consultation' => $priceGeneral,
             'Specialist Visit'     => $priceSpecialist,
@@ -164,7 +169,9 @@ $stmt->bind_param(
         ];
 
         foreach ($pricingData as $serviceName => $priceValue) {
-            if ($priceValue <= 0) continue;
+            if ($priceValue <= 0) {
+                continue;
+            }
 
             $stmt = $conn->prepare("SELECT pricingID FROM Pricing WHERE cabinetID = ? AND serviceName = ? LIMIT 1");
             $stmt->bind_param('is', $cabinetID, $serviceName);
@@ -188,8 +195,8 @@ $stmt->bind_param(
         }
     }
 
-    $response['success']  = true;
-    $response['message']  = 'Cabinet information updated successfully';
+    $response['success'] = true;
+    $response['message'] = 'Cabinet information updated successfully';
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {
