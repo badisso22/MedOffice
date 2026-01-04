@@ -17,6 +17,10 @@ try {
     $raw   = file_get_contents('php://input');
     $input = json_decode($raw, true);
 
+    if (!is_array($input)) {
+        throw new Exception('Invalid JSON payload');
+    }
+
     $patientID     = isset($input['patientId']) ? (int)$input['patientId'] : 0;
     $date          = isset($input['date']) ? trim($input['date']) : '';
     $time          = isset($input['time']) ? trim($input['time']) : '';
@@ -24,19 +28,22 @@ try {
     $appointmentID = isset($input['id']) ? (int)$input['id'] : 0;
     $doctorIdInput = isset($input['doctorId']) ? (int)$input['doctorId'] : 0;
 
-    $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 0;
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : 0;
     $roleID    = isset($_SESSION['roleID']) ? (int)$_SESSION['roleID'] : 0;
 
-    if (!$patientID || !$date || !$time || !$purpose || !$cabinetID) {
+    if (!$patientID || !$date || !$time || !$purpose || $cabinetID <= 0) {
         throw new Exception('Missing required fields');
     }
 
     $doctorID = null;
     $status   = 'pending';
 
-    if ($roleID == 2 || $roleID == 3) {
+    if ($roleID === 2 || $roleID === 3) {
         $sqlDoctor = "SELECT doctorID FROM DoctorProfile WHERE userID = ? LIMIT 1";
         $stmtDoctor = $conn->prepare($sqlDoctor);
+        if (!$stmtDoctor) {
+            throw new Exception('Prepare failed: ' . $conn->error);
+        }
         $stmtDoctor->bind_param('i', $_SESSION['userID']);
         $stmtDoctor->execute();
         $resDoctor = $stmtDoctor->get_result();
@@ -44,13 +51,20 @@ try {
         $stmtDoctor->close();
 
         $doctorID = $docRow ? (int)$docRow['doctorID'] : null;
-        $status   = 'accepted';
-    } elseif ($roleID == 4 || $roleID == 5) {
+        if ($doctorID <= 0) {
+            throw new Exception('Doctor profile not found for this user');
+        }
+        $status = 'accepted';
+
+    } elseif ($roleID === 4 || $roleID === 5) {
         if ($doctorIdInput <= 0) {
             throw new Exception('Doctor is required for this booking');
         }
         $doctorID = $doctorIdInput;
         $status   = 'accepted';
+
+    } else {
+        throw new Exception('Unauthorized role');
     }
 
     if ($doctorID) {
@@ -65,6 +79,9 @@ try {
             LIMIT 1
         ";
         $stmtConflict = $conn->prepare($sqlConflict);
+        if (!$stmtConflict) {
+            throw new Exception('Prepare failed: ' . $conn->error);
+        }
         $stmtConflict->bind_param('issi', $doctorID, $date, $time, $appointmentID);
         $stmtConflict->execute();
         $resConflict = $stmtConflict->get_result();
@@ -76,10 +93,15 @@ try {
     }
 
     if ($appointmentID > 0) {
-        $sql = "UPDATE Appointments 
-                SET patientID = ?, doctorID = ?, date = ?, appointmentTime = ?, purpose = ?, status = ? 
-                WHERE appointmentID = ? AND cabinetID = ?";
+        $sql = "
+            UPDATE Appointments 
+            SET patientID = ?, doctorID = ?, date = ?, appointmentTime = ?, purpose = ?, status = ? 
+            WHERE appointmentID = ? AND cabinetID = ?
+        ";
         $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception('Prepare failed: ' . $conn->error);
+        }
         $stmt->bind_param(
             'iisssiii',
             $patientID,
@@ -94,12 +116,18 @@ try {
         $stmt->execute();
         $stmt->close();
         $response['message'] = 'Appointment updated successfully';
+
     } else {
         $timeShort = substr($time, 0, 5);
-        $sql = "INSERT INTO Appointments 
+        $sql = "
+            INSERT INTO Appointments 
                 (patientID, doctorID, date, appointmentTime, time, purpose, status, cabinetID) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ";
         $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception('Prepare failed: ' . $conn->error);
+        }
         $stmt->bind_param(
             'iisssssi',
             $patientID,
