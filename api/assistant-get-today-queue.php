@@ -14,11 +14,14 @@ try {
         throw new Exception('Database connection error');
     }
 
-    if (!isset($_SESSION['cabinetID'])) {
+    if (!isset($_SESSION['activeCabinetID'])) {
         throw new Exception('Unauthorized');
     }
 
-    $cabinetID = (int)$_SESSION['cabinetID'];
+    $cabinetID = (int)$_SESSION['activeCabinetID'];
+    if ($cabinetID <= 0) {
+        throw new Exception('Cabinet ID not found in session');
+    }
 
     $doctorIdFilter = isset($_GET['doctorId']) && $_GET['doctorId'] !== 'all'
         ? (int)$_GET['doctorId']
@@ -45,7 +48,7 @@ try {
             CONCAT(p.firstname, ' ', p.lastname) AS patientName,
             d.doctorID,
             up.firstName AS doctorFirstName,
-            up.lastName AS doctorLastName,
+            up.lastName  AS doctorLastName,
             d.speciality AS specialty
         FROM Appointments a
         JOIN PatientTable p ON p.patientID = a.patientID
@@ -61,6 +64,9 @@ try {
     ";
 
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param($types, ...$params);
     $stmt->execute();
     $res = $stmt->get_result();
@@ -91,6 +97,9 @@ try {
         ORDER BY up.firstName, up.lastName
     ";
     $stmtDoc = $conn->prepare($sqlDoc);
+    if (!$stmtDoc) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmtDoc->bind_param('i', $cabinetID);
     $stmtDoc->execute();
     $resDoc = $stmtDoc->get_result();
@@ -102,9 +111,9 @@ try {
 
     $response['success'] = true;
     $response['data'] = [
-        'current'  => $current,
-        'waiting'  => $waiting,
-        'doctors'  => $doctors
+        'current' => $current,
+        'waiting' => $waiting,
+        'doctors' => $doctors
     ];
 
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
