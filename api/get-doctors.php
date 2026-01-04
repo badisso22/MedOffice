@@ -16,8 +16,8 @@ try {
         throw new Exception('Database connection error');
     }
 
-    $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 0;
-    if (!$cabinetID) {
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : 0;
+    if ($cabinetID <= 0) {
         throw new Exception('Cabinet ID not found in session');
     }
 
@@ -34,8 +34,8 @@ try {
         INNER JOIN UserProfile up ON up.userID = dp.userID
         INNER JOIN DoctorAvailability da ON da.doctorID = dp.doctorID
         WHERE dp.isArchived = 0
-          AND dp.isActive = 1
-          AND dp.cabinetID = ?
+          AND dp.isActive   = 1
+          AND dp.cabinetID  = ?
           AND da.isAvailable = 1
         ORDER BY up.firstName, up.lastName
     ";
@@ -67,6 +67,7 @@ try {
     $response['message'] = 'Doctors loaded';
     $response['data']    = $doctors;
     echo json_encode($response, JSON_UNESCAPED_UNICODE);
+
 } catch (Exception $e) {
     http_response_code(500);
     $response['success'] = false;
