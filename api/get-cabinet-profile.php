@@ -14,7 +14,7 @@ try {
         throw new Exception('Database connection error');
     }
 
-    $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 0;
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : 0;
     if ($cabinetID <= 0) {
         throw new Exception('Cabinet ID not found');
     }
@@ -38,6 +38,9 @@ try {
         LIMIT 1
     ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $cabinet = $stmt->get_result()->fetch_assoc();
@@ -48,15 +51,24 @@ try {
     }
 
     $sqlDoctors = "
-        SELECT dp.doctorID, dp.speciality, dp.yearsOfExperience, dp.bio,
-               up.firstName, up.lastName
+        SELECT 
+            dp.doctorID,
+            dp.speciality,
+            dp.yearsOfExperience,
+            dp.bio,
+            up.firstName,
+            up.lastName
         FROM DoctorProfile dp
         INNER JOIN Users u ON u.userID = dp.userID
         INNER JOIN UserProfile up ON up.userID = u.userID
-        WHERE dp.cabinetID = ? AND dp.isArchived = 0
+        WHERE dp.cabinetID = ? 
+          AND dp.isArchived = 0
         ORDER BY up.firstName, up.lastName
     ";
     $stmt = $conn->prepare($sqlDoctors);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $doctorsResult = $stmt->get_result();
@@ -76,10 +88,14 @@ try {
     $sqlPricing = "
         SELECT serviceName, price, description
         FROM Pricing
-        WHERE cabinetID = ? AND isActive = 1
+        WHERE cabinetID = ? 
+          AND isActive = 1
         ORDER BY price DESC
     ";
     $stmt = $conn->prepare($sqlPricing);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $pricingResult = $stmt->get_result();
@@ -101,6 +117,9 @@ try {
         ORDER BY facility
     ";
     $stmt = $conn->prepare($sqlFacilities);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $facilitiesResult = $stmt->get_result();
@@ -112,16 +131,23 @@ try {
     $stmt->close();
 
     $sqlReviews = "
-        SELECT pf.feedback_title, pf.feedback_message, pf.created_at,
-               COALESCE(pf.doctor_competence_rating, 0) as rating,
-               u.username
+        SELECT 
+            pf.feedback_title,
+            pf.feedback_message,
+            pf.created_at,
+            COALESCE(pf.doctor_competence_rating, 0) AS rating,
+            u.username
         FROM PatientFeedback pf
         INNER JOIN Users u ON u.userID = pf.patient_id
-        WHERE pf.cabinet_id = ? AND pf.feedback_message IS NOT NULL
+        WHERE pf.cabinet_id = ? 
+          AND pf.feedback_message IS NOT NULL
         ORDER BY pf.created_at DESC
         LIMIT 10
     ";
     $stmt = $conn->prepare($sqlReviews);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $reviewsResult = $stmt->get_result();
@@ -153,20 +179,20 @@ try {
     $response['success'] = true;
     $response['data'] = [
         'cabinet' => [
-            'name'              => $cabinet['cabinetname'],
-            'location'          => $cabinet['cabinetlocation'],
-            'email'             => $cabinet['contact_email'],
-            'phone'             => $cabinet['cabinetphonenumber'],
-            'hours'             => $cabinet['cabinetworktime'],
-            'specialty'         => $cabinet['cabinetspeciality'],
-            'bio'               => $cabinet['cabinetbio'],
-            'websiteUrl'        => $cabinet['websiteUrl'] ?? null,
-            'facebookUrl'       => $cabinet['facebookUrl'] ?? null,
-            'twitterUrl'        => $cabinet['twitterUrl'] ?? null,
-            'instagramUrl'      => $cabinet['instagramUrl'] ?? null,
-            'linkedinUrl'       => $cabinet['linkedinUrl'] ?? null,
-            'establishedYear'   => $cabinet['establishedYear'] ?? null,
-            'additionalServices'=> $cabinet['additionalServices'] ?? null,
+            'name'               => $cabinet['cabinetname'],
+            'location'           => $cabinet['cabinetlocation'],
+            'email'              => $cabinet['contact_email'],
+            'phone'              => $cabinet['cabinetphonenumber'],
+            'hours'              => $cabinet['cabinetworktime'],
+            'specialty'          => $cabinet['cabinetspeciality'],
+            'bio'                => $cabinet['cabinetbio'],
+            'websiteUrl'         => $cabinet['websiteUrl'] ?? null,
+            'facebookUrl'        => $cabinet['facebookUrl'] ?? null,
+            'twitterUrl'         => $cabinet['twitterUrl'] ?? null,
+            'instagramUrl'       => $cabinet['instagramUrl'] ?? null,
+            'linkedinUrl'        => $cabinet['linkedinUrl'] ?? null,
+            'establishedYear'    => $cabinet['establishedYear'] ?? null,
+            'additionalServices' => $cabinet['additionalServices'] ?? null,
         ],
         'doctors'    => $doctors,
         'reviews'    => $reviews,
