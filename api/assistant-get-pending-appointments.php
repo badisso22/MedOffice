@@ -13,12 +13,14 @@ try {
     if (!$conn instanceof mysqli) {
         throw new Exception('Database connection error');
     }
-
-    if (!isset($_SESSION['cabinetID'])) {
+    if (!isset($_SESSION['activeCabinetID'])) {
         throw new Exception('Unauthorized');
     }
 
-    $cabinetID = (int)$_SESSION['cabinetID'];
+    $cabinetID = (int)$_SESSION['activeCabinetID'];
+    if ($cabinetID <= 0) {
+        throw new Exception('Cabinet ID not found');
+    }
 
     $sql = "
       SELECT 
@@ -27,19 +29,23 @@ try {
         a.appointmentTime,
         a.purpose,
         a.status,
-        p.name AS patientName,
+        CONCAT(p.firstname, ' ', p.lastname) AS patientName,
         p.patientID,
-        d.firstName AS doctorFirstName,
-        d.lastName AS doctorLastName
+        up.firstName AS doctorFirstName,
+        up.lastName  AS doctorLastName
       FROM Appointments a
-      JOIN Patients p ON p.patientID = a.patientID
-      LEFT JOIN Doctors d ON d.doctorID = a.doctorID
+      JOIN PatientTable p ON p.patientID = a.patientID
+      LEFT JOIN DoctorProfile d ON d.doctorID = a.doctorID
+      LEFT JOIN Users u ON u.userID = d.userID
+      LEFT JOIN UserProfile up ON up.userID = u.userID
       WHERE a.cabinetID = ?
         AND a.status = 'pending'
       ORDER BY a.date ASC, a.appointmentTime ASC
     ";
-
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $result = $stmt->get_result();
