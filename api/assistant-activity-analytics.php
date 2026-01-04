@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 require '../config/config.php';
 header('Content-Type: application/json; charset=utf-8');
@@ -6,15 +9,23 @@ header('Content-Type: application/json; charset=utf-8');
 $response = ['success' => false, 'data' => [], 'errors' => []];
 
 try {
-    if (!$conn instanceof mysqli) throw new Exception('Database error');
-    if (!isset($_SESSION['userID'], $_SESSION['cabinetID']) || $_SESSION['roleID'] != 4) {
+    if (!$conn instanceof mysqli) {
+        throw new Exception('Database error');
+    }
+    if (
+        !isset($_SESSION['userID'], $_SESSION['roleID'], $_SESSION['activeCabinetID']) ||
+        (int)$_SESSION['roleID'] !== 4
+    ) {
         throw new Exception('Unauthorized');
     }
 
     $assistantID = (int)$_SESSION['userID'];
-    $cabinetID   = (int)$_SESSION['cabinetID'];
+    $cabinetID   = (int)$_SESSION['activeCabinetID'];
+    if ($cabinetID <= 0) {
+        throw new Exception('Cabinet ID not found');
+    }
 
-    $today = new DateTimeImmutable('today');
+    $today     = new DateTimeImmutable('today');
     $weekStart = $today->modify('-' . ($today->format('N') - 1) . ' days'); 
     $weekEnd   = $weekStart->modify('+6 days');
 
@@ -26,15 +37,19 @@ try {
              SUM(TIMESTAMPDIFF(MINUTE, startedAt, endedAt)) AS minutesWorked
       FROM AssistantShifts
       WHERE assistantUserID = ?
+        AND cabinetID = ?
         AND shiftDate BETWEEN ? AND ?
         AND endedAt IS NOT NULL
       GROUP BY shiftDate
     ";
     $stmt = $conn->prepare($sqlShifts);
-    $stmt->bind_param('iss', $assistantID, $weekStartDate, $weekEndDate);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
+    $stmt->bind_param('iiss', $assistantID, $cabinetID, $weekStartDate, $weekEndDate);
     $stmt->execute();
     $res = $stmt->get_result();
-    $minutesByDate = [];
+    $minutesByDate    = [];
     $totalMinutesWeek = 0;
     while ($row = $res->fetch_assoc()) {
         $d = $row['shiftDate'];
@@ -54,10 +69,13 @@ try {
       GROUP BY date
     ";
     $stmt = $conn->prepare($sqlAppts);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('iss', $cabinetID, $weekStartDate, $weekEndDate);
     $stmt->execute();
     $res = $stmt->get_result();
-    $apptsByDate = [];
+    $apptsByDate    = [];
     $totalApptsWeek = 0;
     while ($row = $res->fetch_assoc()) {
         $d = $row['apptDate'];
@@ -67,16 +85,16 @@ try {
     }
     $stmt->close();
 
-    $daily = [];
-    $cur = $weekStart;
-    $daysWithWork = 0;
+    $daily            = [];
+    $cur              = $weekStart;
+    $daysWithWork     = 0;
     $sumMinutesForAvg = 0;
 
     for ($i = 0; $i < 7; $i++) {
-        $dStr = $cur->format('Y-m-d');
+        $dStr    = $cur->format('Y-m-d');
         $dayName = $cur->format('l');
 
-        $mins = $minutesByDate[$dStr] ?? 0;
+        $mins  = $minutesByDate[$dStr] ?? 0;
         $appts = $apptsByDate[$dStr] ?? 0;
 
         if ($mins > 0) {
@@ -88,7 +106,7 @@ try {
             'date'          => $dStr,
             'dayName'       => $dayName,
             'minutesWorked' => $mins,
-            'appointments'  => $appts
+            'appointments'  => $appts,
         ];
 
         $cur = $cur->modify('+1 day');
@@ -103,7 +121,7 @@ try {
         'totalMinutesWeek'   => $totalMinutesWeek,
         'totalAppointments'  => $totalApptsWeek,
         'avgDailyMinutes'    => $avgDailyMinutes,
-        'daily'              => $daily
+        'daily'              => $daily,
     ];
 
 } catch (Exception $e) {
