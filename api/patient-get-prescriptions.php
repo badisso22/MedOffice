@@ -10,15 +10,30 @@ try {
         throw new Exception('Database connection error');
     }
 
-    if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'], $_SESSION['cabinetID']) || $_SESSION['roleID'] != 5) {
+    if (
+        empty($_SESSION['loggedIn']) ||
+        !isset($_SESSION['userID'], $_SESSION['roleID'], $_SESSION['activeCabinetID']) ||
+        (int)$_SESSION['roleID'] !== 5
+    ) {
         throw new Exception('Unauthorized');
     }
 
     $userID    = (int)$_SESSION['userID'];
-    $cabinetID = (int)$_SESSION['cabinetID'];
+    $cabinetID = (int)$_SESSION['activeCabinetID'];
+    if ($cabinetID <= 0) {
+        throw new Exception('Cabinet ID not found');
+    }
 
-    $sql = "SELECT patientID FROM PatientTable WHERE userID = ? AND cabinetID = ? LIMIT 1";
+    $sql = "
+        SELECT patientID 
+        FROM PatientTable 
+        WHERE userID = ? AND cabinetID = ? 
+        LIMIT 1
+    ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('ii', $userID, $cabinetID);
     $stmt->execute();
     $patRow = $stmt->get_result()->fetch_assoc();
@@ -30,19 +45,30 @@ try {
 
     $patientID = (int)$patRow['patientID'];
 
-    $sql = "SELECT p.prescriptionID, p.dosage, p.frequency, p.duration, p.instructions,
-               p.prescribedDate, p.expiryDate,
-               m.medicationName,
-               up.firstName AS doctorFirstName,
-               up.lastName AS doctorLastName
+    $sql = "
+        SELECT 
+            p.prescriptionID, 
+            p.dosage, 
+            p.frequency, 
+            p.duration, 
+            p.instructions,
+            p.prescribedDate, 
+            p.expiryDate,
+            m.medicationName,
+            up.firstName AS doctorFirstName,
+            up.lastName  AS doctorLastName
         FROM Prescriptions p
-        JOIN Medications m ON p.medicationID = m.medicationID
+        JOIN Medications m   ON p.medicationID = m.medicationID
         JOIN DoctorProfile dp ON p.doctorID = dp.doctorID
-        JOIN UserProfile up ON dp.userID = up.userID
+        JOIN Users u         ON u.userID = dp.userID
+        JOIN UserProfile up  ON up.userID = u.userID
         WHERE p.patientID = ?
-        ORDER BY p.prescribedDate DESC";
-
+        ORDER BY p.prescribedDate DESC
+    ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('i', $patientID);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -62,23 +88,21 @@ try {
                 $diff = $today->diff($expDate)->days;
                 if ($diff !== false && $diff <= 7) {
                     $status = 'expiring';
-                } else {
-                    $status = 'active';
                 }
             }
         }
 
         $response['data'][] = [
-            'id'          => (int)$row['prescriptionID'],
-            'medication'  => $row['medicationName'],
-            'dosage'      => $row['dosage'],
-            'frequency'   => $row['frequency'],
-            'duration'    => $row['duration'],
-            'instructions'=> $row['instructions'],
-            'prescribed'  => $prescribed,
-            'expiry'      => $expiry,
-            'doctor'      => trim($row['doctorFirstName'] . ' ' . $row['doctorLastName']),
-            'status'      => $status, 
+            'id'           => (int)$row['prescriptionID'],
+            'medication'   => $row['medicationName'],
+            'dosage'       => $row['dosage'],
+            'frequency'    => $row['frequency'],
+            'duration'     => $row['duration'],
+            'instructions' => $row['instructions'],
+            'prescribed'   => $prescribed,
+            'expiry'       => $expiry,
+            'doctor'       => trim($row['doctorFirstName'] . ' ' . $row['doctorLastName']),
+            'status'       => $status,
         ];
     }
     $stmt->close();
