@@ -11,8 +11,8 @@ header('Content-Type: application/json; charset=utf-8');
 $response = [
     'success' => false,
     'message' => '',
-    'data' => null,
-    'errors' => []
+    'data'    => null,
+    'errors'  => []
 ];
 
 try {
@@ -20,15 +20,16 @@ try {
         throw new Exception('Database connection error');
     }
 
-    $roleID = isset($_SESSION['roleID']) ? (int)$_SESSION['roleID'] : 0;
-    $cabinetID = isset($_SESSION['cabinetID']) ? (int)$_SESSION['cabinetID'] : 0;
+    $roleID    = isset($_SESSION['roleID']) ? (int)$_SESSION['roleID'] : 0;
+    $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : 0;
 
     if ($cabinetID <= 0) {
         throw new Exception('Cabinet ID not found in session');
     }
 
     $today = date('Y-m-d');
-    if ($roleID == 3) {
+
+    if ($roleID === 3) { 
         $doctorID = isset($_SESSION['doctorID']) ? (int)$_SESSION['doctorID'] : 0;
         if ($doctorID <= 0) {
             throw new Exception('Doctor ID not found in session');
@@ -53,9 +54,12 @@ try {
         ";
 
         $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception('Prepare failed: ' . $conn->error);
+        }
         $stmt->bind_param('iis', $doctorID, $cabinetID, $today);
 
-    } elseif ($roleID == 2) {
+    } elseif ($roleID === 2) { 
         $sql = "
             SELECT 
                 a.appointmentID,
@@ -74,42 +78,41 @@ try {
         ";
 
         $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception('Prepare failed: ' . $conn->error);
+        }
         $stmt->bind_param('is', $cabinetID, $today);
 
     } else {
         throw new Exception('Unauthorized access');
     }
 
-    if (!$stmt) {
-        throw new Exception('Prepare failed: ' . $conn->error);
-    }
-
     $stmt->execute();
     $result = $stmt->get_result();
 
     $appointments = [];
-    $now = new DateTime();
+    $now        = new DateTime();
     $currentTime = $now->format('H:i:s');
 
     while ($row = $result->fetch_assoc()) {
         $appointments[] = [
             'appointmentID' => (int)$row['appointmentID'],
-            'patientID' => (int)$row['patientID'],
-            'patientName' => $row['firstname'] . ' ' . $row['lastname'],
-            'time' => $row['appointmentTime'],
-            'purpose' => $row['purpose'],
-            'status' => $row['status']
+            'patientID'     => (int)$row['patientID'],
+            'patientName'   => $row['firstname'] . ' ' . $row['lastname'],
+            'time'          => $row['appointmentTime'],
+            'purpose'       => $row['purpose'],
+            'status'=> $row['status']
         ];
     }
     $stmt->close();
 
     $completed = [];
-    $current = null;
-    $upcoming = [];
+    $current   = null;
+    $upcoming  = [];
 
     foreach ($appointments as $apt) {
         $aptTime = $apt['time'];
-        
+
         if ($apt['status'] === 'cancelled') {
             continue;
         }
@@ -120,7 +123,7 @@ try {
             $completed[] = $apt;
         } elseif (!$current && $aptTime >= $currentTime && $apt['status'] !== 'completed') {
             $current = $apt;
-        } else if ($apt['status'] !== 'completed' && $aptTime >= $currentTime) {
+        } elseif ($apt['status'] !== 'completed' && $aptTime >= $currentTime) {
             $upcoming[] = $apt;
         }
     }
@@ -128,12 +131,12 @@ try {
     $response['success'] = true;
     $response['message'] = 'Appointments loaded';
     $response['data'] = [
-        'current' => $current,
-        'completed' => $completed,
-        'upcoming' => $upcoming,
-        'total' => count($appointments),
+        'current'        => $current,
+        'completed'      => $completed,
+        'upcoming'       => $upcoming,
+        'total'          => count($appointments),
         'completedCount' => count($completed),
-        'currentCount' => $current ? 1 : 0,
+        'currentCount'   => $current ? 1 : 0,
         'remainingCount' => count($upcoming)
     ];
 
