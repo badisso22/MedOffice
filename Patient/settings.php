@@ -6,11 +6,9 @@
   <title>Settings - MediCare</title>
   <link rel="stylesheet" href="../CSS/general.css">
   <link rel="stylesheet" href="../CSS/settings.css" />
-  <link rel="stylesheet" href="../CSS/form_validations.css" />
-
 </head>
 <body>
-    <nav>
+  <nav>
         <div class="nav-container">
             <button class="drawer-toggle" onclick="toggleDrawer()">
                 <span></span>
@@ -22,7 +20,7 @@
                 MedOffice
             </a>
             <div class="nav-cta">
-                <span class="user-name">Patient Samia</span>
+                <span class="user-name">Patient <?= htmlspecialchars($fullname ?? 'User') ?></span>
                 <div class="top-icons">
                     <a href="patient_messages.php" class="icon-btn" title="Chat">
                         <svg viewBox="0 0 24 24">
@@ -40,7 +38,6 @@
             </div>
         </div>
     </nav>
-
     <div class="drawer" id="drawer">
         <div class="drawer-header">
             <div class="logo">
@@ -54,7 +51,7 @@
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                 Dashboard
             </a></li>
-            <li><a href="patientProfile.php">
+            <li><a href="profileP.php">
                 <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 My Profile
             </a></li>
@@ -74,15 +71,15 @@
                 <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
                 Prescriptions
             </a></li>
-            <li><a href="myPrescriptions.php">
+          <!--  <li><a href="myPrescriptions.php">
                 <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                 Consultations
-            </a></li>
-            <li><a href="cabinet_info.php">
+            </a></li>-->
+            <li><a href="about_cabinet.php">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                 Cabinet Info
             </a></li>
-            <li><a href="cabinet_info.php">
+            <li><a href="medAi.php">
                 <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
                     <circle cx="8" cy="10" r="1.5" fill="white"/>
@@ -106,12 +103,10 @@
                 </svg>
                 Settings
             </a></li>
-            <button class="drawer-logout" onclick="logout()">Logout</button>
         </ul>
     </div>
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-
   <div class="settings-layout">
     <aside class="settings-sidebar">
       <div class="sidebar-header">
@@ -173,12 +168,12 @@
           <div class="card-body">
             <div class="form-group">
               <label for="username">Username</label>
-              <input type="text" id="username" value="KimP" />
+              <input type="text" id="username"  />
               <span class="form-hint">This is your public display name</span>
             </div>
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input type="email" id="email" value="kim.park@medic-office.com" />
+              <input type="email" id="email"  />
               <span class="form-hint">We'll send notifications to this email</span>
             </div>
             <div class="form-group">
@@ -393,7 +388,6 @@
     </main>
   </div>
 </body>
-<script src="../JS/form_validations.js"></script>
 <script>
   function showSection(id) {
     document.querySelectorAll('.settings-menu button').forEach(btn => btn.classList.remove('active'));
@@ -404,15 +398,11 @@
   document.getElementById('accent-color')?.addEventListener('input', (e) => {
     document.querySelector('.color-value').textContent = e.target.value;
   });
-
-   function toggleDrawer() {
+        function toggleDrawer() {
             const drawer = document.getElementById('drawer');
             const overlay = document.getElementById('drawerOverlay');
             drawer.classList.toggle('open');
             overlay.classList.toggle('active');
-        }
-        function logout() {
-            window.location.href = '../index.html';
         }
 </script>
 </html>
