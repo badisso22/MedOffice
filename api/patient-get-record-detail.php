@@ -10,7 +10,11 @@ try {
         throw new Exception('Database connection error');
     }
 
-    if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'], $_SESSION['cabinetID']) || $_SESSION['roleID'] != 5) {
+    if (
+        empty($_SESSION['loggedIn']) ||
+        !isset($_SESSION['userID'], $_SESSION['roleID'], $_SESSION['activeCabinetID']) ||
+        (int)$_SESSION['roleID'] !== 5
+    ) {
         throw new Exception('Unauthorized');
     }
 
@@ -19,15 +23,26 @@ try {
     }
 
     $userID    = (int)$_SESSION['userID'];
-    $cabinetID = (int)$_SESSION['cabinetID'];
+    $cabinetID = (int)$_SESSION['activeCabinetID'];
+    if ($cabinetID <= 0) {
+        throw new Exception('Cabinet ID not found');
+    }
 
     $consultationID = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if ($consultationID <= 0) {
         throw new Exception('Invalid record ID');
     }
 
-    $sql = "SELECT patientID FROM PatientTable WHERE userID = ? AND cabinetID = ? LIMIT 1";
+    $sql = "
+        SELECT patientID 
+        FROM PatientTable 
+        WHERE userID = ? AND cabinetID = ? 
+        LIMIT 1
+    ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('ii', $userID, $cabinetID);
     $stmt->execute();
     $patientRow = $stmt->get_result()->fetch_assoc();
@@ -39,12 +54,25 @@ try {
 
     $patientID = (int)$patientRow['patientID'];
 
-    $sql = "SELECT consultationID, consultationdate, consultationtype, symptoms,
-                   diagnosis, treatmentplan, additionalnotes, nextappointment,
-                   medicalfees
-            FROM PatientConsultationInfo
-            WHERE consultationID = ? AND PatientID = ?";
+    $sql = "
+        SELECT 
+            consultationID,
+            consultationdate,
+            consultationtype,
+            symptoms,
+            diagnosis,
+            treatmentplan,
+            additionalnotes,
+            nextappointment,
+            medicalfees
+        FROM PatientConsultationInfo
+        WHERE consultationID = ? 
+          AND PatientID = ?
+    ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('ii', $consultationID, $patientID);
     $stmt->execute();
     $res = $stmt->get_result();
@@ -59,7 +87,7 @@ try {
     $response['data'] = [
         'id'              => (int)$row['consultationID'],
         'date'            => $row['consultationdate'],
-        'type'            => $row['consultationtype'], 
+        'type'            => $row['consultationtype'],
         'symptoms'        => $row['symptoms'],
         'diagnosis'       => $row['diagnosis'],
         'treatmentplan'   => $row['treatmentplan'],
