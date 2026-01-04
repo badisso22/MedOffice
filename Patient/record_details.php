@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'], $_SESSION['cabinetID']) || $_SESSION['roleID'] != 5) {
+if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'], $_SESSION['activeCabinetID']) || $_SESSION['roleID'] != 5) {
     header('Location: ../login-forms/login.php');
     exit;
 }
