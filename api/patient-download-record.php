@@ -8,7 +8,11 @@ if (!$conn instanceof mysqli) {
     exit;
 }
 
-if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'], $_SESSION['cabinetID']) || $_SESSION['roleID'] != 5) {
+if (
+    empty($_SESSION['loggedIn']) ||
+    !isset($_SESSION['userID'], $_SESSION['roleID'], $_SESSION['activeCabinetID']) ||
+    (int)$_SESSION['roleID'] !== 5
+) {
     http_response_code(401);
     echo 'Unauthorized';
     exit;
@@ -22,12 +26,19 @@ if ($consultationID <= 0) {
 }
 
 $userID    = (int)$_SESSION['userID'];
-$cabinetID = (int)$_SESSION['cabinetID'];
+$cabinetID = (int)$_SESSION['activeCabinetID'];
+if ($cabinetID <= 0) {
+    http_response_code(400);
+    echo 'Cabinet ID not found';
+    exit;
+}
 
-$sql = "SELECT patientID, firstname, lastname 
-        FROM PatientTable 
-        WHERE userID = ? AND cabinetID = ? 
-        LIMIT 1";
+$sql = "
+    SELECT patientID, firstname, lastname 
+    FROM PatientTable 
+    WHERE userID = ? AND cabinetID = ? 
+    LIMIT 1
+";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('ii', $userID, $cabinetID);
 $stmt->execute();
@@ -43,11 +54,21 @@ if (!$patientRow) {
 $patientID   = (int)$patientRow['patientID'];
 $patientName = $patientRow['firstname'] . ' ' . $patientRow['lastname'];
 
-$sql = "SELECT consultationID, consultationdate, consultationtype, symptoms,
-               diagnosis, treatmentplan, additionalnotes, nextappointment,
-               medicalfees
-        FROM PatientConsultationInfo
-        WHERE consultationID = ? AND PatientID = ?";
+$sql = "
+    SELECT 
+        consultationID,
+        consultationdate,
+        consultationtype,
+        symptoms,
+        diagnosis,
+        treatmentplan,
+        additionalnotes,
+        nextappointment,
+        medicalfees
+    FROM PatientConsultationInfo
+    WHERE consultationID = ? 
+      AND PatientID = ?
+";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('ii', $consultationID, $patientID);
 $stmt->execute();
@@ -61,15 +82,15 @@ if (!$row) {
     exit;
 }
 
-$title   = $row['diagnosis'] ?: $row['consultationtype'] ?: 'Medical Record';
-$date    = $row['consultationdate'];
-$type    = $row['consultationtype'];
-$symptoms= $row['symptoms'];
-$diag    = $row['diagnosis'];
-$treat   = $row['treatmentplan'];
-$notes   = $row['additionalnotes'];
-$next    = $row['nextappointment'];
-$fees    = $row['medicalfees'];
+$title    = $row['diagnosis'] ?: $row['consultationtype'] ?: 'Medical Record';
+$date     = $row['consultationdate'];
+$type     = $row['consultationtype'];
+$symptoms = $row['symptoms'];
+$diag     = $row['diagnosis'];
+$treat    = $row['treatmentplan'];
+$notes    = $row['additionalnotes'];
+$next     = $row['nextappointment'];
+$fees     = $row['medicalfees'];
 
 $filename = 'record_' . $consultationID . '.html';
 
