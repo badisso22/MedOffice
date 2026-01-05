@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Doctor - MedOffice</title>
+    <title>Smart Doctor Search - MedOffice</title>
     <link rel="stylesheet" href="../CSS/general.css">
     <link rel="stylesheet" href="../CSS/search_doctor.css">
+    <link rel="stylesheet" href="../CSS/search_wizard.css">
 </head>
 <body>
-   <nav>
+    <nav>
         <div class="nav-container">
             <button class="drawer-toggle" onclick="toggleDrawer()">
                 <span></span>
@@ -38,6 +39,7 @@
             </div>
         </div>
     </nav>
+
     <div class="drawer" id="drawer">
         <div class="drawer-header">
             <div class="logo">
@@ -115,206 +117,176 @@
         </div>
 
         <section class="search-hero">
-            <h1>Search a doctor</h1>
-            <p>Find and book appointments with qualified doctors in your area</p>
+            <h1>Find Your Perfect Doctor</h1>
+            <p>Our intelligent recommendation system helps you find the best match based on your priorities</p>
         </section>
 
-        <div class="search-container">
-            <aside class="filter-panel">
-                <div class="filter-header">
-                    <h2>Filters</h2>
-                    <button class="reset-btn" onclick="resetFilters()">Reset filters</button>
+        <div class="wizard-container">
+            <div class="wizard-progress">
+                <div class="progress-bar" id="progressBar" style="width: 25%"></div>
+            </div>
+
+            <div class="wizard-steps">
+                <div class="wizard-step active" id="step1" data-step="1">
+                    <h2>Step 1: Choose Your Specialty</h2>
+                    <p>What type of doctor are you looking for?</p>
+                    
+                    <div class="specialty-grid" id="specialtyGrid">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="resetWizard()">Cancel</button>
+                        <button class="btn btn-primary" id="step1Next" onclick="goToStep(2)" disabled>
+                            Continue →
+                        </button>
+                    </div>
                 </div>
 
-                <form id="searchForm" class="filter-form">
-                  <!--  <div class="form-group">
-                        <label for="searchText">Search</label>
-                        <input type="text" id="searchText" placeholder="Search by doctor name or clinic" class="form-input">
-                    </div>-->
+                <div class="wizard-step" id="step2" data-step="2">
+                    <h2>Step 2: Select Your Criteria</h2>
+                    <p>Which factors are important to you? (Optional)</p>
+                    
+                    <div class="criteria-checklist" id="criteriaChecklist">
+                        <label class="criteria-checkbox">
+                            <input type="checkbox" name="criteria" value="price" onchange="onCriteriaChange()">
+                            <div class="criteria-card">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M12 6v12M9 9h6a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H9"></path>
+                                </svg>
+                                <span class="label">Price</span>
+                                <span class="description">Budget-friendly options</span>
+                            </div>
+                        </label>
 
-                    <div class="form-group">
-                        <label for="speciality">Speciality <span class="required">*</span></label>
-                        <select id="speciality" class="form-select" required>
-                            <option value="">Select speciality</option>
-                            <option value="cardiology">Cardiology</option>
-                            <option value="dermatology">Dermatology</option>
-                            <option value="general">General Medicine</option>
-                            <option value="pediatrics">Pediatrics</option>
-                            <option value="neurology">Neurology</option>
-                            <option value="orthopedics">Orthopedics</option>
+                        <label class="criteria-checkbox">
+                            <input type="checkbox" name="criteria" value="availability" onchange="onCriteriaChange()">
+                            <div class="criteria-card">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <span class="label">Availability</span>
+                                <span class="description">Next 7 days</span>
+                            </div>
+                        </label>
+
+                        <label class="criteria-checkbox">
+                            <input type="checkbox" name="criteria" value="facilities" onchange="onCriteriaChange()">
+                            <div class="criteria-card">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 10h18M3 10l1-6h16l1 6M3 10v9a1 1 0 001 1h16a1 1 0 001-1v-9"></path>
+                                    <circle cx="9" cy="18" r="1"></circle>
+                                    <circle cx="15" cy="18" r="1"></circle>
+                                </svg>
+                                <span class="label">Facilities</span>
+                                <span class="description">Parking, wheelchair access</span>
+                            </div>
+                        </label>
+
+                        <label class="criteria-checkbox">
+                            <input type="checkbox" name="criteria" value="location" onchange="onCriteriaChange()">
+                            <div class="criteria-card">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                <span class="label">Location</span>
+                                <span class="description">Your preferred area</span>
+                            </div>
+                        </label>
+
+                        <label class="criteria-checkbox">
+                            <input type="checkbox" name="criteria" value="feedback" onchange="onCriteriaChange()">
+                            <div class="criteria-card">
+                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <polygon points="12 2 15.09 10.26 23.77 11.25 17.77 17.76 19.04 26.45 12 22.77 4.96 26.45 6.23 17.76 0.23 11.25 8.91 10.26"></polygon>
+                                </svg>
+                                <span class="label">Patient Feedback</span>
+                                <span class="description">Reviews & ratings</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div id="facilitiesSelector" class="sub-selector" style="display: none;">
+                        <h4>Which facilities matter to you?</h4>
+                        <div id="facilitiesOptions" class="checkbox-group"></div>
+                    </div>
+
+                    <div id="locationSelector" class="sub-selector" style="display: none;">
+                        <h4>Preferred location (Wilaya)</h4>
+                        <select id="locationSelect" class="form-select">
+                            <option value="">Select location</option>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label for="location">Location</label>
-                        <select id="location" class="form-select">
-                            <option value="">Any location</option>
-                            <option value="algiers">Algiers</option>
-                            <option value="blida">Blida</option>
-                            <option value="oran">Oran</option>
-                            <option value="constantine">Constantine</option>
-                            <option value="tiziouzou">Tizi ouzou</option>
-                            <option value="setif">Setif</option>
-                            <option value="batna">Batna</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="appointmentDate">Preferred Date</label>
-                        <input type="date" id="appointmentDate" class="form-input">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Time Range</label>
-                        <div class="time-chips">
-                            <label class="chip">
-                                <input type="checkbox" name="timeRange" value="morning">
-                                <span>Morning</span>
-                            </label>
-                            <label class="chip">
-                                <input type="checkbox" name="timeRange" value="afternoon">
-                                <span>Afternoon</span>
-                            </label>
-                            <label class="chip">
-                                <input type="checkbox" name="timeRange" value="evening">
-                                <span>Evening</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Price Range</label>
-                        <div class="price-inputs">
-                            <input type="number" id="priceMin" placeholder="Min" class="form-input">
-                            <span>-</span>
-                            <input type="number" id="priceMax" placeholder="Max" class="form-input">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Appointment Type</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="appointmentType" value="checkup">
-                                <span>Regular Check up</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="appointmentType" value="emergency">
-                                <span>Emergency</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="appointmentType" value="consultation">
-                                <span>Consultation</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="appointmentType" value="followup">
-                                <span>Follow-up</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="appointmentType" value="diagnostic">
-                                <span>Diagnostic Test</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="appointmentType" value="vaccination">
-                                <span>Vaccination</span>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-large">Search doctors</button>
-                </form>
-            </aside>
-
-            <section class="results-section">
-                <div id="loadingState" class="loading-state" style="display: none;">
-                    <div class="loading-card">
-                        <div class="spinner"></div>
-                        <p>Searching for doctors...</p>
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+                        <button class="btn btn-primary" id="step2Next" onclick="goToStep(3)">
+                            Continue →
+                        </button>
                     </div>
                 </div>
 
-                <div id="emptyState" class="empty-state" style="display: none;">
-                    <svg viewBox="0 0 24 24" width="80" height="80">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <h3>No doctors found</h3>
-                    <p>Try adjusting your filters to find more results</p>
-                    <button class="btn btn-secondary" onclick="resetFilters()">Adjust filters</button>
+                <div class="wizard-step" id="step3" data-step="3">
+                    <h2>Step 3: Rank Your Priorities</h2>
+                    <p>Drag to reorder: what matters most to you?</p>
+                    
+                    <ul class="ranking-list" id="rankingList">
+                    </ul>
+
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+                        <button class="btn btn-primary" id="step3Next" onclick="goToStep(4)">
+                            Find My Doctor →
+                        </button>
+                    </div>
                 </div>
 
-                <div id="resultsGrid" class="results-grid">
-                    <div class="doctor-card">
-                        <div class="doctor-photo">
-                            <img src="/placeholder.svg?height=80&width=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h3>Dr. Sarah Ahmed</h3>
-                            <p class="doctor-speciality">Cardiologist</p>
-                            <div class="doctor-rating">
-                                <span class="stars">★★★★★</span>
-                                <span class="rating-text">4.9 (127 reviews)</span>
-                            </div>
-                            <div class="doctor-tags">
-                                <span class="tag">Heart failure</span>
-                                <span class="tag">Hypertension</span>
-                            </div>
-                            <div class="doctor-meta">
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                    <span>ESST Medical Office</span>
-                                </div>
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                                    <span>From 1000 DZD</span>
-                                </div>
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    <span>Next: Tomorrow, 15:30</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="doctor-actions">
-                            <a href="doctor_profile.php" class="btn btn-primary">View profile</a>
-                            <button class="btn btn-secondary">Book now</button>
+                <div class="wizard-step" id="step4" data-step="4">
+                    <h2>Your Doctor Recommendations</h2>
+                    <p>Based on your priorities</p>
+
+                    <div id="loadingResults" class="loading-state" style="display: none;">
+                        <div class="loading-card doctor-themed">
+                            <div class="spinner"></div>
+                            <p>Finding your perfect match...</p>
                         </div>
                     </div>
 
-                    <div class="doctor-card">
-                        <div class="doctor-photo">
-                            <img src="/placeholder.svg?height=80&width=80" alt="Doctor">
-                        </div>
-                        <div class="doctor-info">
-                            <h3>Dr. Mohamed Benjelloun</h3>
-                            <p class="doctor-speciality">General Medicine</p>
-                            <div class="doctor-rating">
-                                <span class="stars">★★★★★</span>
-                                <span class="rating-text">4.8 (89 reviews)</span>
-                            </div>
-                            <div class="doctor-tags">
-                                <span class="tag">Checkups</span>
-                                <span class="tag">Preventive care</span>
-                            </div>
-                            <div class="doctor-meta">
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                    <span>North Health Clinic</span>
-                                </div>
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                                    <span>From 500 DZD</span>
-                                </div>
-                                <div class="meta-item">
-                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    <span>Next: Today, 18:00</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="doctor-actions">
-                            <a href="doctor_profile.php" class="btn btn-primary">View profile</a>
-                            <button class="btn btn-secondary">Book now</button>
-                        </div>
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <h3>No doctors found</h3>
+                        <p id="emptyMessage">No doctors are available for the selected specialty.</p>
+                        <button class="btn btn-secondary" onclick="resetWizard()">Try Another Specialty</button>
+                    </div>
+
+                    <div id="resultsContainer" class="results-container">
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="resetWizard()">New Search</button>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+
+        <div id="stepLoadingScreen" class="step-loading-overlay" style="display: none;">
+            <div class="step-loading-card">
+                <div class="loading-spinner"></div>
+                <p id="loadingMessage">Processing...</p>
+                <div class="progress-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -336,36 +308,6 @@
             <p>&copy; 2025 MedOffice. All rights reserved.</p>
         </div>
     </footer>
-
-    <script>
-        function toggleDrawer() {
-            const drawer = document.getElementById('drawer');
-            const overlay = document.getElementById('drawerOverlay');
-            drawer.classList.toggle('open');
-            overlay.classList.toggle('active');
-        }
-
-        function logout() {
-            window.location.href = '../index.html';
-        }
-
-        function resetFilters() {
-            document.getElementById('searchForm').reset();
-        }
-
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const loading = document.getElementById('loadingState');
-            const results = document.getElementById('resultsGrid');
-            
-            results.style.display = 'none';
-            loading.style.display = 'flex';
-            
-            setTimeout(() => {
-                loading.style.display = 'none';
-                results.style.display = 'grid';
-            }, 1500);
-        });
-    </script>
+    <script src="../ajax/patient_search_doctor.js"></script>
 </body>
 </html>
