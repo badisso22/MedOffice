@@ -30,6 +30,7 @@ try {
 
     $cabinetID = isset($_SESSION['activeCabinetID']) ? (int)$_SESSION['activeCabinetID'] : 0;
     $roleID    = isset($_SESSION['roleID']) ? (int)$_SESSION['roleID'] : 0;
+    $userID    = isset($_SESSION['userID']) ? (int)$_SESSION['userID'] : 0;
 
     if (!$patientID || !$date || !$time || !$purpose || $cabinetID <= 0) {
         throw new Exception('Missing required fields');
@@ -39,30 +40,35 @@ try {
     $status   = 'pending';
 
     if ($roleID === 2 || $roleID === 3) {
-        $sqlDoctor = "SELECT doctorID FROM DoctorProfile WHERE userID = ? LIMIT 1";
+        $sqlDoctor = "SELECT doctorID FROM DoctorProfile WHERE userID = ? AND cabinetID = ? LIMIT 1";
         $stmtDoctor = $conn->prepare($sqlDoctor);
         if (!$stmtDoctor) {
             throw new Exception('Prepare failed: ' . $conn->error);
         }
-        $stmtDoctor->bind_param('i', $_SESSION['userID']);
+        $stmtDoctor->bind_param('ii', $userID, $cabinetID);
         $stmtDoctor->execute();
         $resDoctor = $stmtDoctor->get_result();
         $docRow    = $resDoctor->fetch_assoc();
         $stmtDoctor->close();
 
-        $doctorID = $docRow ? (int)$docRow['doctorID'] : null;
+        $doctorID = $docRow ? (int)$docRow['doctorID'] : 0;
         if ($doctorID <= 0) {
             throw new Exception('Doctor profile not found for this user');
         }
         $status = 'accepted';
 
-    } elseif ($roleID === 4 || $roleID === 5) {
+    } elseif ($roleID === 4) {
         if ($doctorIdInput <= 0) {
             throw new Exception('Doctor is required for this booking');
         }
         $doctorID = $doctorIdInput;
         $status   = 'accepted';
 
+    } elseif ($roleID === 5) {
+        if ($doctorIdInput <= 0) {
+            throw new Exception('Doctor is required for this booking');
+        }
+        $doctorID = $doctorIdInput;
     } else {
         throw new Exception('Unauthorized role');
     }
@@ -75,6 +81,7 @@ try {
               AND date = ? 
               AND appointmentTime = ?
               AND appointmentID != ?
+              AND cabinetID = ?
               AND status != 'cancelled'
             LIMIT 1
         ";
@@ -82,7 +89,7 @@ try {
         if (!$stmtConflict) {
             throw new Exception('Prepare failed: ' . $conn->error);
         }
-        $stmtConflict->bind_param('issi', $doctorID, $date, $time, $appointmentID);
+        $stmtConflict->bind_param('issii', $doctorID, $date, $time, $appointmentID, $cabinetID);
         $stmtConflict->execute();
         $resConflict = $stmtConflict->get_result();
         $stmtConflict->close();
@@ -95,19 +102,21 @@ try {
     if ($appointmentID > 0) {
         $sql = "
             UPDATE Appointments 
-            SET patientID = ?, doctorID = ?, date = ?, appointmentTime = ?, purpose = ?, status = ? 
+            SET patientID = ?, doctorID = ?, date = ?, appointmentTime = ?, time = ?, purpose = ?, status = ? 
             WHERE appointmentID = ? AND cabinetID = ?
         ";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             throw new Exception('Prepare failed: ' . $conn->error);
         }
+        $timeShort = substr($time, 0, 5);
         $stmt->bind_param(
-            'iisssiii',
+            'iisssssii',
             $patientID,
             $doctorID,
             $date,
             $time,
+            $timeShort,
             $purpose,
             $status,
             $appointmentID,
