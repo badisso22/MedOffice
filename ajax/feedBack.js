@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      const res = await fetch('../api/patient_feedback_save.php', {
+      const res = await fetch('../api/save_feedback.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
