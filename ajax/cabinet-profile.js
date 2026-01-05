@@ -45,7 +45,6 @@ async function loadCabinetProfile() {
         const bioText = document.getElementById('cabinet-bio-text');
         if (bioText) bioText.textContent = d.cabinet.bio || 'Welcome to our medical cabinet.';
 
-        // RATING (use API directly)
         const ratingValue = document.querySelector('.rating-value');
         const reviewCount = document.querySelector('.review-count');
         const avgFromApi   = Number(d.rating.average || 0);
