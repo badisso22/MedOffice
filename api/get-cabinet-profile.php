@@ -131,19 +131,36 @@ try {
     $stmt->close();
 
     $sqlReviews = "
-        SELECT 
-            pf.feedback_title,
-            pf.feedback_message,
-            pf.created_at,
-            COALESCE(pf.doctor_competence_rating, 0) AS rating,
-            u.username
-        FROM PatientFeedback pf
-        INNER JOIN Users u ON u.userID = pf.patient_id
-        WHERE pf.cabinet_id = ? 
-          AND pf.feedback_message IS NOT NULL
-        ORDER BY pf.created_at DESC
-        LIMIT 10
-    ";
+    SELECT 
+        pf.feedback_title,
+        pf.feedback_message,
+        pf.created_at,
+        u.username,
+        -- per-review combined rating
+        (
+            COALESCE(pf.doctor_competence_rating, 0) +
+            COALESCE(pf.medical_assistant_rating, 0) +
+            COALESCE(pf.appointment_punctuality_rating, 0) +
+            COALESCE(pf.cleanliness_rating, 0) +
+            COALESCE(pf.equipment_quality_rating, 0) +
+            COALESCE(pf.parking_availability_rating, 0)
+        ) /
+        NULLIF(
+            (pf.doctor_competence_rating IS NOT NULL) +
+            (pf.medical_assistant_rating IS NOT NULL) +
+            (pf.appointment_punctuality_rating IS NOT NULL) +
+            (pf.cleanliness_rating IS NOT NULL) +
+            (pf.equipment_quality_rating IS NOT NULL) +
+            (pf.parking_availability_rating IS NOT NULL),
+            0
+        ) AS rating
+    FROM PatientFeedback pf
+    INNER JOIN Users u ON u.userID = pf.patient_id
+    WHERE pf.cabinet_id = ?
+    ORDER BY pf.created_at DESC
+    LIMIT 10
+";
+
     $stmt = $conn->prepare($sqlReviews);
     if (!$stmt) {
         throw new Exception('Prepare failed: ' . $conn->error);
@@ -151,15 +168,24 @@ try {
     $stmt->bind_param('i', $cabinetID);
     $stmt->execute();
     $reviewsResult = $stmt->get_result();
+    error_log('cabinetID=' . $cabinetID . ' rows=' . $reviewsResult->num_rows);
+    while ($row = $reviewsResult->fetch_assoc()) {
+        error_log('ROW=' . json_encode($row));
+    }
+    $reviewsResult->data_seek(0);
+
 
     $reviews      = [];
     $totalRating  = 0;
+    $ratedCount   = 0;
     $ratingCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
 
     while ($row = $reviewsResult->fetch_assoc()) {
         $rating = (int)$row['rating'];
-        if ($rating > 0) {
+
+        if ($rating > 0 && $rating <= 5) {
             $totalRating += $rating;
+            $ratedCount++;
             $ratingCounts[$rating]++;
         }
 
@@ -173,8 +199,7 @@ try {
     }
     $stmt->close();
 
-    $totalReviews  = count($reviews);
-    $averageRating = $totalReviews > 0 ? round($totalRating / $totalReviews, 1) : 0;
+    $averageRating = $ratedCount > 0 ? round($totalRating / $ratedCount, 1) : 0;
 
     $response['success'] = true;
     $response['data'] = [
@@ -198,7 +223,7 @@ try {
         'reviews'    => $reviews,
         'rating'     => [
             'average'   => $averageRating,
-            'total'     => $totalReviews,
+            'total'     => $ratedCount,
             'breakdown' => $ratingCounts
         ],
         'pricing'    => $pricing,
