@@ -84,7 +84,7 @@ try {
         $patientUserID = (int)$patRow['userID'];
         $cabinetID     = (int)$patRow['cabinetID'];
 
-        $feedbackLink = 'feedback_p.php?appointmentID=' . urlencode((string)$appointmentID);
+        $feedbackLink = '../Patient/feedBack.php?appointmentID=' . urlencode((string)$appointmentID);
 
         $title   = 'How was your recent visit?';
         $message = 'You had a consultation on ' . $consultationDate .
