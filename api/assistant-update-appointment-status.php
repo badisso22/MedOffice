@@ -18,11 +18,13 @@ try {
         throw new Exception('Unauthorized');
     }
 
-    if (!isset($_SESSION['cabinetID'])) {
+    if (!isset($_SESSION['activeCabinetID'])) {
         throw new Exception('No cabinet context');
     }
-
-    $cabinetID = (int)$_SESSION['cabinetID'];
+    $cabinetID = (int)$_SESSION['activeCabinetID'];
+    if ($cabinetID <= 0) {
+        throw new Exception('No cabinet context');
+    }
 
     $raw   = file_get_contents('php://input');
     $input = json_decode($raw, true);
@@ -34,7 +36,7 @@ try {
         throw new Exception('Invalid request');
     }
 
-    $newStatus = $action === 'accept' ? 'accepted' : 'declined';
+    $newStatus = $action === 'accept' ? 'accepted' : 'cancelled';
 
     $sql = "
       UPDATE Appointments 
@@ -45,6 +47,9 @@ try {
       LIMIT 1
     ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('sii', $newStatus, $appointmentID, $cabinetID);
     $stmt->execute();
 
