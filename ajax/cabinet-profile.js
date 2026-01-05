@@ -2,8 +2,8 @@ console.log('cabinet-profile.js loaded');
 
 let allDoctors = [];
 
-document.addEventListener('DOMContentLoaded', async function() {
-    await loadCabinetProfile();
+document.addEventListener('DOMContentLoaded', () => {
+    loadCabinetProfile();
 });
 
 async function loadCabinetProfile() {
@@ -15,6 +15,8 @@ async function loadCabinetProfile() {
         if (!res.ok) throw new Error('HTTP ' + res.status);
 
         const json = await res.json();
+        console.log('cabinet API json:', json);
+
         if (!json.success || !json.data) {
             throw new Error(json.message || 'Failed to load cabinet profile');
         }
@@ -43,12 +45,17 @@ async function loadCabinetProfile() {
         const bioText = document.getElementById('cabinet-bio-text');
         if (bioText) bioText.textContent = d.cabinet.bio || 'Welcome to our medical cabinet.';
 
+        // RATING (use API directly)
         const ratingValue = document.querySelector('.rating-value');
         const reviewCount = document.querySelector('.review-count');
-        if (ratingValue) ratingValue.textContent = d.rating.average || '0';
-        if (reviewCount) reviewCount.textContent = `(${d.rating.total || 0} reviews)`;
+        const avgFromApi   = Number(d.rating.average || 0);
+        const totalFromApi = Number(d.rating.total || 0);
 
-        renderRatingBreakdown(d.rating.breakdown, d.rating.total);
+        if (ratingValue) ratingValue.textContent = avgFromApi.toFixed(1);
+        if (reviewCount) reviewCount.textContent = `(${totalFromApi} reviews)`;
+
+        renderRatingBreakdown(d.rating.breakdown, totalFromApi, avgFromApi);
+
         allDoctors = d.doctors;
         renderDoctors(d.doctors);
         renderPricing(d.pricing);
@@ -84,13 +91,13 @@ async function loadCabinetProfile() {
     }
 }
 
-function renderRatingBreakdown(breakdown, total) {
+function renderRatingBreakdown(breakdown, total, avgFromApi) {
     const container = document.querySelector('.rating-breakdown');
     if (!container) return;
 
     let html = '';
     for (let star = 5; star >= 1; star--) {
-        const count = breakdown[star] || 0;
+        const count = (breakdown && breakdown[star]) || 0;
         const percent = total > 0 ? Math.round((count / total) * 100) : 0;
         html += `
             <div class="rating-bar-item">
@@ -104,25 +111,22 @@ function renderRatingBreakdown(breakdown, total) {
     }
     container.innerHTML = html;
 
-    const bigRating = document.querySelector('.big-rating');
+    const bigRating    = document.querySelector('.big-rating');
     const totalReviews = document.querySelector('.total-reviews');
 
-    if (bigRating && total > 0) {
-        const sum = Object.keys(breakdown).reduce(
-            (acc, key) => acc + (parseInt(key) * breakdown[key]),
-            0
-        );
-        const avg = (sum / total).toFixed(1);
-        bigRating.textContent = avg;
+    if (bigRating) {
+        bigRating.textContent = total > 0 ? avgFromApi.toFixed(1) : '0.0';
     }
-    if (totalReviews) totalReviews.textContent = `${total} total reviews`;
+    if (totalReviews) {
+        totalReviews.textContent = `${total} total reviews`;
+    }
 }
 
 function renderDoctors(doctors) {
     const grid = document.querySelector('.doctors-grid');
     if (!grid) return;
 
-    if (doctors.length === 0) {
+    if (!doctors || doctors.length === 0) {
         grid.innerHTML = '<p style="text-align: center; color: #6b7280;">No doctors available</p>';
         return;
     }
@@ -159,14 +163,15 @@ function renderReviews(reviews) {
     const list = document.getElementById('reviewsList');
     if (!list) return;
 
-    if (reviews.length === 0) {
+    if (!reviews || reviews.length === 0) {
         list.innerHTML = '<p style="text-align: center; color: #6b7280;">No reviews yet</p>';
         return;
     }
 
     let html = '';
     reviews.forEach((rev, i) => {
-        const stars = '★'.repeat(rev.rating || 0) + '☆'.repeat(5 - (rev.rating || 0));
+        const r = rev.rating || 0;
+        const stars = '★'.repeat(r) + '☆'.repeat(5 - r);
         const hideClass = i >= 3 ? 'hidden-review' : '';
 
         html += `
@@ -174,7 +179,7 @@ function renderReviews(reviews) {
                 <div class="review-header">
                     <div class="reviewer-info">
                         <div class="reviewer-avatar" style="background: #0891b2; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                            ${escapeHtml(rev.username.substring(0, 2).toUpperCase())}
+                            ${escapeHtml((rev.username || '').substring(0, 2).toUpperCase())}
                         </div>
                         <div>
                             <h4 class="reviewer-name">${escapeHtml(rev.username)}</h4>
@@ -200,7 +205,7 @@ function renderSpecializations(cabinetSpecialty, doctors) {
     const specialties = new Set();
     if (cabinetSpecialty) specialties.add(cabinetSpecialty);
 
-    doctors.forEach(doc => {
+    (doctors || []).forEach(doc => {
         if (doc.specialty) specialties.add(doc.specialty);
     });
 
@@ -326,6 +331,7 @@ function escapeHtml(str) {
 function toggleAllReviews() {
     const hiddenReviews = document.querySelectorAll('.hidden-review');
     const btn = document.querySelector('.btn-show-all');
+    if (!btn) return;
 
     hiddenReviews.forEach(review => {
         if (review.style.display === 'block') {
