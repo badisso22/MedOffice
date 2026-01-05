@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form  = document.getElementById('feedbackForm');
   const modal = document.getElementById('customModal');
-
   if (!form) return;
 
   document.querySelectorAll('.star-rating').forEach(group => {
@@ -9,7 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!e.target.classList.contains('star')) return;
       const value = parseInt(e.target.dataset.value, 10);
       group.querySelectorAll('.star').forEach(star => {
-        star.classList.toggle('selected', parseInt(star.dataset.value, 10) <= value);
+        star.classList.toggle(
+          'selected',
+          parseInt(star.dataset.value, 10) <= value
+        );
       });
     });
   });
@@ -36,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const appointmentMethodEl = document.getElementById('appointment-method');
     const appointmentMethod = appointmentMethodEl ? appointmentMethodEl.value : '';
+    const feedbackTitleEl = document.getElementById('feedback-title');
+    const feedbackMessageEl = document.getElementById('feedback-message');
 
     const data = {
       appointmentID: appointmentID,
@@ -45,17 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
       cleanliness: getRating('cleanliness'),
       equipmentQuality: getRating('equipment-quality'),
       parkingAvailability: getRating('parking-availability'),
-      appointmentMethod: appointmentMethod,
-      feedbackTitle: document.getElementById('feedback-title')?.value.trim() || '',
-      feedbackMessage: document.getElementById('feedback-message')?.value.trim() || '',
+      appointmentMethod: appointmentMethod || null,
+      feedbackTitle: feedbackTitleEl ? feedbackTitleEl.value.trim() : '',
+      feedbackMessage: feedbackMessageEl ? feedbackMessageEl.value.trim() : '',
     };
 
     try {
       const res = await fetch('../api/save_feedback.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
 
