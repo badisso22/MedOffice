@@ -341,7 +341,6 @@ function renderResults(doctors) {
             </div>
             
             <div class="result-actions">
-                <a href="doctor_profile.php?id=${doctor.doctorID}" class="btn btn-primary">View Profile</a>
                 <button class="btn btn-secondary" onclick="bookDoctor(${doctor.doctorID})">Book Now</button>
             </div>
         `;
