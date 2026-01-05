@@ -123,7 +123,7 @@
 
         <div class="wizard-container">
             <div class="wizard-progress">
-                <div class="progress-bar" id="progressBar" style="width: 25%"></div>
+                <div class="progress-bar" id="progressBar" style="width: 20%"></div>
             </div>
 
             <div class="wizard-steps">
@@ -230,25 +230,68 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="wizard-step" id="step3" data-step="3">
-                    <h2>Step 3: Rank Your Priorities</h2>
+                    <h2>Step 3: Choose Calculation Method</h2>
+                    <p>Select how you'd like doctors to be ranked</p>
+                    
+                    <div class="method-selection-grid">
+                        <label class="method-card">
+                            <input type="radio" name="method" value="wsm" checked onchange="selectMethod('wsm')">
+                            <div class="method-content">
+                                <div class="method-icon">⚖️</div>
+                                <h3>Weighted Sum Method (WSM)</h3>
+                                <p class="method-description">Simple and straightforward weighting approach</p>
+                                <ul class="method-features">
+                                    <li>✓ Easy to understand</li>
+                                    <li>✓ Direct weighted scoring</li>
+                                    <li>✓ Faster calculation</li>
+                                </ul>
+                            </div>
+                        </label>
+
+                        <label class="method-card">
+                            <input type="radio" name="method" value="topsis" onchange="selectMethod('topsis')">
+                            <div class="method-content">
+                                <div class="method-icon">📊</div>
+                                <h3>TOPSIS Method</h3>
+                                <p class="method-description">Advanced technique for complex decision-making</p>
+                                <ul class="method-features">
+                                    <li>✓ Considers ideal & anti-ideal solutions</li>
+                                    <li>✓ Better for complex criteria</li>
+                                    <li>✓ More sophisticated ranking</li>
+                                </ul>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="method-info" id="methodInfo">
+                        <p><strong>WSM</strong> (Weighted Sum Method) is a simpler approach that multiplies each criterion score by its weight and sums them up. It's intuitive and works well for most decision scenarios.</p>
+                    </div>
+                    
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+                        <button class="btn btn-primary" onclick="goToStep(4)">
+                            Continue →
+                        </button>
+                    </div>
+                </div>
+                <div class="wizard-step" id="step4" data-step="4">
+                    <h2>Step 4: Rank Your Priorities</h2>
                     <p>Drag to reorder: what matters most to you?</p>
                     
                     <ul class="ranking-list" id="rankingList">
                     </ul>
 
                     <div class="step-actions">
-                        <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
-                        <button class="btn btn-primary" id="step3Next" onclick="goToStep(4)">
+                        <button class="btn btn-secondary" onclick="goToStep(3)">← Back</button>
+                        <button class="btn btn-primary" id="step4Next" onclick="goToStep(5)">
                             Find My Doctor →
                         </button>
                     </div>
                 </div>
-
-                <div class="wizard-step" id="step4" data-step="4">
+                <div class="wizard-step" id="step5" data-step="5">
                     <h2>Your Doctor Recommendations</h2>
-                    <p>Based on your priorities</p>
+                    <p>Based on your priorities and selected method</p>
 
                     <div id="loadingResults" class="loading-state" style="display: none;">
                         <div class="loading-card doctor-themed">
