@@ -1,6 +1,7 @@
 <?php
 session_start();
 require '../config/config.php';
+
 header('Content-Type: application/json; charset=utf-8');
 
 $response = ['success' => false, 'data' => [], 'errors' => []];
@@ -10,20 +11,32 @@ try {
         throw new Exception('Database connection error');
     }
 
-    if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'], $_SESSION['cabinetID']) || $_SESSION['roleID'] != 5) {
+    if (
+        empty($_SESSION['loggedIn']) ||
+        !isset($_SESSION['userID'], $_SESSION['roleID'], $_SESSION['activeCabinetID']) ||
+        (int)$_SESSION['roleID'] !== 5
+    ) {
         throw new Exception('Unauthorized');
     }
 
-    $userID      = (int)$_SESSION['userID'];
-    $cabinetID   = (int)$_SESSION['cabinetID'];
+    $userID       = (int)$_SESSION['userID'];
+    $cabinetID    = (int)$_SESSION['activeCabinetID']; 
     $appointmentID = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
     if ($appointmentID <= 0) {
         throw new Exception('Invalid appointment ID');
     }
 
-    $sql = "SELECT patientID FROM PatientTable WHERE userID = ? AND cabinetID = ? LIMIT 1";
+    $sql = "
+        SELECT patientID 
+        FROM PatientTable 
+        WHERE userID = ? AND cabinetID = ? 
+        LIMIT 1
+    ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('ii', $userID, $cabinetID);
     $stmt->execute();
     $patientRow = $stmt->get_result()->fetch_assoc();
@@ -58,6 +71,9 @@ try {
       LIMIT 1
     ";
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception('Prepare failed: ' . $conn->error);
+    }
     $stmt->bind_param('iii', $appointmentID, $patientID, $cabinetID);
     $stmt->execute();
     $appt = $stmt->get_result()->fetch_assoc();
