@@ -145,6 +145,7 @@ function handleRecommendations($conn) {
     $criteria = json_decode($_POST['criteria'] ?? '{}', true);
     $ranking = json_decode($_POST['ranking'] ?? '[]', true);
     $preferences = json_decode($_POST['preferences'] ?? '{}', true);
+    $method = $_POST['method'] ?? 'wsm';
     
     if (empty($specialty) || empty($ranking)) {
         http_response_code(400);
@@ -209,17 +210,22 @@ function handleRecommendations($conn) {
     $rankedDoctors = [];
     foreach ($doctors as $doctor) {
         $scores = calculateScores($conn, $doctor, $criteria, $preferences);
-        $wsm = calculateWSM($scores, $criteria, $weights);
+        
+        if ($method === 'topsis') {
+            $finalScore = calculateTOPSIS($scores, $criteria, $weights);
+        } else {
+            $finalScore = calculateWSM($scores, $criteria, $weights);
+        }
         
         $rankedDoctors[] = [
             'doctor' => $doctor,
             'scores' => $scores,
-            'wsm_score' => round($wsm, 1),
+            'score' => round($finalScore, 1),
             'rank_explanation' => generateExplanation($scores, $criteria, $weights)
         ];
     }
     
-    usort($rankedDoctors, fn($a, $b) => $b['wsm_score'] <=> $a['wsm_score']);
+    usort($rankedDoctors, fn($a, $b) => $b['score'] <=> $a['score']);
     
     $topDoctors = array_slice($rankedDoctors, 0, 10);
     
@@ -227,7 +233,8 @@ function handleRecommendations($conn) {
         'success' => true,
         'data' => $topDoctors,
         'total_results' => count($rankedDoctors),
-        'returned' => count($topDoctors)
+        'returned' => count($topDoctors),
+        'method' => $method
     ]);
 }
 
@@ -384,6 +391,50 @@ function calculateWSM($scores, $criteria, $weights) {
     }
     
     return $totalWeight > 0 ? ($weightedSum / $totalWeight) * 100 : 50;
+}
+
+function calculateTOPSIS($scores, $criteria, $weights) {
+    $criteriaList = array_keys($scores);
+    
+    $idealSolution = [];
+    $antiIdealSolution = [];
+    $weightedScores = [];
+    
+    foreach ($criteria as $criterion => $enabled) {
+        if (!$enabled || !isset($scores[$criterion])) continue;
+        
+        $weight = floatval($weights[$criterion] ?? 0);
+        $score = floatval($scores[$criterion] ?? 0);
+        $normalizedScore = $score; 
+        $weightedScore = $weight * $normalizedScore;
+        
+        $weightedScores[$criterion] = $weightedScore;
+        $idealSolution[$criterion] = $weight * 1.0; 
+        $antiIdealSolution[$criterion] = $weight * 0.0; 
+    }
+    
+    $distanceToIdeal = 0;
+    $distanceToAntiIdeal = 0;
+    
+    foreach ($criteria as $criterion => $enabled) {
+        if (!$enabled || !isset($weightedScores[$criterion])) continue;
+        
+        $diff_ideal = $weightedScores[$criterion] - $idealSolution[$criterion];
+        $diff_anti_ideal = $weightedScores[$criterion] - $antiIdealSolution[$criterion];
+        
+        $distanceToIdeal += $diff_ideal * $diff_ideal;
+        $distanceToAntiIdeal += $diff_anti_ideal * $diff_anti_ideal;
+    }
+    
+    $distanceToIdeal = sqrt($distanceToIdeal);
+    $distanceToAntiIdeal = sqrt($distanceToAntiIdeal);
+    
+    $topsisScore = 0;
+    if ($distanceToIdeal + $distanceToAntiIdeal > 0) {
+        $topsisScore = $distanceToAntiIdeal / ($distanceToIdeal + $distanceToAntiIdeal);
+    }
+    
+    return $topsisScore * 100; 
 }
 
 function generateExplanation($scores, $criteria, $weights) {
