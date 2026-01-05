@@ -158,7 +158,6 @@ if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID']) || $_SESSION['ro
         </div>
 
         <div class="appointments-grid" id="appointmentsGrid">
-            <!-- JS injects appointment cards -->
         </div>
     </main>
 
