@@ -1,9 +1,5 @@
 <?php
 session_start();
-if (empty($_SESSION['loggedIn']) || !isset($_SESSION['userID'], $_SESSION['cabinetID']) || $_SESSION['roleID'] != 5) {
-    header('Location: ../login-forms/login.php');
-    exit;
-}
 
 $appointmentID = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($appointmentID <= 0) {
