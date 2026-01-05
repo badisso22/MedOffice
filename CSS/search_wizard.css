@@ -1,0 +1,645 @@
+.wizard-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.wizard-progress {
+    position: relative;
+    height: 4px;
+    background: #e5e5e5;
+    border-radius: 2px;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #1890ff, #52c41a);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 8px rgba(24, 144, 255, 0.5);
+}
+
+.wizard-step {
+    display: none;
+    animation: slideIn 0.4s ease-in-out;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.wizard-step h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.wizard-step > p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.specialty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 30px 0;
+}
+
+.specialty-card {
+    position: relative;
+}
+
+.specialty-card input[type="radio"] {
+    display: none;
+}
+
+.specialty-card label {
+    display: block;
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    background: white;
+}
+
+.specialty-card input[type="radio"]:checked + label {
+    border-color: #1890ff;
+    background: #f0f5ff;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.specialty-card label h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.specialty-card label p {
+    font-size: 14px;
+    color: #999;
+}
+
+.criteria-checklist {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin: 30px 0;
+}
+
+.criteria-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.criteria-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    background: white;
+}
+
+.criteria-checkbox input[type="checkbox"]:checked + .criteria-card {
+    border-color: #52c41a;
+    background: #f6ffed;
+    box-shadow: 0 2px 8px rgba(82, 196, 26, 0.2);
+    transform: translateY(-2px);
+}
+
+.criteria-card .icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+    color: #1890ff;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.criteria-checkbox input[type="checkbox"]:checked + .criteria-card .icon {
+    color: #52c41a;
+    transform: scale(1.1);
+}
+
+.criteria-card .label {
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.criteria-card .description {
+    font-size: 12px;
+    color: #999;
+}
+
+.sub-selector {
+    margin: 20px 0;
+    padding: 20px;
+    background: #fafafa;
+    border-radius: 8px;
+    border-left: 4px solid #1890ff;
+    animation: slideIn 0.3s ease;
+}
+
+.sub-selector h4 {
+    margin-bottom: 15px;
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 6px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.checkbox-label:hover {
+    background: rgba(24, 144, 255, 0.1);
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: #1890ff;
+}
+
+.checkbox-label span {
+    color: #1a1a1a;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.form-select:hover,
+.form-select:focus {
+    border-color: #1890ff;
+    outline: none;
+}
+
+.ranking-list {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #fafafa;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: grab;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.ranking-item:hover {
+    border-color: #1890ff;
+    background: #f0f5ff;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.1);
+}
+
+.ranking-item:active {
+    cursor: grabbing;
+}
+
+.ranking-item.dragging {
+    opacity: 0.5;
+    background: #fff;
+    border-color: #1890ff;
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+    transform: scale(1.02);
+}
+
+.rank-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #1890ff, #52c41a);
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+    margin-right: 12px;
+    flex-shrink: 0;
+    font-size: 16px;
+}
+
+.criterion-name {
+    flex: 1;
+    font-weight: 500;
+    color: #1a1a1a;
+    font-size: 16px;
+}
+
+.drag-handle {
+    color: #bbb;
+    font-size: 18px;
+    cursor: grab;
+    margin-left: 12px;
+    transition: color 0.2s;
+}
+
+.ranking-item:hover .drag-handle {
+    color: #1890ff;
+}
+
+.results-container {
+    margin-top: 30px;
+}
+
+.result-doctor-card {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.3s;
+}
+
+.result-doctor-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border-color: #1890ff;
+    transform: translateY(-2px);
+}
+
+.result-rank {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1890ff, #52c41a);
+    border-radius: 8px;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.rank-badge {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.score {
+    font-size: 18px;
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+.result-doctor-info h3 {
+    font-size: 20px;
+    margin-bottom: 4px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.specialty {
+    color: #1890ff;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.experience,
+.cabinet {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.result-explanation {
+    grid-column: 1 / -1;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.result-explanation h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1a1a1a;
+}
+
+.result-explanation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.result-explanation li {
+    font-size: 13px;
+    color: #666;
+    padding: 6px 0;
+    display: flex;
+    gap: 8px;
+}
+
+.result-explanation strong {
+    color: #1a1a1a;
+    min-width: 120px;
+}
+
+.result-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.result-actions .btn {
+    flex: 1;
+}
+
+
+
+.step-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #1890ff;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #0050b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.btn-primary:disabled {
+    background: #d9d9d9;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    background: white;
+    color: #1890ff;
+    border: 1px solid #1890ff;
+}
+
+.btn-secondary:hover {
+    background: #f0f5ff;
+    transform: translateY(-2px);
+}
+
+
+.loading-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+}
+
+.loading-card {
+    text-align: center;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border: 4px solid #f0f0f0;
+    border-top: 4px solid #1890ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-card p {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+
+
+.step-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.98);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+.step-loading-card {
+    text-align: center;
+}
+
+.step-loading-card .spinner {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    border-width: 5px;
+}
+
+.step-loading-card p {
+    font-size: 18px;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.progress-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.progress-dots span {
+    width: 8px;
+    height: 8px;
+    background: #1890ff;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.progress-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.progress-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.doctor-themed {
+    background: linear-gradient(135deg, #f0f5ff 0%, #f6ffed 100%);
+}
+
+
+@media (max-width: 768px) {
+    .wizard-container {
+        padding: 20px;
+        margin: 20px 10px;
+    }
+
+    .wizard-step h2 {
+        font-size: 24px;
+    }
+
+    .specialty-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .criteria-checklist {
+        grid-template-columns: 1fr;
+    }
+
+    .result-doctor-card {
+        grid-template-columns: 1fr;
+    }
+
+    .result-rank {
+        grid-column: 1;
+        padding: 16px;
+    }
+
+    .step-actions {
+        flex-direction: column;
+    }
+
+    .step-actions .btn {
+        width: 100%;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .wizard-container {
+        padding: 15px;
+        margin: 15px 5px;
+    }
+
+    .wizard-step h2 {
+        font-size: 20px;
+    }
+
+    .specialty-card label {
+        padding: 15px;
+    }
+
+    .ranking-item {
+        padding: 12px;
+    }
+
+    .rank-number {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .criterion-name {
+        font-size: 14px;
+    }
+
+    .result-doctor-card {
+        gap: 15px;
+        padding: 15px;
+    }
+}
