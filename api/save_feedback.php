@@ -63,19 +63,26 @@ try {
         $response['errors'][] = 'Missing appointment ID.';
     }
 
-    $medicalAssistantRating      = isset($input['medicalStaff']) ? (int)$input['medicalStaff'] : null;
-    $doctorCompetenceRating      = isset($input['doctorCompetence']) ? (int)$input['doctorCompetence'] : null;
-    $appointmentPunctualityRating= isset($input['appointmentPunctuality']) ? (int)$input['appointmentPunctuality'] : null;
-    $cleanlinessRating           = isset($input['cleanliness']) ? (int)$input['cleanliness'] : null;
-    $equipmentQualityRating      = isset($input['equipmentQuality']) ? (int)$input['equipmentQuality'] : null;
-    $parkingAvailabilityRating   = isset($input['parkingAvailability']) ? (int)$input['parkingAvailability'] : null;
+    $medicalAssistantRating       = isset($input['medicalStaff']) ? (int)$input['medicalStaff'] : null;
+    $doctorCompetenceRating       = isset($input['doctorCompetence']) ? (int)$input['doctorCompetence'] : null;
+    $appointmentPunctualityRating = isset($input['appointmentPunctuality']) ? (int)$input['appointmentPunctuality'] : null;
+    $cleanlinessRating            = isset($input['cleanliness']) ? (int)$input['cleanliness'] : null;
+    $equipmentQualityRating       = isset($input['equipmentQuality']) ? (int)$input['equipmentQuality'] : null;
+    $parkingAvailabilityRating    = isset($input['parkingAvailability']) ? (int)$input['parkingAvailability'] : null;
 
-    $appointmentMethod           = isset($input['appointmentMethod']) ? trim($input['appointmentMethod']) : '';
-    $feedbackTitle               = isset($input['feedbackTitle']) ? trim($input['feedbackTitle']) : '';
-    $feedbackMessage             = isset($input['feedbackMessage']) ? trim($input['feedbackMessage']) : '';
-
+    $appointmentMethod = isset($input['appointmentMethod']) ? trim($input['appointmentMethod']) : null;
     if ($appointmentMethod === '') {
-        $response['errors'][] = 'Appointment method is required.';
+        $appointmentMethod = null;
+    }
+
+    $feedbackTitle   = isset($input['feedbackTitle']) ? trim($input['feedbackTitle']) : null;
+    if ($feedbackTitle === '') {
+        $feedbackTitle = null;
+    }
+
+    $feedbackMessage = isset($input['feedbackMessage']) ? trim($input['feedbackMessage']) : null;
+    if ($feedbackMessage === '') {
+        $feedbackMessage = null;
     }
 
     if (
@@ -97,20 +104,20 @@ try {
     }
 
     $sql = "
-        INSERT INTO PatientFeedback (
-            patient_id,
-            cabinet_id,
-            appointment_id,
-            medical_assistant_rating,
-            doctor_competence_rating,
-            appointment_punctuality_rating,
-            cleanliness_rating,
-            equipment_quality_rating,
-            parking_availability_rating,
-            appointment_method,
-            feedback_title,
-            feedback_message,
-            created_at
+    INSERT INTO PatientFeedback (
+        patient_id,
+        cabinet_id,
+        appointment_id,
+        medical_assistant_rating,
+        doctor_competence_rating,
+        appointment_punctuality_rating,
+        cleanliness_rating,
+        equipment_quality_rating,
+        parking_availability_rating,
+        appointment_method,
+        feedback_title,
+        feedback_message,
+        created_at
         ) VALUES (
             ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()
         )
@@ -121,19 +128,19 @@ try {
     }
 
     $stmt->bind_param(
-        'iiiIIIIIIsss',
-        $patientID,
-        $cabinetID,
-        $appointmentID,
-        $medicalAssistantRating,
-        $doctorCompetenceRating,
-        $appointmentPunctualityRating,
-        $cleanlinessRating,
-        $equipmentQualityRating,
-        $parkingAvailabilityRating,
-        $appointmentMethod,
-        $feedbackTitle,
-        $feedbackMessage
+        'iiiissssisss',
+        $userID,                       
+        $cabinetID,                   
+        $appointmentID,               
+        $medicalAssistantRating,       
+        $doctorCompetenceRating,       
+        $appointmentPunctualityRating, 
+        $cleanlinessRating,            
+        $equipmentQualityRating,       
+        $parkingAvailabilityRating,    
+        $appointmentMethod,            
+        $feedbackTitle,                
+        $feedbackMessage               
     );
 
     $stmt->execute();
