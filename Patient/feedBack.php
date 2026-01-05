@@ -10,7 +10,7 @@
 </head>
 
 <body>    
-    <div class="custom-modal-overlay" id="customModal">
+    <div class="custom-modal-overlay is-hidden" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
                 <div class="modal-icon">
@@ -35,6 +35,7 @@
             <p>We value your experience with MedOffice. Your detailed feedback helps us improve our services and provide better care.</p>
 
             <form class="feedback-form" id="feedbackForm">
+                <input type="hidden" id="consultation-id" name="consultation-id" value="">
                 <div class="rating-section">
                     <h3>
                         <svg viewBox="0 0 24 24">
@@ -46,7 +47,7 @@
 
                     <div class="rating-item">
                         <label>How would you rate the quality of the welcome you received?</label>
-                        <div class="star-rating" id="medical-assistant">
+                        <div class="star-rating" id="medical-assistant" data-rating-field="medicalStaff">
                             <span class="star" data-value="1">★</span>
                             <span class="star" data-value="2">★</span>
                             <span class="star" data-value="3">★</span>
@@ -65,7 +66,7 @@
                     <div class="rating-grid">
                         <div class="rating-item">
                             <label>How would you rate the doctor's professionalism and expertise?</label>
-                            <div class="star-rating" id="doctor-competence">
+                            <div class="star-rating" id="doctor-competence" data-rating-field="doctorCompetence">
                                 <span class="star" data-value="1">★</span>
                                 <span class="star" data-value="2">★</span>
                                 <span class="star" data-value="3">★</span>
@@ -86,7 +87,7 @@
                     <div class="rating-grid">
                         <div class="rating-item">
                             <label>How would you rate the punctuality of your appointment?</label>
-                            <div class="star-rating" id="appointment-punctuality">
+                            <div class="star-rating" id="appointment-punctuality" data-rating-field="appointmentPunctuality">
                                 <span class="star" data-value="1">★</span>
                                 <span class="star" data-value="2">★</span>
                                 <span class="star" data-value="3">★</span>
@@ -108,7 +109,7 @@
                     <div class="rating-grid">
                         <div class="rating-item">
                             <label>How would you rate the cleanliness and hygiene of the cabinet?</label>
-                            <div class="star-rating" id="cleanliness">
+                            <div class="star-rating" id="cleanliness" data-rating-field="cleanliness">
                                 <span class="star" data-value="1">★</span>
                                 <span class="star" data-value="2">★</span>
                                 <span class="star" data-value="3">★</span>
@@ -131,7 +132,7 @@
                     <div class="rating-grid">
                         <div class="rating-item">
                             <label>How would you rate the quality and condition of the medical equipment?</label>
-                            <div class="star-rating" id="equipment-quality">
+                            <div class="star-rating" id="equipment-quality" data-rating-field="equipmentQuality">
                                 <span class="star" data-value="1">★</span>
                                 <span class="star" data-value="2">★</span>
                                 <span class="star" data-value="3">★</span>
@@ -153,7 +154,7 @@
                     <div class="rating-grid">
                         <div class="rating-item">
                             <label>How would you rate the availability and ease of parking?</label>
-                            <div class="star-rating" id="parking-availability">
+                            <div class="star-rating" id="parking-availability" data-rating-field="parkingAvailability">
                                 <span class="star" data-value="1">★</span>
                                 <span class="star" data-value="2">★</span>
                                 <span class="star" data-value="3">★</span>
@@ -185,7 +186,7 @@
                     </div>
                     <div class="rating-item" id="app-rating-container">
                         <label>How would you rate your experience using the app to book your appointment?</label>
-                        <div class="star-rating" id="app-booking-experience">
+                        <div class="star-rating" id="app-booking-experience" data-rating-field="appBookingExperience">
                             <span class="star" data-value="1">★</span>
                             <span class="star" data-value="2">★</span>
                             <span class="star" data-value="3">★</span>
@@ -195,7 +196,7 @@
                     </div>
                     <div class="rating-item" id="phone-inperson-rating-container">
                         <label>How would you rate the ease and efficiency of scheduling your appointment by phone or in person?</label>
-                        <div class="star-rating" id="phone-inperson-booking-experience">
+                        <div class="star-rating" id="phone-inperson-booking-experience" data-rating-field="phoneInPersonBookingExperience">
                             <span class="star" data-value="1">★</span>
                             <span class="star" data-value="2">★</span>
                             <span class="star" data-value="3">★</span>
@@ -216,11 +217,11 @@
                     <textarea id="feedback-message" name="feedback-message" placeholder="Please share your detailed feedback, suggestions, or concerns."></textarea>
                 </div>
                 <button type="submit" class="submit-btn">Submit Feedback</button>
-                <a href="dashboard_p.php" class="btn" >Cancel</a>
-
+                <a href="dashboard_p.php" class="btn">Cancel</a>
             </form>
         </section>
     </main>
     <script src="../JS/feedback.js"></script>
+    <script src="../ajax/feedBack.js"></script>
 </body>
 </html>
