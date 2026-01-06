@@ -155,6 +155,41 @@ MedOffice/
 - **Login**: `http://localhost/MedOffice/login-forms/login.php`
 - **Cabinet Request**: `http://localhost/MedOffice/login-forms/requestCab.php`
 
+## 🔐 Test Credentials
+
+The database includes fake/dummy data for testing purposes. Use any of these credentials to log in:
+
+### Super Admin
+| Role | Username | Email | Password |
+|------|----------|-------|----------|
+| Super Admin | `superadmin` | superadmin@medoffice.com | `Test@123` |
+
+### Cabinet Admins
+| Role | Username | Email | Password |
+|------|----------|-------|----------|
+| Cabinet Admin 1 | `cabinet_admin` | admin@cabinet1.com | `Test@123` |
+
+### Doctors
+| Role | Username | Email | Password |
+|------|----------|-------|----------|
+| General Medicine | `drthompson` | michael.thompson@medoffice.com | `Test@123` |
+| Pediatrics | `drwilson` | emily.wilson@medoffice.com | `Test@123` |
+
+### Medical Assistants
+| Role | Username | Email | Password |
+|------|----------|-------|----------|
+| Assistant | `jessica_assist` | jessica.brown@medoffice.com | `Test@123` |
+
+### Patients
+| Role | Username | Email | Password |
+|------|----------|-------|----------|
+| Patient 1 | `john_patient` | john.smith@patient.com | `Test@123` |
+| Patient 2 | `sarah_patient` | sarah.johnson@patient.com | `Test@123` |
+
+**Default Password for all test accounts**: `Test@123`
+
+> **Note**: These are dummy credentials for development and testing only. Never use these in production.
+
 ## 📋 Main Modules
 
 ### Admin Module (`AdminDoctor/`)
