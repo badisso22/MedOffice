@@ -28,6 +28,7 @@ try {
             up.gender,
             up.address,
             up.phoneNumber,
+            up.profilePicture,
             up.createdAt AS profileCreatedAt
         FROM Users u
         LEFT JOIN UserProfile up ON up.userID = u.userID
@@ -65,7 +66,8 @@ try {
         'status'      => $row['account_status'] ?? 'active',
         'dateOfBirth' => $row['dateOfBirth'] ?? null,
         'gender'      => $row['gender'] ?? null,
-        'createdAt'   => $row['created_at'] ?? $row['profileCreatedAt'] ?? null,
+        'profilePicture' => $row['profilePicture'] ?? null,
+        'createdAt'   => $row['createdAt'] ?? $row['profileCreatedAt'] ?? null,
     ];
 } catch (Exception $e) {
     http_response_code(400);
@@ -73,3 +75,4 @@ try {
 }
 
 echo json_encode($response, JSON_UNESCAPED_UNICODE);
+?>
